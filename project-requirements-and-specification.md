@@ -1,5 +1,5 @@
 ## Project Abstract<br />
-**foodify** is an all-in-one refrigerator management service, tracking the ingredients you have and sending notifications such as expiration dates and available recipes. Our target customers are anyone who has a refrigerator, from cooking newbies to manias.
+**Foodify** is an all-in-one refrigerator management service, tracking the ingredients you have and sending notifications such as expiration dates and available recipes. Our target customers are anyone who has a refrigerator, from cooking newbies to manias.
 
 
 ## **Customer**<br />
@@ -9,46 +9,24 @@
   * Anyone who owns a refrigerator
 
 ## **Competitive Landscape**<br />  
-The most basic but most important information is the graph and Financial Statements, which is objective information in the stock market.
-Stockin' provides this with summarized information.
-This will reduce the time that users spend searching for this information.
+Our main competitor is Beep, a barcode scanning service, and Yummly, a recipe recommendation service. We expect **Foodify** to be more competitive with respect to the following:
 
-Also, Stockin' provides news information.
-This is subjective information, but it is good information to be able to grasp public opinion and to understand the trends of the companies concerned.
-Stockin' categorizes positive and negative articles through NLP and ranks according to the degree of relevant articles to the enterprise.
-Eventually users quickly identify them.
-
-By scoring and recommending based on summarized information, users will be able to get help in selecting stocks.
-
-* **Competitive market companies**
-
-  * **Beep**
-    * An barcode scanning application that allows customers to manage expiration dates manually.
-
-  * **Yummly**
-    * Yummly is a recipe 
-
-Through deep learning, they decide where to sell and buy, thereby narrowing the user's judgment.
-However, there are so many factors that determine the price of stocks, and it is unpredictable.
-Stockin' helps users build know-how and make better judgments without reducing the width of their judgment.
-This will allow users to move on to the best judgment they are satisfied with.
-
-By using **Foodify**'s OCR, user can easilly scan ingredient's expiration date.  
-
-
-
-So, what's most **distinct from other competitors** is:
-  * Reduce the amount of time users spend searching for stock-related information.
-  * Do not narrow the user's judgment by processing objective information.
-  * The minimum analysis prediction makes it easier to choose among many stock items.
-
-## **User Stories**<br />
-This section will include the specification for your project in the form of user stories. For each user story, you should have at least a Feature and one or more Scenarios, each of which can have one or more Acceptance Tests. Acceptance Tests list one or more acceptance tests with concrete values for the parameters, and concrete assertions that you will make to verify the postconditions. Each user story should also have a field called "Sprint" where you specify in which sprint you implemented or plan to implement this feature.
-You should list only the user stories for the previous sprints and those for the current sprint.
-
-At the end of this section you should maintain a bullet list of user stories that you plan to get to in future sprints, with only minimal detail for each such story. We expect that in future sprints some of these items will be promoted to full fledged user stories.
-(**Must include in the first version, and must be expanded for future sprints**)
-
+  * **OCR scanning**
+    * Beep users have to manually type in expiration date.
+    * **Foodify** allows users to automatically scan expiration date through OCR. 
+    
+  * **Cusomized units**
+    * Beep cannot manage multiple products with same expiration date.
+    * (O) Add (egg, expire: 1/1) (egg, expire: 1/4)
+    * (X) Add (egg, expire: 1/1) (egg, expire: 1/1)
+    * **Foodify** allows users to manage products in personalized unit.
+    * (O) (egg, 2, unit: dozen)
+    * (O) (egg, 4, unit: one)
+    
+  * **Personalized recipe recommendation based on my refrigerator**
+    * Yummly does not consider the ingredients the user actually have.
+    * **Foodify** recommends recipe based on both user's preference and the ingredients that user have.
+    
 ## User Stories  
 ### Main page  
 > **Story 1**
@@ -149,5 +127,4 @@ At the end of this section you should maintain a bullet list of user stories tha
 > > When user clicks edit-button for a product on product list page
 > > Then user should see a prompt that takes both barcode number and expiration date as input.
 > > ```
-
 
