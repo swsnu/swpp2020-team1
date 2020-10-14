@@ -1,76 +1,153 @@
-## Project Requirements and Specification
-
-**Project Requirements and Specification**<br />
-(Borrowed and Adapted from UCB CS169)
-
-Your Project Name<br />
-Requirements and Specification Document<br />
-??/??/????, version major.minor
-
-**Instructions**<br />
-This is a requirements and specification document template for Software Development Principles and Practices. Please follow these directions for filling out this template. Items in italics are information that you are to fill in, beginning with the project name, date, and version number above. See below for an explanation of version numbers.
-
-There is no standard for requirements or specifications documents and in fact many organizations blend aspects of requirements, specification, and design in a single document. We will use a simple template for requirements and specification. Inevitably in preparing this document you will discuss design and planning, but limit this document to requirements, a description of how the system should interact with the outside world.
-
-This will be a living document. For the first sprint you will fill in the overview sections (Abstract, Customer, Competitive Landscape), and a few of the requirements that you plan to implement in the first sprint. In subsequent sprints you will expand the applicable sections.
-
-You have to use the Github wiki of your private team repo.
-
-**Submission**<br />
-You must send an email to swpp-staff@spl.snu.ac.kr with a PDF version of your document.
-You must send the email by the deadline in the class calendar. This is a HARD deadline.
+## Project Abstract<br />
+**foodify** is an all-in-one refrigerator management service, tracking the ingredients you have and sending notifications such as expiration dates and available recipes. Our target customers are anyone who has a refrigerator, from cooking newbies to manias.
 
 
-**Project Abstract**<br />
-A one paragraph summary (about 200 words) of what the software will do. (**Must include in the first version.**)
+## **Customer**<br />
 
-**Document Revision History**<br />
-Your first version of this document is version 1.0. When you evolve this document for future sprints of your project you will increment the minor version number (e.g., 1.1, 1.2, ...). We do not expect that you will have to increment the major version number in the course of this semester. For every version after the initial version, you should list a short bullet list with the main changes and extensions that you made to the document:
+* **Customer**
 
-       Rev. 1.0 YYYY-MM-DD - initial version
+  * Anyone who owns a refrigerator
 
-**Customer**<br />
-A brief description of the customer for this software, both in general (the population who might eventually use such a system) and specifically for this document (the customer(s) who informed this document).  (**Must include in the first version**)
+## **Competitive Landscape**<br />  
+The most basic but most important information is the graph and Financial Statements, which is objective information in the stock market.
+Stockin' provides this with summarized information.
+This will reduce the time that users spend searching for this information.
+
+Also, Stockin' provides news information.
+This is subjective information, but it is good information to be able to grasp public opinion and to understand the trends of the companies concerned.
+Stockin' categorizes positive and negative articles through NLP and ranks according to the degree of relevant articles to the enterprise.
+Eventually users quickly identify them.
+
+By scoring and recommending based on summarized information, users will be able to get help in selecting stocks.
+
+* **Competitive market companies**
+
+  * **Beep**
+    * An barcode scanning application that allows customers to manage expiration dates manually.
+
+  * **Yummly**
+    * Yummly is a recipe 
+
+Through deep learning, they decide where to sell and buy, thereby narrowing the user's judgment.
+However, there are so many factors that determine the price of stocks, and it is unpredictable.
+Stockin' helps users build know-how and make better judgments without reducing the width of their judgment.
+This will allow users to move on to the best judgment they are satisfied with.
+
+By using **Foodify**'s OCR, user can easilly scan ingredient's expiration date.  
 
 
-**Competitive Landscape**<br />
-Briefly identify the competitors in this market, and list the main ways in which your project is going to be different.
-(**Must include in the first version**)
 
-**User Stories**<br />
+So, what's most **distinct from other competitors** is:
+  * Reduce the amount of time users spend searching for stock-related information.
+  * Do not narrow the user's judgment by processing objective information.
+  * The minimum analysis prediction makes it easier to choose among many stock items.
+
+## **User Stories**<br />
 This section will include the specification for your project in the form of user stories. For each user story, you should have at least a Feature and one or more Scenarios, each of which can have one or more Acceptance Tests. Acceptance Tests list one or more acceptance tests with concrete values for the parameters, and concrete assertions that you will make to verify the postconditions. Each user story should also have a field called "Sprint" where you specify in which sprint you implemented or plan to implement this feature.
 You should list only the user stories for the previous sprints and those for the current sprint.
 
 At the end of this section you should maintain a bullet list of user stories that you plan to get to in future sprints, with only minimal detail for each such story. We expect that in future sprints some of these items will be promoted to full fledged user stories.
 (**Must include in the first version, and must be expanded for future sprints**)
 
-**User Interface Requirements**<br />
-Describes any customer user interface requirements including graphical user interface requirements. Here you should have sketches or mockups for the main parts of the interface. To save time you may want to use scanned drawings of interface mockups here, instead of Photoshop drawings.
+## User Stories  
+### Main page  
+> **Story 1**
+> > **Feature:** User wants to add item automatically through camera scanning
+> >  
+> > **Actors:** Logged-in user
+> >  
+> > **Precondition:** User must a member of the service
+> >  
+> > **Scenario:**
+> > ```
+> > 1. User clicks add-item button.
+> > 2. User scans the product's barcode.
+> > 3. User scans the product's expiration date.
+> > 4. User repeats step 2 and step 3 for every products.
+> > 5. User clicks done button on camera view.
+> > 6. User clicks confirm button on product list page.
+> > ```
+> > **Exceptions:** 
+> > ```
+> > (1) When the product's barcode is not recognized correctly, then user clicks retake-button to scan the barcode again.
+> > (2) When the product's barcode is not recognized correctly, then user clicks edit-button to manually enter the barcode number.
+> > (3) When the product's expiration date is not recognized correctly, then user clicks retake-button to scan the expiration date again.
+> > (4) When the product's expiration date is not recognized correctly, then user clicks edit-button to manually enter the expiration date.
+> > ```
+> > 
+> > **Acceptance Test:**
+> > ```
+> > When user clicks add-item button
+> > Then user should see barcode-scanning camera view
+> >
+> > When user scans barcode number 8801115114154 on barcode-scanning camera view
+> > Then user should see product information "8801115114154 / 냉장 서울우유 1L" on top banner
+> > And user is automatically directed to expiration-date camera view.
+> >
+> > When user clicks retake-button on expiration-date camera view
+> > Then user should be directed to barcode-scanning camera view.
+> >
+> > When user clicks edit-button on expiration-date camera view
+> > Then user should see a prompt that takes barcode number as input.
+> >
+> > When user types in barcode number 8801115114154 on barcode-edit-prompt and clicks confirm-button
+> > Then user should be directed to expiration-date camera view.
+> >
+> > When user scans expiration date 2020/10/22 on expiration-date camera view
+> > Then user should see product expiration date "2020/10/22" on top banner
+> > And user is automatically directed to barcode-scanning camera view.
+> >
+> > When user clicks retake-button on barcode-scanning camera view
+> > Then user should be directed to expiration-date camera view.
+> >
+> > When user clicks edit-button on barcode-scanning camera view
+> > Then user should see a prompt that takes expiration date as input.
+> >
+> > When user types in expiration date 2020/10/22 on expiration-edit-prompt and clicks confirm-button
+> > Then user should be directed to barcode-scanning camera view.
+> >
+> > When user clicks done-button on barcode-scanning view
+> > Then user should see product-list page.
+> >
+> > When user clicks confirm-button on product-list page
+> > Then user should see main page.
+> >
+> > When user clicks edit-button for a product on product list page
+> > Then user should see a prompt that takes both barcode number and expiration date as input.
+> > ```
+> **Story 2**
+> > **Feature:** User wants to add item manually
+> >  
+> > **Actors:** Logged-in user
+> >  
+> > **Precondition:** User must a member of the service
+> >  
+> > **Scenario:**
+> > ```
+> > 1. User clicks add-item button.
+> > 2. User clicks manual-mode button.
+> > 3. User is directed to product-list page.
+> > 4. User types in barcode number and expiration date on input area.
+> > 5. User clicks manual-add button.
+> > 6. User repeats step 4 and step 5.
+> > 6. User clicks confirm button on product-list page.
+> > 
+> > **Acceptance Test:**
+> > ```
+> > When user clicks add-item button
+> > Then user should see barcode-scanning camera view
+> >
+> > When user clicks manual-item button
+> > Then user should see product-list page.
+> >
+> > When user types in (barcode number, expiration date) on input area and clicks manual-add button
+> > Then user should see updated product-list page.
+> >
+> > When user types in (barcode number, expiration date) on input area and clicks manual-add button
+> > Then user should see updated product-list page.
+> >
+> > When user clicks edit-button for a product on product list page
+> > Then user should see a prompt that takes both barcode number and expiration date as input.
+> > ```
 
-Just like for the User Stories section, you need to list here only the parts of the user interface that are applicable to the previous sprints and the current one.
-(**Must include in the first version, and must be expanded for future sprints**)
-
-
-**Requirements grading guidelines:**<br />
-These are the grading guidelines that staff will use to evaluate your document.
-
-
-| Max Points | Content |
-|------------|---------|
-| 5 | Do the requirements state the customers needs? |
-| 5 | Competitive analysis |
-| 5 | Do the requirements avoid specifying a design (customer-specified design elements are allowed) ? |
-| 5 | Do you believe all parts are possible to implement? |
-| 5 | Is the project scope big enough? |
-|   | **Completeness** |
-| 20| Are the user stories written in sufficient detail to allow for design and planning? |
-| 5 | Do the user stories have acceptance tests ? |
-| 5 | Do the user stories mention error conditions and required behavior ? |
-| 5 | Are there sufficient user stories for the first iteration? |
-| 5 | Is there a discussion of the stories for future iterations ? |
-| 20 | Are the User Interface Requirements given with some detail? Are there some sketches, mockups?|
-| | **Clarity** |
-| 5 | Is the document carefully written, without typos and grammatical errors? |
-| 5 | Is each part of the document in agreement with all other parts? |
-| 5 | Are all items clear and not ambiguous? (Minor document readability issues should be handled off-line, not in the review, e.g. spelling, grammar, and organization).|
 
