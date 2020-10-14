@@ -109,6 +109,7 @@ Our main competitor is Beep, a barcode scanning service, and Yummly, a recipe re
 > > 5. User clicks manual-add button.
 > > 6. User repeats step 4 and step 5.
 > > 6. User clicks confirm button on product-list page.
+> > ```
 > > 
 > > **Acceptance Test:**
 > > ```
@@ -174,7 +175,6 @@ Our main competitor is Beep, a barcode scanning service, and Yummly, a recipe re
 > >
 > > When user types in a new comment in comment-input field and clicks create button
 > >	Then a new comment is created and the comment-input field is cleared.
-> >
 > >
 > > When the user clicks back button in the (user preference choosing page || recipe recommendation result page || recipe detail page)
 > > Then alert with message “Do you want to go back to main page? all your choices will be lost” appears.
