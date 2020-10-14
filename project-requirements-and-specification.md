@@ -128,3 +128,5 @@ Our main competitor is Beep, a barcode scanning service, and Yummly, a recipe re
 > > Then user should see a prompt that takes both barcode number and expiration date as input.
 > > ```
 
+## User Interface Requirements
+> Check the link: https://www.figma.com/file/nHGIzFuzR48pIXG319arD5/Foodify?node-id=0%3A1
