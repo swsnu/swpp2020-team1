@@ -11,11 +11,11 @@
 ## **Competitive Landscape**<br />  
 Our main competitor is Beep, a barcode scanning service, and Yummly, a recipe recommendation service. We expect **Foodify** to be more competitive with respect to the following:
 
-  * **OCR scanning**
-    * Beep users have to manually type in expiration date.
+  * **Expiration date scanning through OCR**
+    * Beep users must manually type in expiration date.
     * **Foodify** allows users to automatically scan expiration date through OCR. 
     
-  * **Cusomized units**
+  * **Cusomized item units**
     * Beep cannot manage multiple products with same expiration date.
     * (O) Add (egg, expire: 1/1) (egg, expire: 1/4)
     * (X) Add (egg, expire: 1/1) (egg, expire: 1/1)
