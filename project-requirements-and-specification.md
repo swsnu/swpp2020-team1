@@ -153,11 +153,6 @@ Our main competitor is Beep, a barcode scanning service, and Yummly, a recipe re
 > > 
 > > **Acceptance Test:**
 > > ```
-> > Feature:  User gets recipe recommendations based on the ingredients
-> > 	As a customer
-> > 	I want to get recipe recommendations based on the ingredients I have
-> >
-> > Scenario:
 > >	When user adds tomato, cheese, olive from her fridge
 > >	Then get-recommendation button is enabled
 > >
@@ -181,6 +176,129 @@ Our main competitor is Beep, a barcode scanning service, and Yummly, a recipe re
 > > When the user clicks “yes”
 > > Then user is directed to the main page
 > >
+> > ```
+> **Story 4**
+> > **Feature:** User wants to create an article in the community
+> >  
+> > **Actors:** Logged in user 
+> >  
+> > **Precondition:** User should be a member of the service. 
+> >  
+> > **Scenario:**
+> > ```
+> > 1. User clicks community board button.
+> > 2. User clicks create article button to start to create an article.
+> > 3. User writes text for the title and content.
+> > 4. User clicks submit article button to submit an article.
+> > ```
+> >
+> > **Exceptions:** 
+> > ```
+> > (1) When the text input is empty, submit button should be disabled.
+> > ```
+> > 
+> > **Acceptance Test:**
+> > ```
+> >	When user clicks create article button
+> >	Then the create article page opens.
+> >
+> >	When user types text to the title and content field and clicks submit button
+> >	Then the article is created.
+> > ```
+> **Story 5**
+> > **Feature:** User wants to edit her own article in the community
+> >  
+> > **Actors:** Logged in user who wrote some articles. 
+> >  
+> > **Precondition:** User should be in her own article page.
+> >  
+> > **Scenario:**
+> > ```
+> > 1. User clicks edit button.
+> > 2. User edits her article content.
+> > 3. User clicks submit button.
+> > ```
+> >
+> > **Exceptions:** 
+> > ```
+> > (1) When the content is changed, back button should give alert which informs that edited contents will be lost.
+> > (2) When the text input is empty, submit button should be disabled.
+> > ```
+> >
+> > **Acceptance Test:**
+> > ```
+> >	When user clicks edit article button
+> >	Then the edit article page opens.
+> >
+> >	When user changes text and clicks submit button
+> >	Then the article is updated.
+> > ```
+> >
+> **Story 6**
+> > **Feature:** User wants to delete her own article in the community
+> >  
+> > **Actors:** Logged in user who wrote some articles. 
+> >  
+> > **Precondition:** User should be in her own article page.
+> >  
+> > **Scenario:**
+> > ```
+> > 1. User clicks delete button.
+> > 2. User gets an alert which informs that deleting the article cannot be undone.
+> > 3. User clicks confirm deletion button.
+> > ```
+> >
+> > **Acceptance Test:**
+> > ```
+> >	When user clicks delete article button
+> >	Then the alert appears.
+> >
+> >	When user clicks confirm button
+> >	Then the article is deleted.
+> > ```
+> >
+> **Story 7**
+> > **Feature:** User can read and comment to the article in the community
+> >  
+> > **Actors:** Logged in user
+> >  
+> > **Precondition:** User should be a member of the service.
+> >  
+> > **Scenario:**
+> > ```
+> > 1. User clicks the article title button.
+> > 2. Article detail page opens.
+> > 3. User writes a text on comment input area.
+> > 4. User clicks submit button.
+> > 5. User can click edit or delete button for her comment.
+> > ```
+> >
+> > **Exceptions:** 
+> > ```
+> > (1) When the comment input is empty, submit button should be disabled
+> > ```
+> >
+> > **Acceptance Test:**
+> > ```
+> >	When user clicks the article title button
+> >	Then the corresponding article detail page opens.
+> >
+> >	When user input text to comment input area
+> > And click submit button
+> >	Then the comment is created.
+> >
+> >	When user clicks edit comment button
+> >	Then comment edit prompt appears.
+> >
+> >	When user edit comment in the prompt
+> > And click confirm button
+> >	Then the comment is updated.
+> >
+> >	When user clicks delete comment button
+> >	Then the deletion confirming alert appears
+> >
+> >	When user clicks confirm deletion button
+> >	Then the comment is deleted.
 > > ```
 
 
