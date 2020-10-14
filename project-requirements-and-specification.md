@@ -34,7 +34,7 @@ Our main competitor is Beep, a barcode scanning service, and Yummly, a recipe re
 > >  
 > > **Actors:** Logged-in user
 > >  
-> > **Precondition:** User must a member of the service
+> > **Precondition:** User should be a member of the service
 > >  
 > > **Scenario:**
 > > ```
@@ -98,7 +98,7 @@ Our main competitor is Beep, a barcode scanning service, and Yummly, a recipe re
 > >  
 > > **Actors:** Logged-in user
 > >  
-> > **Precondition:** User must a member of the service
+> > **Precondition:** User should be a member of the service
 > >  
 > > **Scenario:**
 > > ```
@@ -132,7 +132,9 @@ Our main competitor is Beep, a barcode scanning service, and Yummly, a recipe re
 > **Story 3**
 > > **Feature:** User gets recipe recommendations based on the ingredients
 > >  
-> > **Actors:** Logged in user 
+> > **Actors:** Logged-in user 
+> >  
+> > **Precondition:** User should be a member of the service
 > >  
 > > **Scenario:**
 > > ```
@@ -180,7 +182,7 @@ Our main competitor is Beep, a barcode scanning service, and Yummly, a recipe re
 > **Story 4**
 > > **Feature:** User wants to create an article in the community
 > >  
-> > **Actors:** Logged in user 
+> > **Actors:** Logged-in user 
 > >  
 > > **Precondition:** User should be a member of the service. 
 > >  
@@ -208,7 +210,7 @@ Our main competitor is Beep, a barcode scanning service, and Yummly, a recipe re
 > **Story 5**
 > > **Feature:** User wants to edit her own article in the community
 > >  
-> > **Actors:** Logged in user who wrote some articles. 
+> > **Actors:** Logged-in user who has written some articles. 
 > >  
 > > **Precondition:** User should be in her own article page.
 > >  
@@ -237,7 +239,7 @@ Our main competitor is Beep, a barcode scanning service, and Yummly, a recipe re
 > **Story 6**
 > > **Feature:** User wants to delete her own article in the community
 > >  
-> > **Actors:** Logged in user who wrote some articles. 
+> > **Actors:** Logged-in user who has written some articles. 
 > >  
 > > **Precondition:** User should be in her own article page.
 > >  
@@ -260,7 +262,7 @@ Our main competitor is Beep, a barcode scanning service, and Yummly, a recipe re
 > **Story 7**
 > > **Feature:** User can read and comment to the article in the community
 > >  
-> > **Actors:** Logged in user
+> > **Actors:** Logged-in user
 > >  
 > > **Precondition:** User should be a member of the service.
 > >  
