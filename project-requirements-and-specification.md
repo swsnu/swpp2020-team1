@@ -135,7 +135,6 @@ Our main competitor is Beep, a barcode scanning service, and Yummly, a recipe re
 > >  
 > > **Scenario:**
 > > ```
-> >
 > > 1. User drags and drops the ingredients to use.
 > > 2. User clicks get-recommendation button
 > > 3. User is directed to preference-choosing page.
