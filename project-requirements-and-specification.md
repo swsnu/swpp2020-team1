@@ -162,25 +162,25 @@ Our main competitor is Beep, a barcode scanning service, and Yummly, a recipe re
 > >	Then get-recommendation button is enabled
 > >
 > >	When user clicks get-recommendation button
-> > 	Then user is directed to preference-choosing page.
+> > Then user is directed to preference-choosing page.
 > >
 > >	When the user chooses vegan option and italian option, and clicks search button
-> > 	Then user is directed to recipe-recommendation-result page, which includes “tomato cheese pasta”
+> > Then user is directed to recipe-recommendation-result page, which includes “tomato cheese pasta”
 > >
-> > 	When user clicks “tomato cheese pasta”
+> > When user clicks “tomato cheese pasta”
 > >	Then user is directed to recipe-detail page where the user can watch the videos.
 > >
-> > 	When the user in the recipe detail page clicks play button of the video 
-> > 	Then the video is played
+> > When the user in the recipe detail page clicks play button of the video 
+> > Then the video is played
 > >
-> > 	When user types in a new comment in comment-input field and clicks create button
+> > When user types in a new comment in comment-input field and clicks create button
 > >	Then a new comment is created and the comment-input field is cleared.
 > >
 > >
-> > 	When the user clicks back button in the (user preference choosing page || recipe recommendation result page || recipe detail page)
-> > 	Then alert with message “Do you want to go back to main page? all your choices will be lost” appears.
-> > 	When the user clicks “yes”
-> > 	Then user is directed to the main page
+> > When the user clicks back button in the (user preference choosing page || recipe recommendation result page || recipe detail page)
+> > Then alert with message “Do you want to go back to main page? all your choices will be lost” appears.
+> > When the user clicks “yes”
+> > Then user is directed to the main page
 > >
 > > ```
 
