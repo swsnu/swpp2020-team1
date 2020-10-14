@@ -127,6 +127,64 @@ Our main competitor is Beep, a barcode scanning service, and Yummly, a recipe re
 > > When user clicks edit-button for a product on product list page
 > > Then user should see a prompt that takes both barcode number and expiration date as input.
 > > ```
+> >
+> **Story 3**
+> > **Feature:** User gets recipe recommendations based on the ingredients
+> >  
+> > **Actors:** Logged in user 
+> >  
+> > **Scenario:**
+> > ```
+> >
+> > 1. User drags and drops the ingredients to use.
+> > 2. User clicks get-recommendation button
+> > 3. User is directed to preference-choosing page.
+> > 3. User chooses various preferences such as vegan and types of cuisine such as italian, Korean.
+> > 4. User clicks the search button.
+> > 5. User is directed to recipe-recommendation-result page.
+> > 6. User clicks one of the recipes from the list.
+> > 7. User is directed to recipe-detail page.
+> > 8. User watches video and write comments.
+> > ```
+> > **Exceptions:** 
+> > ```
+> > (1) When there is no search results with the given ingredients, then the user is informed that there is no relevant search results, and popular videos are shown.
+> > ```
+> > 
+> > **Acceptance Test:**
+> > ```
+> > Feature:  User gets recipe recommendations based on the ingredients
+> > 	As a customer
+> > 	I want to get recipe recommendations based on the ingredients I have
+> >
+> > Scenario:
+> >	When user adds tomato, cheese, olive from her fridge
+> >	Then get-recommendation button is enabled
+> >
+> >	When user clicks get-recommendation button
+> > 	Then user is directed to preference-choosing page.
+> >
+> >	When the user chooses vegan option and italian option, and clicks search button
+> > 	Then user is directed to recipe-recommendation-result page, which includes “tomato cheese pasta”
+> >
+> > 	When user clicks “tomato cheese pasta”
+> >	Then user is directed to recipe-detail page where the user can watch the videos.
+> >
+> > 	When the user in the recipe detail page clicks play button of the video 
+> > 	Then the video is played
+> >
+> > 	When user types in a new comment in comment-input field and clicks create button
+> >	Then a new comment is created and the comment-input field is cleared.
+> >
+> >
+> > 	When the user clicks back button in the (user preference choosing page || recipe recommendation result page || recipe detail page)
+> > 	Then alert with message “Do you want to go back to main page? all your choices will be lost” appears.
+> > 	When the user clicks “yes”
+> > 	Then user is directed to the main page
+> >
+> > ```
+
+
 
 ## User Interface Requirements
 > Check the link: https://www.figma.com/file/nHGIzFuzR48pIXG319arD5/Foodify?node-id=0%3A1
