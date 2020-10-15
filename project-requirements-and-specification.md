@@ -48,7 +48,7 @@ Our main competitor is Beep, a barcode scanning service, and Yummly, a recipe re
 > > 1. User clicks add-item button.
 > > 2. User scans the product's barcode.
 > > 3. User scans the product's expiration date.
-> > 4. User repeats step 2 and step 3 for every products.
+> > 4. User repeats step 2 and step 3 for every product.
 > > 5. User clicks done button on camera view.
 > > 6. User clicks confirm button on product list page.
 > > ```
@@ -67,29 +67,31 @@ Our main competitor is Beep, a barcode scanning service, and Yummly, a recipe re
 > >
 > > When user scans barcode number 8801115114154 on barcode-scanning camera view
 > > Then user should see product information "8801115114154 / 냉장 서울우유 1L" on top banner
-> > And user is automatically directed to expiration-date camera view.
+> > And user is directed to expiration-date camera view.
 > >
 > > When user clicks retake-button on expiration-date camera view
 > > Then user should be directed to barcode-scanning camera view.
 > >
 > > When user clicks edit-button on expiration-date camera view
-> > Then user should see a prompt that takes barcode number as input.
+> > Then user should see a barcode-edit-prompt that takes product name and barcode number as input.
 > >
-> > When user types in barcode number 8801115114154 on barcode-edit-prompt and clicks confirm-button
-> > Then user should be directed to expiration-date camera view.
+> > When user types in barcode number 8801115114154 and product name '냉장 서울우유 1L' on barcode-edit-prompt and clicks Ok-button
+> > Then user should see product information "8801115114154 / 냉장 서울우유 1L" on top banner
+> > And user should be directed to expiration-date camera view.
 > >
 > > When user scans expiration date 2020/10/22 on expiration-date camera view
 > > Then user should see product expiration date "2020/10/22" on top banner
-> > And user is automatically directed to barcode-scanning camera view.
+> > And user is directed to barcode-scanning camera view.
 > >
 > > When user clicks retake-button on barcode-scanning camera view
 > > Then user should be directed to expiration-date camera view.
 > >
 > > When user clicks edit-button on barcode-scanning camera view
-> > Then user should see a prompt that takes expiration date as input.
+> > Then user should see a expiration-edit-prompt that takes expiration date as input.
 > >
-> > When user types in expiration date 2020/10/22 on expiration-edit-prompt and clicks confirm-button
-> > Then user should be directed to barcode-scanning camera view.
+> > When user types in expiration date 2020/10/22 on expiration-edit-prompt and clicks Ok-button
+> > Then user should see product expiration date "2020/10/22" on top banner
+> > And user should be directed to barcode-scanning camera view.
 > >
 > > When user clicks done-button on barcode-scanning view
 > > Then user should see product-list page.
@@ -126,18 +128,18 @@ Our main competitor is Beep, a barcode scanning service, and Yummly, a recipe re
 > > When user clicks manual-item button
 > > Then user should see product-list page.
 > >
-> > When user types in (barcode number, expiration date) on input area and clicks manual-add button
-> > Then user should see updated product-list page.
-> >
-> > When user types in (barcode number, expiration date) on input area and clicks manual-add button
-> > Then user should see updated product-list page.
+> > When user types in 냉장 서울우유 1L in product name input area, 8801115114154 in barcode number input area, 2020/10/22 in exirpation date input area, and clicks manual-add button
+> > Then user should see updated product-list page that has (냉장 서울우유 1L, 8801115114154, 2020/10/22) as one of its element.
 > >
 > > When user clicks edit-button for a product on product list page
-> > Then user should see a prompt that takes both barcode number and expiration date as input.
+> > Then user should see a prompt that takes (product name, barcode number, expiration date) as input.
+> >
+> > When user types in 냉장 서울우유 500mL in product name input area, 7701115114154 in barcode number input area, 2020/12/22 in exirpation date input area, and clicks Ok button on the edit prompt
+> > Then the chosen product should be updated to (냉장 서울우유 500mL, 7701115114154, 2020/12/22).
 > > ```
 > >
 > **Story 3**
-> > **Feature:** User gets recipe recommendations based on the ingredients
+> > **Feature:** User wants to get recipe recommendations
 > >  
 > > **Actors:** Logged-in user 
 > >  
@@ -149,11 +151,11 @@ Our main competitor is Beep, a barcode scanning service, and Yummly, a recipe re
 > > 2. User clicks get-recommendation button
 > > 3. User is directed to preference-choosing page.
 > > 3. User chooses various preferences such as vegan and types of cuisine such as italian, Korean.
-> > 4. User clicks the search button.
+> > 4. User clicks done button.
 > > 5. User is directed to recipe-recommendation-result page.
 > > 6. User clicks one of the recipes from the list.
 > > 7. User is directed to recipe-detail page.
-> > 8. User watches video and write comments.
+> > 8. User watches the video and write comments.
 > > ```
 > > **Exceptions:** 
 > > ```
@@ -165,24 +167,25 @@ Our main competitor is Beep, a barcode scanning service, and Yummly, a recipe re
 > >	When user adds tomato, cheese, olive from her fridge
 > >	Then get-recommendation button is enabled
 > >
-> >	When user clicks get-recommendation button
+> >	When user clicks enabled get-recommendation button
 > > Then user is directed to preference-choosing page.
 > >
-> >	When the user chooses vegan option and italian option, and clicks search button
-> > Then user is directed to recipe-recommendation-result page, which includes “tomato cheese pasta”
+> >	When the user chooses vegan option and italian option, and clicks done button
+> > Then user is directed to recipe-recommendation-result page.
 > >
-> > When user clicks “tomato cheese pasta”
-> >	Then user is directed to recipe-detail page where the user can watch the videos.
+> > When user clicks “tomato cheese pasta” on the recipe-recommendation-result page
+> >	Then user is directed to recipe-detail page.
 > >
-> > When the user in the recipe detail page clicks play button of the video 
+> > When user in the recipe-detail page clicks play button of the video 
 > > Then the video is played
 > >
-> > When user types in a new comment in comment-input field and clicks create button
+> > When user in the recipe-detail page types in a new comment in comment-input field and clicks create button
 > >	Then a new comment is created and the comment-input field is cleared.
 > >
 > > When the user clicks back button in the (user preference choosing page || recipe recommendation result page || recipe detail page)
 > > Then alert with message “Do you want to go back to main page? all your choices will be lost” appears.
-> > When the user clicks “yes”
+> >
+> > When the user clicks “yes” on the alert message
 > > Then user is directed to the main page
 > >
 > > ```
@@ -196,9 +199,10 @@ Our main competitor is Beep, a barcode scanning service, and Yummly, a recipe re
 > > **Scenario:**
 > > ```
 > > 1. User clicks community board button.
-> > 2. User clicks create article button to start to create an article.
-> > 3. User writes text for the title and content.
-> > 4. User clicks submit article button to submit an article.
+> > 2. User is directed to community page.
+> > 3. User clicks create article button to start to create an article.
+> > 4. User writes text for the title and content.
+> > 5. User clicks submit article button.
 > > ```
 > >
 > > **Exceptions:** 
@@ -209,22 +213,22 @@ Our main competitor is Beep, a barcode scanning service, and Yummly, a recipe re
 > > **Acceptance Test:**
 > > ```
 > >	When user clicks create article button
-> >	Then the create article page opens.
+> >	Then user is directed to create article page.
 > >
-> >	When user types text to the title and content field and clicks submit button
-> >	Then the article is created.
+> >	When user types "title1" in the title field and "content1" in the content field and clicks submit button
+> >	Then the article with the given title and content is created.
 > > ```
 > **Story 5**
 > > **Feature:** User wants to edit her own article in the community
 > >  
 > > **Actors:** Logged-in user who has written some articles. 
 > >  
-> > **Precondition:** User should be in her own article page.
+> > **Precondition:** User should be in his/her own article page.
 > >  
 > > **Scenario:**
 > > ```
 > > 1. User clicks edit button.
-> > 2. User edits her article content.
+> > 2. User edits article content.
 > > 3. User clicks submit button.
 > > ```
 > >
@@ -239,35 +243,35 @@ Our main competitor is Beep, a barcode scanning service, and Yummly, a recipe re
 > >	When user clicks edit article button
 > >	Then the edit article page opens.
 > >
-> >	When user changes text and clicks submit button
-> >	Then the article is updated.
+> >	When user types "edited title" in the title field and "edited content" in the content field and clicks submit button
+> >	Then the article is updated with the given title and content.
 > > ```
 > >
 > **Story 6**
-> > **Feature:** User wants to delete her own article in the community
+> > **Feature:** User wants to delete his/her own article in the community
 > >  
 > > **Actors:** Logged-in user who has written some articles. 
 > >  
-> > **Precondition:** User should be in her own article page.
+> > **Precondition:** User should be in his/her own article page.
 > >  
 > > **Scenario:**
 > > ```
 > > 1. User clicks delete button.
-> > 2. User gets an alert which informs that deleting the article cannot be undone.
+> > 2. User gets an alert.
 > > 3. User clicks confirm deletion button.
 > > ```
 > >
 > > **Acceptance Test:**
 > > ```
 > >	When user clicks delete article button
-> >	Then the alert appears.
+> >	Then the alert with the message "Are you sure? Deleting cannot be undone." appears.
 > >
-> >	When user clicks confirm button
+> >	When user clicks confirm button on the alert message
 > >	Then the article is deleted.
 > > ```
 > >
 > **Story 7**
-> > **Feature:** User can read and comment to the article in the community
+> > **Feature:** User can read and write comment to the article in the community
 > >  
 > > **Actors:** Logged-in user
 > >  
@@ -276,10 +280,10 @@ Our main competitor is Beep, a barcode scanning service, and Yummly, a recipe re
 > > **Scenario:**
 > > ```
 > > 1. User clicks the article title button.
-> > 2. Article detail page opens.
+> > 2. User is directed to article-detail page.
 > > 3. User writes a text on comment input area.
 > > 4. User clicks submit button.
-> > 5. User can click edit or delete button for her comment.
+> > 5. User clicks edit or delete button for her comment.
 > > ```
 > >
 > > **Exceptions:** 
@@ -290,23 +294,21 @@ Our main competitor is Beep, a barcode scanning service, and Yummly, a recipe re
 > > **Acceptance Test:**
 > > ```
 > >	When user clicks the article title button
-> >	Then the corresponding article detail page opens.
+> >	Then user is directed to  corresponding article-detail page.
 > >
-> >	When user input text to comment input area
-> > And click submit button
-> >	Then the comment is created.
+> >	When user writes "comment1" to comment input area and click submit button
+> >	Then the comment with the given content is created.
 > >
 > >	When user clicks edit comment button
 > >	Then comment edit prompt appears.
 > >
-> >	When user edit comment in the prompt
-> > And click confirm button
-> >	Then the comment is updated.
+> >	When user types "edited comment" in the prompt and click confirm button
+> >	Then the comment is updated with the given content.
 > >
 > >	When user clicks delete comment button
 > >	Then the deletion confirming alert appears
 > >
-> >	When user clicks confirm deletion button
+> >	When user clicks confirm deletion button on the alert
 > >	Then the comment is deleted.
 > > ```
 
