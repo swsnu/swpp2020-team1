@@ -1,12 +1,19 @@
 ## Project Abstract<br />
-**Foodify** is an all-in-one refrigerator management service, tracking the ingredients you have and sending notifications such as expiration dates and available recipes. Our target customers are anyone who has a refrigerator, from cooking newbies to manias.
+**Foodify** is an all-in-one refrigerator management service, tracking the ingredients users have and sending notifications such as expiration dates. 
+**Foodify** recommends recipes based on the user's ingredients and preferences. The recipes contain video that users can follow easily, detailed description about the recipe, and comments from other users such as additional cooking tips. The users can also share their own homemade recipes or any other contents through our community.
+Our target customers are anyone who has a refrigerator, from cooking newbies to manias.
 
 
 ## **Customer**<br />
 
-* **Customer**
+* **General Customer**
 
   * Anyone who owns a refrigerator
+  
+* **Specific Customer**
+  * People who often fail to remember what's in their fridge and throw away lots of ingredients after expiration date
+  * Cooking newbies who have no idea what to do with ingredients in their fridge
+  * Cooking manias who want to get some new ideas about what to cook, or share their own recipes and cooking tips with others
 
 ## **Competitive Landscape**<br />  
 Our main competitor is Beep, a barcode scanning service, and Yummly, a recipe recommendation service. We expect **Foodify** to be more competitive with respect to the following:
