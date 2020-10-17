@@ -473,8 +473,7 @@ THEN the item "냉장서울우유1L" is deleted from the fridge
 - **WHEN** the User clicks enabled `get-recommendation-button`
 - **THEN** the User is directed to `preference-choosing-page`.
 
-> > **Acceptance Test:**
-> > (1) User watches a recipe recommendation result in `recipe-detail-page`
+### Acceptance Test
 ```
 GIVEN the User is on `main-page`
 WHEN the User drags ingredients[For example, "tomato","cheese","olive"] from his/her fridge to the basket
@@ -498,7 +497,7 @@ THEN the User is directed to `preference-choosing-page`.
   - **AND** the User clicks `done-button`
 - **THEN** the User is directed to `recipe-recommendation-result-page`.
 
-> > **Acceptance Test:**
+### Acceptance Test
 ```
 GIVEN the User is on `preference-choosing-page`
 WHEN the User chooses option[For example, "Vegan", "Italian"]
@@ -522,7 +521,7 @@ THEN the User is directed to `recipe-recommendation-result-page`.
 - **WHEN** the User clicks the play button of the recipe video
 - **THEN** the video is played.
 
-> > **Acceptance Test:**
+### Acceptance Test
 ```
 GIVEN the User is on `recipe-recommendation-result-page`
 WHEN the User clicks a recipe[For example, "tomato cheese pasta"]
@@ -533,7 +532,7 @@ WHEN the User clicks the play button of the recipe video
 THEN the video is played.
 ```
 
-> > **Exception Test:**
+### Exception Test
 (1) There exists no recipe for selected ingredients & options
 ```
 GIVEN the User selects ingredients[For example, "Beef", "Egg"] and options[For example, "Vegan"]
@@ -556,7 +555,7 @@ AND popular recipes are shown on `recipe-recommendation-result-page`
 - **THEN** a new comment is created
   - **AND** the comment-input field is cleared. 
 
-> > **Acceptance Test:**
+### Acceptance Test
 ```
 GIVEN the User is on `recipe-detail-page`[For example, "tomato cheese pasta"]
 - **WHEN** the User types comment[For example, "comment1"] in comment-input field
@@ -585,7 +584,7 @@ GIVEN the User is on `recipe-detail-page`[For example, "tomato cheese pasta"]
 - **WHEN** the User clicks "no"
 - **THEN** the User stays on the original page
 
-> > **Acceptance Test:**
+### Acceptance Test
 ```
 GIVEN the User is on `user-preference-choosing-page`
 WHEN the User clicks `back-button`
@@ -636,11 +635,12 @@ THEN the User stays on `recipe-detail-page`
 - **WHEN** the User clicks `community-board-button`
 - **THEN**the User is directed to `community-page`.
 
-> > **Acceptance Test:**
-> > ```
+### Acceptance Test
+```
 GIVEN the User is on `main-page`
 WHEN the User clicks `community-board-button`
 THEN the User is directed to `community-page`.
+```
 
 > > **Feature:** User can create article on community
 > >  
@@ -657,8 +657,8 @@ THEN the User is directed to `community-page`.
 - **WHEN** the User types title and content field
 - **THEN**the User is directed to `article-detail-page`.
 
-> > **Acceptance Test:**
-> > ```
+### Acceptance Test
+```
 GIVEN the User is on `community-page`
 WHEN the User clicks `create-article-button`
 THEN the User is directed to `create-article-page`.
@@ -667,15 +667,15 @@ GIVEN the User is on `create-article-page`
 WHEN the User types "title1" in the title field and "content1" in the content field 
 AND the user clicks `submit-button`
 THEN the User is directed to `article-detail-page`
-> > ```
+```
 
-> > **Exceptions Test:**
-> > (1) When the text input is empty, `submit-button` should be disabled.
-> > ```
+### Exceptions Test
+(1) When the text input is empty, `submit-button` should be disabled.
+```
 GIVEN the User is on `create-article-page`
 WHEN the User types "" in the title field and "" in the content field 
 THEN the `submit-button` is disabled
-> > ```
+```
 > >
 > > **Feature:** User can edit his/her own article in the community
 > >  
