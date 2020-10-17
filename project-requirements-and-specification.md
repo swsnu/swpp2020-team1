@@ -885,6 +885,7 @@ THEN the alert disappears.
 
 
 ## User Interface Requirements
-> Check the link: https://www.figma.com/file/nHGIzFuzR48pIXG319arD5/Foodify?node-id=0%3A1
+![텍스트](https://github.com/swsnu/swpp2020-team1/blob/master/UI%20Specification_Team%201.png, "UI Specification")
+> For further information, please check the figma link: https://www.figma.com/file/nHGIzFuzR48pIXG319arD5/Foodify?node-id=0%3A1
 
 
