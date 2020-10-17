@@ -34,285 +34,857 @@ Our main competitor is Beep, a barcode scanning service, and Yummly, a recipe re
     * Yummly does not consider the ingredients the user actually have.
     * **Foodify** recommends recipe based on both user's preference and the ingredients that user have.
     
-## User Stories  
-### Main page  
-> **Story 1**
-> > **Feature:** User wants to add item automatically through camera scanning
+## Login
+> > **Feature:** User wants to sign in
 > >  
-> > **Actors:** Logged-in user
+> > **Actors:** User
 > >  
-> > **Precondition:** User should be a member of the service
+> > **Precondition:** User is logged out, User is member of the service
 > >  
-> > **Scenario:**
-> > ```
-> > 1. User clicks add-item button.
-> > 2. User scans the product's barcode.
-> > 3. User scans the product's expiration date.
-> > 4. User repeats step 2 and step 3 for every product.
-> > 5. User clicks done button on camera view.
-> > 6. User clicks confirm button on product list page.
-> > ```
-> > **Exceptions:** 
-> > ```
-> > (1) When the product's barcode is not recognized correctly, then user clicks retake-button to scan the barcode again.
-> > (2) When the product's barcode is not recognized correctly, then user clicks edit-button to manually enter the barcode number.
-> > (3) When the product's expiration date is not recognized correctly, then user clicks retake-button to scan the expiration date again.
-> > (4) When the product's expiration date is not recognized correctly, then user clicks edit-button to manually enter the expiration date.
-> > ```
-> > 
+
+### Scenario
+- **GIVEN** the User is a member of the service
+- **WHEN** the User enters a valid email and password
+- **THEN** the User is directed to the `main-page` if the given email and password are valid.
+
+### Acceptance test
+```
+GIVEN a user with email "a@a.com" password "pw1" is a member of the service
+WHEN the User enters "a@a.com" in email input field and "pw1" in password input field and clicks `login-button`
+THEN the User is directed to the `main-page`.
+
+GIVEN email "b@b.com" password "pw2" is not a member of the service
+WHEN the User enters "b@b.com" in email input field and "pw2" in password input field and clicks `login-button`
+THEN the alert with the message "email or password is invalid." pops up.
+```
+
+## Sign up
+> > **Feature:** User wants to sign up
+> >  
+> > **Actors:** User who is not a member of the service
+> >
+> > **Precondition:** User is in `sign-up-page`
+> >  
+
+### Scenario
+- **GIVEN** the User in `sign-up-page`
+- **WHEN** the User enters new (email, password)
+- **THEN** the User is directed to the `main-page` if the given email doesn't already exist
+
+### Acceptance test
+```
+GIVEN user with email "a@a.com" does not exist
+WHEN user enters ("a@a.com", "pw1") in (email, password) input field and clicks `create-account-button`
+THEN user is directed to the `login-page`.
+```
+
+### Exception Test
+(1) User tries to sign up with an email that already exists.
+```
+GIVEN user with email "b@b.com" already exists
+WHEN user enters "b@b.com" in email input field
+AND `create-account-button` should be  disabled and the text "email already exists" is shown beside the email input field.
+```
+(2) User doesn't enter email or password.
+```
+WHEN email or password input field is empty
+THEN `create-account-button` should be  disabled
+```
+
+## Find Password
+> > **Feature:** User wants to find out the password.
+> >  
+> > **Actors:** User who is a member of the service
+> >
+> > **Precondition:** User is member of service, User is in `find-password-page`
+> >  
+
+### Scenario
+- **GIVEN** the User is on `find-password-page`
+- **WHEN** the User enters valid email
+- **THEN** the password is sent to the user's email
+  - **AND** alert message "Your password is sent to your mail" pops up
+  - **AND** the User is directed to `login-page`.
+
+### Acceptance test
+```
+GIVEN the User is in `find-password-page`
+AND user with email "a@a.com" and password "pw1" exists
+WHEN user enters "a@a.com" in email input field and clicks `find-button`
+THEN an email with content "Foodify: Your password is pw1" is sent to a@a.com
+AND alert message "Your password is sent to your mail" pops up
+AND the User is directed to `login-page`.
+```
+
+### Exception Test
+(1) User enters the wrong email.
+```
+GIVEN only a single user with email "a@a.com" exist in the service
+WHEN user enters "b@b.com" in email input field and clicks `find-button`
+THEN alert message "ID or name is invalid." pops up.
+```
+(2) User doesn't enter email.
+```
+WHEN email input field is empty
+THEN `find-button` is disabled.
+```
+
+## Main page  
+> > **Feature:** User gets alarm when the product is about to expire
+> >  
+> > **Actors:** User
+> >  
+> > **Precondition:** User logged in, User who has a product in his/her fridge
+> >  
+
+### Scenario
+- **GIVEN** logged-in User
+- **WHEN** the the product's expiration date is 3 days left / 1 day left / today
+- **THEN** the user gets an alarm.
+
+### Acceptance test
+```
+GIVEN logged-in User having "냉장서울우유 1L" that expires on 2020/12/25 in his/her fridge,
+WHEN the date is 2020/12/22, 2020/12/24, 2020/12/25
+THEN the User gets alarm "Expiration 3 days left: 냉장서울우유 1L", "Expiration 1 day left: 냉장서울우유 1L", "Expiration date: 냉장서울우유 1L"
+```
+
+> > **Feature:** User gets alarm when there is new comment on his/her article.
+> >  
+> > **Actors:** User
+> >  
+> > **Precondition:** User logged in, User who has written an article.
+> >  
+
+### Scenario
+- **GIVEN** logged-in User
+- **WHEN** the a new comment is generated in his/her article
+- **THEN** the user gets an alarm.
+
+### Acceptance test
+```
+GIVEN logged-in User who has written an article "article1"
+WHEN some user wrote a new comment in "article1"
+THEN the User gets alarm "There is a new comment on article 1."
+```
+## Add ingredients to the fridge (automatic/manual)
+> > **Feature:** User can add ingredients
+> >  
+> > **Actors:** User
+> >  
+> > **Precondition:** User logged in
+> >  
+
+### Scenario
+- **GIVEN** logged-in User
+- **WHEN** the User clicks `add-item-button`
+  - **AND** the User clicks 'OK' on camera access popup
+- **THEN** the User is directed to camera view
+
+### Acceptance test
+```
+GIVEN the User account[For example, id:"id_in_database", password:"valid_password"],
+WHEN the user clicks `add-item-button`
+AND the User clicks 'OK' on camera access popup
+THEN the User is directed to camera view
+```
+### Exception Test
+(1) User did not allow camera access
+```
+GIVEN the User account[For example, id:"id_in_database", password:"valid_password"],
+WHEN the user clicks `add-item-button`
+AND the User clicks `Don't Allow` on camera access popup
+THEN the User is directed to the `product-list-page`.
+```
+
+> > **Feature:** User can scan item's barcode number
+> >  
+> > **Actors:** User
+> >  
+> > **Precondition:** User logged in, User allowed camera access, User is on `barcode-scan camera view`
+> >  
+
+### Scenario
+- **GIVEN** User is on `barcode-scan camera view`
+- **WHEN** the User scans the product's barcode
+  - **AND** the barcode is recognized correctly
+- **THEN** the User is directed to expiration-date camera view
+  - **AND** barcode scan result is displayed on top
+
+### Acceptance test
+```
+GIVEN the User is on `barcode-scan camera view`
+WHEN the User scans the product's barcode[For example, barcode: "8801019306495"]
+AND the barcode is recognized correctly
+THEN the User is directed to `expiration-date camera view`
+AND barcode scan result[For example, barcode: "8801019306495", name: "냉장서울우유1L" category: "유제품"] is displayed on top
+```
+
+> > **Feature:** User can scan barcode again
+> >  
+> > **Actors:** User
+> >  
+> > **Precondition:** User logged in, User allowed camera access, User is on `expiration-date camera view`
+> >  
+
+### Scenario
+- **GIVEN** the User is on `expiration-date camera view`
+- **WHEN** the User clicks `retake-button`
+- **THEN** the User is directed back to `barcode-scan camera view`
+
+### Acceptance test
+```
+GIVEN the User is on `expiration-date camera view`
+WHEN the User clicks `retake-button`
+THEN the User is directed back to `barcode-scan camera view`
+```
+
+> > **Feature:** User can manually edit item information (barcode number, item name)
+> >  
+> > **Actors:** User
+> >  
+> > **Precondition:** User logged in, User allowed camera access, User is on `expiration-date camera view`
+> >  
+
+### Scenario
+- **GIVEN** the User is on `expiration-date camera view`
+- **WHEN** the User clicks `edit-button` on top banner
+- **THEN** `edit-barcode-prompt` pops up
+
+- **GIVEN** the `edit-barcode-prompt` popped up on `expiration-date camera view`
+- **WHEN** the User fills in both barcode number and item name on input field
+  - **AND** the User clicks `OK-button`
+- **THEN** the `edit-barcode-prompt` disappears
+
+### Acceptance test
+```
+GIVEN the User is on `expiration-date camera view`
+WHEN the User clicks `edit-button` on top banner
+THEN prompt[For example, Product name: _____, Barcode name: _____, Category: ____] pops up
+
+GIVEN the `edit-barcode-prompt` popped up on `expiration-date camera view`
+WHEN the User fills in the input field[For example, Product name: "냉장서울우유1L", Barcode name: "8801019306495", Category: "유제품"] 
+AND the User clicks `OK-button`
+THEN the `edit-barcode-prompt` disappears
+```
+
+### Exception Test
+(1) Input field for `Product name` is empty
+```
+GIVEN the edit-barcode-prompt popped up on `expiration-date camera view`
+WHEN the User fills in the input field[For example, Product name: "", Barcode name: "", Category: ""] 
+THEN the `OK-button` is disabled
+AND the placeholder for `Product name` input field is set to "Product Name should be filled in"
+```
+
+> > **Feature:** User can scan item's expiration date
+> >  
+> > **Actors:** User
+> >  
+> > **Precondition:** User logged in, User allowed camera access, User is on  `expiration-date camera view`
+> >  
+
+### Scenario
+- **GIVEN** the User is on  `expiration-date camera view`
+- **WHEN** the User scans the product's expiration date
+  - **AND** the expiration date is recognized correctly
+- **THEN** the User is directed to `barcode-scan camera view`
+  - **AND** expiration date scan result is displayed on top
+
+### Acceptance test
+```
+GIVEN the User is on  `expiration-date camera view`
+WHEN  the User scans the product's expiration date[For example, Expiration date: "2020/10/22"]
+AND the expiration date is recognized correctly
+THEN the User is directed to `barcode-scan camera view`
+AND expiration date scan result[For example, Expiration date: "2020/10/22"] is displayed on top
+```
+
+> > **Feature:** User can scan expiration date again
+> >  
+> > **Actors:** User
+> >  
+> > **Precondition:** User logged in, User allowed camera access, User is on `barcode-scan camera view`
+> >  
+
+### Scenario
+- **GIVEN** the User is on `barcode-scan camera view`
+- **WHEN** the User clicks `retake-button`
+- **THEN** the User is directed back to `expiration-date camera view`
+
+### Acceptance test
+```
+GIVEN the User is on `barcode-scan camera view`
+WHEN the User clicks `retake-button`
+THEN the User is directed back to `expiration-date camera view`
+```
+
+> > **Feature:** User can manually edit expiration date
+> >  
+> > **Actors:** User
+> >  
+> > **Precondition:** User logged in, User allowed camera access, User is on `barcode-scan camera view`
+> >  
+
+### Scenario
+- **GIVEN** the User is on `barcode-scan camera view`
+- **WHEN** the User clicks `edit-button` on top banner
+- **THEN** `edit-expiration-prompt` pops up
+
+- **GIVEN** the `edit-expiration-prompt` popped up on `barcode-scan camera view`
+- **WHEN** the User fills in expiration date on input field
+  - **AND** the User clicks `OK-button`
+- **THEN** the `edit-expiration-prompt` disappears
+
+- **GIVEN** the `edit-expiration-prompt` popped up on `barcode-scan camera view`
+- **WHEN** the User checks on no-expiration-checkbox
+  - **AND** the User clicks `OK-button`
+- **THEN** the `edit-expiration-prompt` disappears
+
+### Acceptance test
+```
+GIVEN the User is on `barcode-scan camera view`
+WHEN the User clicks `edit-button` on top banner
+THEN prompt[For example, Expiration date: _____] pops up
+
+GIVEN the `edit-expiration-prompt` popped up on `barcode-scan camera view`
+WHEN the User fills in the input field[For example, Expiration date: "2020/10/22"] 
+AND the User clicks `OK-button`
+THEN the `edit-expiration-prompt` disappears
+
+GIVEN the `edit-expiration-prompt` popped up on `barcode-scan camera view`
+WHEN the User checks on no-expiration-checkbox
+AND the User clicks `OK-button`
+THEN the `edit-expiration-prompt` disappears
+```
+
+### Exception Test
+(1) Input field for `Expiration date` is empty & checkbox is not checked
+```
+GIVEN the `edit-expiration-prompt` popped up on `barcode-scan camera view`
+WHEN the User does not fill in the input field[For example, Expiration date: "00/00/00"] 
+AND the User does not check on no-expiration-checkbox 
+THEN the `OK-button` is disabled
+AND warning-prompt[For example, "If no expiration date, check on checkbox"] pops up 
+```
+
+> > **Feature:** User can stop scanning when clicking on `done-button`
+> >  
+> > **Actors:** User
+> >  
+> > **Precondition:** User logged in, User allowed camera access, User is on `barcode-scan camera view`
+> >  
+
+### Scenario
+- **GIVEN** the User is on `barcode-scan camera view`
+- **WHEN** the User clicks `done-button`
+- **THEN** the User is directed back to `product-list-page`
+
+### Acceptance test
+```
+GIVEN the User is on `barcode-scan camera view`
+WHEN the User clicks `done-button`
+THEN the User is directed back to `product-list-page`
+```
+
+> > **Feature:** User can stop/continue scanning after checking scanned product list
+> >  
+> > **Actors:** User
+> >  
+> > **Precondition:** User logged in, User allowed camera access, User is on `product-list-page`
+> >  
+
+### Scenario
+- **GIVEN** the User is on `product-list-page`
+- **WHEN** the User clicks `confirm-button`
+- **THEN** the User is directed back to `main-page`
+
+- **GIVEN** the User is on `product-list-page`
+- **WHEN** the User clicks `automatic-mode-button`
+- **THEN** the User is directed back to `barcode-scan camera view`
+
+### Acceptance test
+```
+GIVEN the User is on `product-list-page`
+WHEN the User clicks `confirm-button`
+THEN the User is directed back to `main-page`
+
+GIVEN the User is on `product-list-page`
+WHEN the User clicks `automatic-mode-button`
+THEN the User is directed back to `barcode-scan camera view`
+```
+
+> > **Feature:** User can scan item's barcode number
+> >  
+> > **Actors:** User
+> >  
+> > **Precondition:** User logged in, User allowed camera access, User is on `barcode-scan camera view`
+> >  
+
+### Scenario
+- **GIVEN** User is on `barcode-scan camera view`
+- **WHEN** the User scans the product's barcode
+  - **AND** the barcode is recognized correctly
+- **THEN** the User is directed to expiration-date camera view
+  - **AND** barcode scan result is displayed on top
+
+### Acceptance test
+```
+GIVEN the User is on `barcode-scan camera view`
+WHEN the User scans the product's barcode[For example, barcode: "8801019306495"]
+AND the barcode is recognized correctly
+THEN the User is directed to `expiration-date camera view`
+AND barcode scan result[For example, barcode: "8801019306495", name: "냉장서울우유1L" category: "유제품"] is displayed on top
+```
+
+
+> > **Feature:** User can delete item in the fridge
+> >  
+> > **Actors:** User
+> >  
+> > **Precondition:** User logged in, User has some item in the fridge, User is on `main-page`
+> >  
+
+### Scenario
+- **GIVEN** User is on `main-page`
+- **WHEN** the User clicks `delete-button` of the target item
+- **THEN** the target item is deleted from the fridge
+
+### Acceptance test
+```
+GIVEN the User is on `main-page`
+WHEN the User clicks `delete-button` of "냉장서울우유1L" in the fridge
+THEN the item "냉장서울우유1L" is deleted from the fridge
+```
+## Personal Recipe Recommendation
+> > **Feature:** User can add ingredients to the basket for recipe recommendation
+> >  
+> > **Actors:** User
+> >  
+> > **Precondition:** User logged in, User's fridge is not empty, User is on `main-page`
+> >  
+
+### Scenario
+- **GIVEN** the User is on `main-page`
+- **WHEN** the User drags and drops ingredients from the fridge to the basket
+- **THEN** the `get-recommendation-button` is enabled
+
+- **GIVEN** the `get-recommendation-button` is enabled
+- **WHEN** the User clicks enabled `get-recommendation-button`
+- **THEN** the User is directed to `preference-choosing-page`.
+
 > > **Acceptance Test:**
-> > ```
-> > When user clicks add-item button
-> > Then user should see barcode-scanning camera view
-> >
-> > When user scans barcode number 8801115114154 on barcode-scanning camera view
-> > Then user should see product information "8801115114154 / 냉장 서울우유 1L" on top banner
-> > And user is directed to expiration-date camera view.
-> >
-> > When user clicks retake-button on expiration-date camera view
-> > Then user should be directed to barcode-scanning camera view.
-> >
-> > When user clicks edit-button on expiration-date camera view
-> > Then user should see a barcode-edit-prompt that takes product name and barcode number as input.
-> >
-> > When user types in barcode number 8801115114154 and product name '냉장 서울우유 1L' on barcode-edit-prompt and clicks Ok-button
-> > Then user should see product information "8801115114154 / 냉장 서울우유 1L" on top banner
-> > And user should be directed to expiration-date camera view.
-> >
-> > When user scans expiration date 2020/10/22 on expiration-date camera view
-> > Then user should see product expiration date "2020/10/22" on top banner
-> > And user is directed to barcode-scanning camera view.
-> >
-> > When user clicks retake-button on barcode-scanning camera view
-> > Then user should be directed to expiration-date camera view.
-> >
-> > When user clicks edit-button on barcode-scanning camera view
-> > Then user should see a expiration-edit-prompt that takes expiration date as input.
-> >
-> > When user types in expiration date 2020/10/22 on expiration-edit-prompt and clicks Ok-button
-> > Then user should see product expiration date "2020/10/22" on top banner
-> > And user should be directed to barcode-scanning camera view.
-> >
-> > When user clicks done-button on barcode-scanning view
-> > Then user should see product-list page.
-> >
-> > When user clicks confirm-button on product-list page
-> > Then user should see main page.
-> >
-> > When user clicks edit-button for a product on product list page
-> > Then user should see a prompt that takes both barcode number and expiration date as input.
-> > ```
-> **Story 2**
-> > **Feature:** User wants to add item manually
+> > (1) User watches a recipe recommendation result in `recipe-detail-page`
+```
+GIVEN the User is on `main-page`
+WHEN the User drags ingredients[For example, "tomato","cheese","olive"] from his/her fridge to the basket
+THEN `get-recommendation-button` is enabled
+
+GIVEN the `get-recommendation-button` is enabled
+WHEN the User clicks enabled `get-recommendation-button`
+THEN the User is directed to `preference-choosing-page`.
+```
+
+> > **Feature:** User can choose preference options for recipe recommendation
 > >  
-> > **Actors:** Logged-in user
+> > **Actors:** User
 > >  
-> > **Precondition:** User should be a member of the service
+> > **Precondition:** User logged in, User's fridge is not empty, User's basket is not empty, User is on `preference-choosing-page`
 > >  
-> > **Scenario:**
-> > ```
-> > 1. User clicks add-item button.
-> > 2. User clicks manual-mode button.
-> > 3. User is directed to product-list page.
-> > 4. User types in barcode number and expiration date on input area.
-> > 5. User clicks manual-add button.
-> > 6. User repeats step 4 and step 5.
-> > 6. User clicks confirm button on product-list page.
-> > ```
-> > 
+
+### Scenario
+- **GIVEN** the User is on `preference-choosing-page`
+- **WHEN** the User chooses option
+  - **AND** the User clicks `done-button`
+- **THEN** the User is directed to `recipe-recommendation-result-page`.
+
 > > **Acceptance Test:**
-> > ```
-> > When user clicks add-item button
-> > Then user should see barcode-scanning camera view
-> >
-> > When user clicks manual-item button
-> > Then user should see product-list page.
-> >
-> > When user types in 냉장 서울우유 1L in product name input area, 8801115114154 in barcode number input area, 2020/10/22 in exirpation date input area, and clicks manual-add button
-> > Then user should see updated product-list page that has (냉장 서울우유 1L, 8801115114154, 2020/10/22) as one of its element.
-> >
-> > When user clicks edit-button for a product on product list page
-> > Then user should see a prompt that takes (product name, barcode number, expiration date) as input.
-> >
-> > When user types in 냉장 서울우유 500mL in product name input area, 7701115114154 in barcode number input area, 2020/12/22 in exirpation date input area, and clicks Ok button on the edit prompt
-> > Then the chosen product should be updated to (냉장 서울우유 500mL, 7701115114154, 2020/12/22).
-> > ```
-> >
-> **Story 3**
-> > **Feature:** User wants to get recipe recommendations
+```
+GIVEN the User is on `preference-choosing-page`
+WHEN the User chooses option[For example, "Vegan", "Italian"]
+AND the User clicks `done-button`
+THEN the User is directed to `recipe-recommendation-result-page`.
+```
+
+> > **Feature:** User can choose a recipe from the recommendation page
+> >  
+> > **Actors:** User
+> >  
+> > **Precondition:** User logged in, User's fridge is not empty, User's basket is not empty, User is on `recipe-recommendation-result-page`
+> >  
+
+### Scenario
+- **GIVEN** the User is on `recipe-recommendation-result-page`
+- **WHEN** the User clicks a recipe
+- **THEN** the User is directed to the `recipe-detail-page` with corresponding recipe.
+
+- **GIVEN** the User is on `recipe-detail-page`
+- **WHEN** the User clicks the play button of the recipe video
+- **THEN** the video is played.
+
+> > **Acceptance Test:**
+```
+GIVEN the User is on `recipe-recommendation-result-page`
+WHEN the User clicks a recipe[For example, "tomato cheese pasta"]
+THEN the User is directed to `recipe-detail-page` with corresponding recipe.
+
+GIVEN the User is in the `recipe-detail-page`[For example, "tomato cheese pasta"]
+WHEN the User clicks the play button of the recipe video
+THEN the video is played.
+```
+
+> > **Exception Test:**
+(1) There exists no recipe for selected ingredients & options
+```
+GIVEN the User selects ingredients[For example, "Beef", "Egg"] and options[For example, "Vegan"]
+WHEN the User clicks `done-button` on `preference-choosing-page`
+THEN message "No results for given ingredients & preference" is shown on top of `recipe-recommendation-result-page`
+AND popular recipes are shown on `recipe-recommendation-result-page`
+```
+
+> > **Feature:** User can write a comment in `recipe-detail-page`
+> >  
+> > **Actors:** User
+> >  
+> > **Precondition:** User logged in, User is on `recipe-detail-page`
+> >  
+
+### Scenario
+- **GIVEN** the User is on `recipe-detail-page`
+- **WHEN** the User types comment in comment-input field
+- ** AND ** the User clicks `submit-button`
+- **THEN** a new comment is created
+  - **AND** the comment-input field is cleared. 
+
+> > **Acceptance Test:**
+```
+GIVEN the User is on `recipe-detail-page`[For example, "tomato cheese pasta"]
+- **WHEN** the User types comment[For example, "comment1"] in comment-input field
+  - **AND** the User clicks `submit-button`
+- **THEN** the new comment[For example, "comment1"]  is created
+  - **AND** the comment-input field is cleared.
+```
+
+> > **Feature:** User can go to `main-page` by clicking `back-button` 
+> >  
+> > **Actors:** User
+> >  
+> > **Precondition:** User logged in, User is on `recipe-detail-page`, User is on either one of `user-preference-choosing-page` / `recipe-recommendation-result-page` / `recipe-detail-page`
+> >  
+
+### Scenario
+- **GIVEN** the User is on either one of `user-preference-choosing-page` / `recipe-recommendation-result-page` / `recipe-detail-page`
+- **WHEN** the User clicks `back-button`
+- **THEN** alert appears
+
+- **GIVEN** alert is shown on either one of `user-preference-choosing-page` / `recipe-recommendation-result-page` / `recipe-detail-page`
+- **WHEN** the User clicks "yes"
+- **THEN** the User is directed to the `main-page`
+
+- **GIVEN** alert is shown on either one of `user-preference-choosing-page` / `recipe-recommendation-result-page` / `recipe-detail-page`
+- **WHEN** the User clicks "no"
+- **THEN** the User stays on the original page
+
+> > **Acceptance Test:**
+```
+GIVEN the User is on `user-preference-choosing-page`
+WHEN the User clicks `back-button`
+THEN alert with message[For example, "Do you want to go back to main page? all your choices will be lost"] appears.
+
+GIVEN the User is on `recipe-recommendation-result-page`
+WHEN the User clicks `back-button`
+THEN alert with message[For example, "Do you want to go back to main page? all your choices will be lost"] appears.
+
+GIVEN the User is on `recipe-detail-page`
+WHEN the User clicks `back-button`
+THEN alert with message[For example, "Do you want to go back to main page? all your choices will be lost"] appears.
+
+GIVEN alert is shown on `user-preference-choosing-page`
+WHEN the User clicks "yes"
+THEN the User is directed to the `main-page`
+
+GIVEN alert is shown on `user-preference-choosing-page`
+WHEN the User clicks "no"
+THEN the User stays on `user-preference-choosing-page`
+
+GIVEN alert is shown on `recipe-recommendation-result-page`
+WHEN the User clicks "yes"
+THEN the User is directed to the `main-page`
+
+GIVEN alert is shown on `recipe-recommendation-result-page`
+WHEN the User clicks "no"
+THEN the User stays on `recipe-recommendation-result-page`
+
+GIVEN alert is shown on `recipe-detail-page`
+WHEN the User clicks "yes"
+THEN the User is directed to the `main-page`
+
+GIVEN alert is shown on `recipe-detail-page`
+WHEN the User clicks "no"
+THEN the User stays on `recipe-detail-page`
+```
+
+## Community
+> > **Feature:** User can go to `community-page` from `main-page`
 > >  
 > > **Actors:** Logged-in user 
 > >  
-> > **Precondition:** User should be a member of the service
+> > **Precondition:** User should be a member of the service, User is on `main-page`
 > >  
-> > **Scenario:**
-> > ```
-> > 1. User drags and drops the ingredients to use.
-> > 2. User clicks get-recommendation button
-> > 3. User is directed to preference-choosing page.
-> > 3. User chooses various preferences such as vegan and types of cuisine such as italian, Korean.
-> > 4. User clicks done button.
-> > 5. User is directed to recipe-recommendation-result page.
-> > 6. User clicks one of the recipes from the list.
-> > 7. User is directed to recipe-detail page.
-> > 8. User watches the video and write comments.
-> > ```
-> > **Exceptions:** 
-> > ```
-> > (1) When there is no search results with the given ingredients, then the user is informed that there is no relevant search results, and popular videos are shown.
-> > ```
-> > 
+
+- **GIVEN** the User is on `main-page`
+- **WHEN** the User clicks `community-board-button`
+- **THEN**the User is directed to `community-page`.
+
 > > **Acceptance Test:**
 > > ```
-> >	When user adds tomato, cheese, olive from her fridge
-> >	Then get-recommendation button is enabled
-> >
-> >	When user clicks enabled get-recommendation button
-> > Then user is directed to preference-choosing page.
-> >
-> >	When the user chooses vegan option and italian option, and clicks done button
-> > Then user is directed to recipe-recommendation-result page.
-> >
-> > When user clicks “tomato cheese pasta” on the recipe-recommendation-result page
-> >	Then user is directed to recipe-detail page.
-> >
-> > When user in the recipe-detail page clicks play button of the video 
-> > Then the video is played
-> >
-> > When user in the recipe-detail page types in a new comment in comment-input field and clicks create button
-> >	Then a new comment is created and the comment-input field is cleared.
-> >
-> > When the user clicks back button in the (user preference choosing page || recipe recommendation result page || recipe detail page)
-> > Then alert with message “Do you want to go back to main page? all your choices will be lost” appears.
-> >
-> > When the user clicks “yes” on the alert message
-> > Then user is directed to the main page
-> >
-> > ```
-> **Story 4**
-> > **Feature:** User wants to create an article in the community
+GIVEN the User is on `main-page`
+WHEN the User clicks `community-board-button`
+THEN the User is directed to `community-page`.
+
+> > **Feature:** User can create article on community
 > >  
 > > **Actors:** Logged-in user 
 > >  
-> > **Precondition:** User should be a member of the service. 
+> > **Precondition:** User should be a member of the service, User is on `community-page`
 > >  
-> > **Scenario:**
-> > ```
-> > 1. User clicks community board button.
-> > 2. User is directed to community page.
-> > 3. User clicks create article button to start to create an article.
-> > 4. User writes text for the title and content.
-> > 5. User clicks submit article button.
-> > ```
-> >
-> > **Exceptions:** 
-> > ```
-> > (1) When the text input is empty, submit button should be disabled.
-> > ```
-> > 
+
+- **GIVEN** the User is on `community-page`
+- **WHEN** the User clicks `create-article-button`
+- **THEN**the User is directed to `create-article-page`.
+
+- **GIVEN** the User is on `create-article-page`
+- **WHEN** the User types title and content field
+- **THEN**the User is directed to `article-detail-page`.
+
 > > **Acceptance Test:**
 > > ```
-> >	When user clicks create article button
-> >	Then user is directed to create article page.
-> >
-> >	When user types "title1" in the title field and "content1" in the content field and clicks submit button
-> >	Then the article with the given title and content is created.
+GIVEN the User is on `community-page`
+WHEN the User clicks `create-article-button`
+THEN the User is directed to `create-article-page`.
+
+GIVEN the User is on `create-article-page`
+WHEN the User types "title1" in the title field and "content1" in the content field 
+AND the user clicks `submit-button`
+THEN the User is directed to `article-detail-page`
 > > ```
-> **Story 5**
-> > **Feature:** User wants to edit her own article in the community
+
+> > **Exceptions Test:**
+> > (1) When the text input is empty, `submit-button` should be disabled.
+> > ```
+GIVEN the User is on `create-article-page`
+WHEN the User types "" in the title field and "" in the content field 
+THEN the `submit-button` is disabled
+> > ```
+> >
+> > **Feature:** User can edit his/her own article in the community
 > >  
 > > **Actors:** Logged-in user who has written some articles. 
 > >  
-> > **Precondition:** User should be in his/her own article page.
+> > **Precondition:** User should be in his/her own `article-detail-page`.
 > >  
-> > **Scenario:**
-> > ```
-> > 1. User clicks edit button.
-> > 2. User edits article content.
-> > 3. User clicks submit button.
-> > ```
+
+### Scenario
+- **GIVEN** the User is on `article-detail-page` of his/her own page
+- **WHEN** the User clicks `edit-article-button`
+- **THEN** the `edit-article-page` opens.
+
+- **WHEN** the User modifies the content of the content input
+  - **AND** the User clicks `submit-button`
+- **THEN** the article is edited.
+
+### Acceptance test
+```
+WHEN the User clicks `edit-article-button`
+THEN `edit-article-page` opens.
+WHEN the User types "edited title" in the title field and "edited content" in the content field and clicks `submit-button`
+THEN the article is updated with the given title and content.
+```
+### Exception test
+(1) User clicks back button with edited content
+```
+GIVEN the User is on `article-edit-page`
+WHEN the User types "edited content 2" and clicks `back-button`
+THEN the alert with message "Do you want to go back? Edited content will be lost" appears.
+WHEN the User clicks `OK-button`
+THEN `article-detail-page` opens.
+
+GIVEN the User is on `article-edit-page`
+WHEN the User types "edited content 2" and clicks `back-button`
+THEN the alert with message "Do you want to go back? Edited content will be lost" appears.
+WHEN the User clicks `cancel-button`
+THEN the User stays in `article-edit-page`
+```
+(2) User clicks back button with empty content
+```
+GIVEN the User is on `article-edit-page`
+WHEN the User erase content and clicks `submit-button`
+THEN the alert with message "The content of the article cannot be blank." appears.
+WHEN the User clicks `OK-button`
+THEN the User stays in `article-edit-page`
+```
 > >
-> > **Exceptions:** 
-> > ```
-> > (1) When the content is changed, back button should give alert which informs that edited contents will be lost.
-> > (2) When the text input is empty, submit button should be disabled.
-> > ```
-> >
-> > **Acceptance Test:**
-> > ```
-> >	When user clicks edit article button
-> >	Then the edit article page opens.
-> >
-> >	When user types "edited title" in the title field and "edited content" in the content field and clicks submit button
-> >	Then the article is updated with the given title and content.
-> > ```
-> >
-> **Story 6**
 > > **Feature:** User wants to delete his/her own article in the community
 > >  
 > > **Actors:** Logged-in user who has written some articles. 
 > >  
-> > **Precondition:** User should be in his/her own article page.
+> > **Precondition:** User should be in his/her own `article-detail-page`.
 > >  
-> > **Scenario:**
-> > ```
-> > 1. User clicks delete button.
-> > 2. User gets an alert.
-> > 3. User clicks confirm deletion button.
-> > ```
-> >
-> > **Acceptance Test:**
-> > ```
-> >	When user clicks delete article button
-> >	Then the alert with the message "Are you sure? Deleting cannot be undone." appears.
-> >
-> >	When user clicks confirm button on the alert message
-> >	Then the article is deleted.
-> > ```
-> >
-> **Story 7**
-> > **Feature:** User can read and write comment to the article in the community
+
+### Scenario
+- **GIVEN** the User is on `article-detail-page` of his/her own article
+- **WHEN** the User clicks `delete-article-button`
+- **THEN** the alert with message "Are you sure? Deleting cannot be undone." appears.
+- **WHEN** the User clicks `OK-button`
+- **THEN** the article is deleted.
+- **WHEN** the User clicks `cancel-button`
+- **THEN** the User stays in `article-detail-page`
+
+**Acceptance Test:**
+```
+GIVEN the User is on `article-detail-page` of his/her own article
+WHEN the User clicks `delete-article-button`
+THEN the alert with the message "Are you sure? Deleting cannot be undone." appears.
+WHEN the User clicks `OK-button` on the alert message
+THEN the article is deleted.
+WHEN the User clicks `cancel-button` on the alert message
+THEN the User stays in `article-detail-page`
+```
+
+
+> > **Feature:** User wants to create a new comment to the article
 > >  
-> > **Actors:** Logged-in user
+> > **Actors:** User
+> >
+> > **Precondition:** User logged in, User is in `article-detail-page`
 > >  
-> > **Precondition:** User should be a member of the service.
+
+### Scenario
+- **GIVEN** the User is in `article-detail-page`
+- **WHEN** the User enters comment in comment input field
+  - **AND** the User clicks `create-comment-button`
+- **THEN** a new comment with the given content is created.
+
+### Acceptance test
+```
+GIVEN the User is in `article-detail-page`
+WHEN the User enters "comment1" in comment input field
+AND the User clicks `create-comment-button`
+THEN a new comment with content "comment1" is created.
+AND the User stays in the current page.
+```
+
+### Exception Test
+(1) Input field for comment is empty
+```
+GIVEN the User is in `article-detail-page`
+WHEN user enters nothing in comment input field
+THEN the `create-comment-button` is disabled.
+```
+
+
+> > **Feature:** User wants to edit a comment he/she created
 > >  
-> > **Scenario:**
-> > ```
-> > 1. User clicks the article title button.
-> > 2. User is directed to article-detail page.
-> > 3. User writes a text on comment input area.
-> > 4. User clicks submit button.
-> > 5. User clicks edit or delete button for her comment.
-> > ```
+> > **Actors:** User
 > >
-> > **Exceptions:** 
-> > ```
-> > (1) When the comment input is empty, submit button should be disabled
-> > ```
+> > **Precondition:** User logged in, User is in `article-detail-page`, User has created a comment in current article-detail page
+> >  
+
+### Scenario
+- **GIVEN** the User is in `article-detail-page`
+  - **AND** there is a comment created by the User
+- **WHEN** the User clicks `edit-comment-button` on the comment
+- **THEN** `edit-comment-prompt` appears.
+
+- **GIVEN** `edit-comment-prompt` appeared
+- **WHEN** the User enters new comment content 
+  - **AND** the User clicks `edit-confirm-button`
+- **THEN** the comment is edited with the given content.
+
+- **GIVEN** `edit-comment-prompt` appeared
+- **WHEN** the User clicks `edit-cancel-button`
+- **THEN** the prompt disappears.
+  - **AND** the content of the comment isn't edited.
+
+### Acceptance test
+```
+GIVEN the User is in `article-detail-page`
+AND there is a comment with content "comment1" created by the User
+WHEN the User clicks `edit-comment-button` on the comment
+THEN `edit-comment-prompt` that takes new content as input appears.
+AND the initial value of the input field is "comment1".
+
+GIVEN `edit-comment-prompt` appeared
+WHEN the User edits the input to "edited comment1"
+AND the User clicks `edit-confirm-button`
+THEN the content of the comment is edited to "edited comment1"
+
+GIVEN `edit-comment-prompt` appeared
+WHEN the User edits the input to "edited comment1"
+AND the User clicks `edit-cancel-button`
+THEN the prompt disappears
+AND the content of the comment remains "comment1"
+```
+
+### Exception Test
+(1) Input field for comment in `edit-comment-prompt` empty
+```
+GIVEN `edit-comment-prompt`appeared
+WHEN user enters nothing in comment input field
+THEN the `edit-confirm-button` is disabled.
+```
+
+
+> > **Feature:** User wants to delete a comment he/she created
+> >  
+> > **Actors:** User
 > >
-> > **Acceptance Test:**
-> > ```
-> >	When user clicks the article title button
-> >	Then user is directed to  corresponding article-detail page.
-> >
-> >	When user writes "comment1" to comment input area and click submit button
-> >	Then the comment with the given content is created.
-> >
-> >	When user clicks edit comment button
-> >	Then comment edit prompt appears.
-> >
-> >	When user types "edited comment" in the prompt and click confirm button
-> >	Then the comment is updated with the given content.
-> >
-> >	When user clicks delete comment button
-> >	Then the deletion confirming alert appears
-> >
-> >	When user clicks confirm deletion button on the alert
-> >	Then the comment is deleted.
-> > ```
+> > **Precondition:** User logged in, User is in `article-detail-page`, User has created a comment in current article-detail page
+> >  
+
+### Scenario
+- **GIVEN** the User is in `article-detail-page`
+  - **AND** there is a comment created by the User
+- **WHEN** the User clicks `delete-comment-button` on the comment
+- **THEN** `delete-comment-alert` appears.
+
+- **GIVEN** `delete-comment-alert` appeared
+- **WHEN** the User clicks `delete-confirm-button`
+- **THEN** the comment is deleted.
+
+- **GIVEN** `delete-comment-alert` appeared
+- **WHEN** the User clicks `delete-cancel-button`
+- **THEN** the alert disappears.
+
+### Acceptance test
+```
+GIVEN the User is in `article-detail-page`
+AND there is a comment with content "comment1" created by the User
+WHEN the User clicks `delete-comment-button` on the comment
+THEN `delete-comment-alert` with the message "Are you sure you want to delete the comment?" appears.
+
+GIVEN `delete-comment-alert` appeared
+WHEN the User clicks `delete-confirm-button`
+THEN the comment is deleted.
+
+GIVEN `delete-comment-alert` appeared
+WHEN the User clicks `delete-cancel-button`
+THEN the alert disappears.
+```
+
+
+
+
+
+
+
+
+
+
 
 
 
 ## User Interface Requirements
 > Check the link: https://www.figma.com/file/nHGIzFuzR48pIXG319arD5/Foodify?node-id=0%3A1
+
+
