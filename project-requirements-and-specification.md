@@ -35,12 +35,12 @@ Our main competitor is Beep, a barcode scanning service, and Yummly, a recipe re
     * **Foodify** recommends recipe based on both user's preference and the ingredients that user have.
     
 ## Login
-> > **Feature:** User wants to sign in
-> >  
-> > **Actors:** User
-> >  
-> > **Precondition:** User is logged out, User is member of the service
-> >  
+### Meta specs
+|        Index                             |                                                                        Content                                                                       |
+|---------------------------------|:---------------------------------------------------------------------------------------------------------------|
+| FeatureName                        |User wants to sign in                     |
+| Actors                                   |User|
+| Precondition                         |User is logged out, User is member of the service|
 
 ### Scenario
 - **GIVEN** the User is a member of the service
@@ -59,12 +59,12 @@ THEN the alert with the message "email or password is invalid." pops up.
 ```
 
 ## Sign up
-> > **Feature:** User wants to sign up
-> >  
-> > **Actors:** User who is not a member of the service
-> >
-> > **Precondition:** User is in `sign-up-page`
-> >  
+**Feature:** User wants to sign up 
+**Actors:** User who is not a member of the service
+**Precondition:** User is in `sign-up-page`
+
+
+
 
 ### Scenario
 - **GIVEN** the User in `sign-up-page`
@@ -92,12 +92,12 @@ THEN `create-account-button` should be  disabled
 ```
 
 ## Find Password
-> > **Feature:** User wants to find out the password.
-> >  
-> > **Actors:** User who is a member of the service
-> >
-> > **Precondition:** User is member of service, User is in `find-password-page`
-> >  
+### Meta specs
+|        Index                             |                                                                        Content                                                                       |
+|---------------------------------|:---------------------------------------------------------------------------------------------------------------|
+| FeatureName                        |User wants to find out the password.| 
+| Actors                                   |User who is a member of the service| 
+| Precondition                         | User is member of service, User is in `find-password-page`|
 
 ### Scenario
 - **GIVEN** the User is on `find-password-page`
@@ -130,12 +130,12 @@ THEN `find-button` is disabled.
 ```
 
 ## Main page  
-> > **Feature:** User gets alarm when the product is about to expire
-> >  
-> > **Actors:** User
-> >  
-> > **Precondition:** User logged in, User who has a product in his/her fridge
-> >  
+### Meta specs
+|        Index                             |                                                                        Content                                                                       |
+|---------------------------------|:---------------------------------------------------------------------------------------------------------------|
+| FeatureName                        |User gets alarm when the product is about to expire|
+| Actors                                   |User|
+| Precondition                                   |User logged in, User who has a product in his/her fridge|
 
 ### Scenario
 - **GIVEN** logged-in User
@@ -149,12 +149,12 @@ WHEN the date is 2020/12/22, 2020/12/24, 2020/12/25
 THEN the User gets alarm "Expiration 3 days left: 냉장서울우유 1L", "Expiration 1 day left: 냉장서울우유 1L", "Expiration date: 냉장서울우유 1L"
 ```
 
-> > **Feature:** User gets alarm when there is new comment on his/her article.
-> >  
-> > **Actors:** User
-> >  
-> > **Precondition:** User logged in, User who has written an article.
-> >  
+### Meta specs
+|        Index                             |                                                                        Content                                                                       |
+|---------------------------------|:---------------------------------------------------------------------------------------------------------------|
+| FeatureName                        |User gets alarm when there is new comment on his/her article.|
+| Actors                                   |User|
+| Precondition                                   |User logged in, User who has written an article.|
 
 ### Scenario
 - **GIVEN** logged-in User
@@ -168,12 +168,12 @@ WHEN some user wrote a new comment in "article1"
 THEN the User gets alarm "There is a new comment on article 1."
 ```
 ## Add ingredients to the fridge (automatic/manual)
-> > **Feature:** User can add ingredients
-> >  
-> > **Actors:** User
-> >  
-> > **Precondition:** User logged in
-> >  
+### Meta specs
+|        Index                             |                                                                        Content                                                                       |
+|---------------------------------|:---------------------------------------------------------------------------------------------------------------|
+| FeatureName                        |User can add ingredients|
+| Actors                                   |User|
+| Precondition                                   |User logged in|
 
 ### Scenario
 - **GIVEN** logged-in User
@@ -197,12 +197,12 @@ AND the User clicks `Don't Allow` on camera access popup
 THEN the User is directed to the `product-list-page`.
 ```
 
-> > **Feature:** User can scan item's barcode number
-> >  
-> > **Actors:** User
-> >  
-> > **Precondition:** User logged in, User allowed camera access, User is on `barcode-scan camera view`
-> >  
+### Meta specs
+|        Index                             |                                                                        Content                                                                       |
+|---------------------------------|:---------------------------------------------------------------------------------------------------------------|
+| FeatureName                        |User can scan item's barcode number| 
+| Actors                                   |User| 
+| Precondition                         | User logged in, User allowed camera access, User is on `barcode-scan camera view`|
 
 ### Scenario
 - **GIVEN** User is on `barcode-scan camera view`
@@ -220,12 +220,12 @@ THEN the User is directed to `expiration-date camera view`
 AND barcode scan result[For example, barcode: "8801019306495", name: "냉장서울우유1L" category: "유제품"] is displayed on top
 ```
 
-> > **Feature:** User can scan barcode again
-> >  
-> > **Actors:** User
-> >  
-> > **Precondition:** User logged in, User allowed camera access, User is on `expiration-date camera view`
-> >  
+### Meta specs
+|        Index                             |                                                                        Content                                                                       |
+|---------------------------------|:---------------------------------------------------------------------------------------------------------------|
+| FeatureName                        |User can scan barcode again|
+| Actors                                   |User|
+| Precondition                                   |User logged in, User allowed camera access, User is on `expiration-date camera view`|
 
 ### Scenario
 - **GIVEN** the User is on `expiration-date camera view`
@@ -239,12 +239,12 @@ WHEN the User clicks `retake-button`
 THEN the User is directed back to `barcode-scan camera view`
 ```
 
-> > **Feature:** User can manually edit item information (barcode number, item name)
-> >  
-> > **Actors:** User
-> >  
-> > **Precondition:** User logged in, User allowed camera access, User is on `expiration-date camera view`
-> >  
+### Meta specs
+|        Index                             |                                                                        Content                                                                       |
+|---------------------------------|:---------------------------------------------------------------------------------------------------------------|
+| FeatureName                        |User can manually edit item information (barcode number, item name) |
+| Actors                                   |User |
+| Precondition                                   |User logged in, User allowed camera access, User is on `expiration-date camera view` |
 
 ### Scenario
 - **GIVEN** the User is on `expiration-date camera view`
@@ -277,12 +277,12 @@ THEN the `OK-button` is disabled
 AND the placeholder for `Product name` input field is set to "Product Name should be filled in"
 ```
 
-> > **Feature:** User can scan item's expiration date
-> >  
-> > **Actors:** User
-> >  
-> > **Precondition:** User logged in, User allowed camera access, User is on  `expiration-date camera view`
-> >  
+### Meta specs
+|        Index                             |                                                                        Content                                                                       |
+|---------------------------------|:---------------------------------------------------------------------------------------------------------------|
+| FeatureName                        |User can scan item's expiration date|
+| Actors                                   |User|
+| Precondition                                   |User logged in, User allowed camera access, User is on  `expiration-date camera view` |
 
 ### Scenario
 - **GIVEN** the User is on  `expiration-date camera view`
@@ -300,12 +300,12 @@ THEN the User is directed to `barcode-scan camera view`
 AND expiration date scan result[For example, Expiration date: "2020/10/22"] is displayed on top
 ```
 
-> > **Feature:** User can scan expiration date again
-> >  
-> > **Actors:** User
-> >  
-> > **Precondition:** User logged in, User allowed camera access, User is on `barcode-scan camera view`
-> >  
+### Meta specs
+|        Index                             |                                                                        Content                                                                       |
+|---------------------------------|:---------------------------------------------------------------------------------------------------------------|
+| FeatureName                        |User can scan expiration date again|
+| Actors                                   |User|
+| Precondition                                   |User logged in, User allowed camera access, User is on `barcode-scan camera view`|
 
 ### Scenario
 - **GIVEN** the User is on `barcode-scan camera view`
@@ -319,12 +319,12 @@ WHEN the User clicks `retake-button`
 THEN the User is directed back to `expiration-date camera view`
 ```
 
-> > **Feature:** User can manually edit expiration date
-> >  
-> > **Actors:** User
-> >  
-> > **Precondition:** User logged in, User allowed camera access, User is on `barcode-scan camera view`
-> >  
+### Meta specs 
+|        Index                             |                                                                        Content                                                                       |
+|---------------------------------|:---------------------------------------------------------------------------------------------------------------|
+| FeatureName                        |User can manually edit expiration date |
+| Actors                                   |User |
+| Precondition                                   |User logged in, User allowed camera access, User is on `barcode-scan camera view` |
 
 ### Scenario
 - **GIVEN** the User is on `barcode-scan camera view`
@@ -368,12 +368,12 @@ THEN the `OK-button` is disabled
 AND warning-prompt[For example, "If no expiration date, check on checkbox"] pops up 
 ```
 
-> > **Feature:** User can stop scanning when clicking on `done-button`
-> >  
-> > **Actors:** User
-> >  
-> > **Precondition:** User logged in, User allowed camera access, User is on `barcode-scan camera view`
-> >  
+### Meta specs
+|        Index                             |                                                                        Content                                                                       |
+|---------------------------------|:---------------------------------------------------------------------------------------------------------------|
+| FeatureName                        |User can stop scanning when clicking on `done-button`|
+| Actors                                   |User|
+| Precondition                                   |User logged in, User allowed camera access, User is on `barcode-scan camera view`|
 
 ### Scenario
 - **GIVEN** the User is on `barcode-scan camera view`
@@ -387,12 +387,12 @@ WHEN the User clicks `done-button`
 THEN the User is directed back to `product-list-page`
 ```
 
-> > **Feature:** User can stop/continue scanning after checking scanned product list
-> >  
-> > **Actors:** User
-> >  
-> > **Precondition:** User logged in, User allowed camera access, User is on `product-list-page`
-> >  
+### Meta specs 
+|        Index                             |                                                                        Content                                                                       |
+|---------------------------------|:---------------------------------------------------------------------------------------------------------------|
+| FeatureName                        |User can stop/continue scanning after checking scanned product list |
+| Actors                                   |User |
+| Precondition                                   |User logged in, User allowed camera access, User is on `product-list-page` |
 
 ### Scenario
 - **GIVEN** the User is on `product-list-page`
@@ -414,12 +414,12 @@ WHEN the User clicks `automatic-mode-button`
 THEN the User is directed back to `barcode-scan camera view`
 ```
 
-> > **Feature:** User can scan item's barcode number
-> >  
-> > **Actors:** User
-> >  
-> > **Precondition:** User logged in, User allowed camera access, User is on `barcode-scan camera view`
-> >  
+### Meta specs
+|        Index                             |                                                                        Content                                                                       |
+|---------------------------------|:---------------------------------------------------------------------------------------------------------------|
+| FeatureName                        |User can scan item's barcode number|
+| Actors                                   |User|
+| Precondition                                   |User logged in, User allowed camera access, User is on `barcode-scan camera view`|
 
 ### Scenario
 - **GIVEN** User is on `barcode-scan camera view`
@@ -438,12 +438,12 @@ AND barcode scan result[For example, barcode: "8801019306495", name: "냉장서�
 ```
 
 
-> > **Feature:** User can delete item in the fridge
-> >  
-> > **Actors:** User
-> >  
-> > **Precondition:** User logged in, User has some item in the fridge, User is on `main-page`
-> >  
+### Meta specs 
+|        Index                             |                                                                        Content                                                                       |
+|---------------------------------|:---------------------------------------------------------------------------------------------------------------|
+| FeatureName                        |User can delete item in the fridge |
+| Actors                                   |User |
+| Precondition                                   |User logged in, User has some item in the fridge, User is on `main-page` |
 
 ### Scenario
 - **GIVEN** User is on `main-page`
@@ -457,12 +457,12 @@ WHEN the User clicks `delete-button` of "냉장서울우유1L" in the fridge
 THEN the item "냉장서울우유1L" is deleted from the fridge
 ```
 ## Personal Recipe Recommendation
-> > **Feature:** User can add ingredients to the basket for recipe recommendation
-> >  
-> > **Actors:** User
-> >  
-> > **Precondition:** User logged in, User's fridge is not empty, User is on `main-page`
-> >  
+### Meta specs
+|        Index                             |                                                                        Content                                                                       |
+|---------------------------------|:---------------------------------------------------------------------------------------------------------------|
+| FeatureName                        |User can add ingredients to the basket for recipe recommendation|
+| Actors                                   |User|
+| Precondition                                   |User logged in, User's fridge is not empty, User is on `main-page`|
 
 ### Scenario
 - **GIVEN** the User is on `main-page`
@@ -484,12 +484,12 @@ WHEN the User clicks enabled `get-recommendation-button`
 THEN the User is directed to `preference-choosing-page`.
 ```
 
-> > **Feature:** User can choose preference options for recipe recommendation
-> >  
-> > **Actors:** User
-> >  
-> > **Precondition:** User logged in, User's fridge is not empty, User's basket is not empty, User is on `preference-choosing-page`
-> >  
+### Meta specs
+|        Index                             |                                                                        Content                                                                       |
+|---------------------------------|:---------------------------------------------------------------------------------------------------------------|
+| FeatureName                        |User can choose preference options for recipe recommendation|
+| Actors                                   |User|
+| Precondition                                   |User logged in, User's fridge is not empty, User's basket is not empty, User is on `preference-choosing-page`|
 
 ### Scenario
 - **GIVEN** the User is on `preference-choosing-page`
@@ -505,12 +505,12 @@ AND the User clicks `done-button`
 THEN the User is directed to `recipe-recommendation-result-page`.
 ```
 
-> > **Feature:** User can choose a recipe from the recommendation page
-> >  
-> > **Actors:** User
-> >  
-> > **Precondition:** User logged in, User's fridge is not empty, User's basket is not empty, User is on `recipe-recommendation-result-page`
-> >  
+### Meta specs
+|        Index                             |                                                                        Content                                                                       |
+|---------------------------------|:---------------------------------------------------------------------------------------------------------------|
+| FeatureName                        |User can choose a recipe from the recommendation page |
+| Actors                                   |User |
+| Precondition                                   |User logged in, User's fridge is not empty, User's basket is not empty, User is on `recipe-recommendation-result-page` |
 
 ### Scenario
 - **GIVEN** the User is on `recipe-recommendation-result-page`
@@ -541,12 +541,12 @@ THEN message "No results for given ingredients & preference" is shown on top of 
 AND popular recipes are shown on `recipe-recommendation-result-page`
 ```
 
-> > **Feature:** User can write a comment in `recipe-detail-page`
-> >  
-> > **Actors:** User
-> >  
-> > **Precondition:** User logged in, User is on `recipe-detail-page`
-> >  
+### Meta specs
+|        Index                             |                                                                        Content                                                                       |
+|---------------------------------|:---------------------------------------------------------------------------------------------------------------|
+| FeatureName                        |User can write a comment in `recipe-detail-page`|
+| Actors                                   |User|
+| Precondition                                   |User logged in, User is on `recipe-detail-page`|
 
 ### Scenario
 - **GIVEN** the User is on `recipe-detail-page`
@@ -558,18 +558,18 @@ AND popular recipes are shown on `recipe-recommendation-result-page`
 ### Acceptance Test
 ```
 GIVEN the User is on `recipe-detail-page`[For example, "tomato cheese pasta"]
-- **WHEN** the User types comment[For example, "comment1"] in comment-input field
-  - **AND** the User clicks `submit-button`
-- **THEN** the new comment[For example, "comment1"]  is created
-  - **AND** the comment-input field is cleared.
+WHEN the User types comment[For example, "comment1"] in comment-input field
+AND the User clicks `submit-button`
+THEN the new comment[For example, "comment1"]  is created
+AND the comment-input field is cleared.
 ```
 
-> > **Feature:** User can go to `main-page` by clicking `back-button` 
-> >  
-> > **Actors:** User
-> >  
-> > **Precondition:** User logged in, User is on `recipe-detail-page`, User is on either one of `user-preference-choosing-page` / `recipe-recommendation-result-page` / `recipe-detail-page`
-> >  
+### Meta specs 
+|        Index                             |                                                                        Content                                                                       |
+|---------------------------------|:---------------------------------------------------------------------------------------------------------------|
+| FeatureName                        |User can go to `main-page` by clicking `back-button` |
+| Actors                                   |User |
+| Precondition                                   |User logged in, User is on `recipe-detail-page`, User is on either one of `user-preference-choosing-page` / `recipe-recommendation-result-page` / `recipe-detail-page` |
 
 ### Scenario
 - **GIVEN** the User is on either one of `user-preference-choosing-page` / `recipe-recommendation-result-page` / `recipe-detail-page`
@@ -624,12 +624,12 @@ THEN the User stays on `recipe-detail-page`
 ```
 
 ## Community
-> > **Feature:** User can go to `community-page` from `main-page`
-> >  
-> > **Actors:** Logged-in user 
-> >  
-> > **Precondition:** User should be a member of the service, User is on `main-page`
-> >  
+### Meta specs
+|        Index                             |                                                                        Content                                                                       |
+|---------------------------------|:---------------------------------------------------------------------------------------------------------------|
+| FeatureName                        |User can go to `community-page` from `main-page`|
+| Actors                                   |Logged-in user |
+| Precondition                                   |User should be a member of the service, User is on `main-page`|
 
 - **GIVEN** the User is on `main-page`
 - **WHEN** the User clicks `community-board-button`
@@ -642,12 +642,12 @@ WHEN the User clicks `community-board-button`
 THEN the User is directed to `community-page`.
 ```
 
-> > **Feature:** User can create article on community
-> >  
-> > **Actors:** Logged-in user 
-> >  
-> > **Precondition:** User should be a member of the service, User is on `community-page`
-> >  
+### Meta specs 
+|        Index                             |                                                                        Content                                                                       |
+|---------------------------------|:---------------------------------------------------------------------------------------------------------------|
+| FeatureName                        |User can create article on community |
+| Actors                                   |Logged-in user |
+| Precondition                                   |User should be a member of the service, User is on `community-page` |
 
 - **GIVEN** the User is on `community-page`
 - **WHEN** the User clicks `create-article-button`
@@ -669,20 +669,20 @@ AND the user clicks `submit-button`
 THEN the User is directed to `article-detail-page`
 ```
 
-### Exceptions Test
+### Exception Test
 (1) When the text input is empty, `submit-button` should be disabled.
 ```
 GIVEN the User is on `create-article-page`
 WHEN the User types "" in the title field and "" in the content field 
 THEN the `submit-button` is disabled
 ```
-> >
-> > **Feature:** User can edit his/her own article in the community
-> >  
-> > **Actors:** Logged-in user who has written some articles. 
-> >  
-> > **Precondition:** User should be in his/her own `article-detail-page`.
-> >  
+
+### Meta specs
+|        Index                             |                                                                        Content                                                                       |
+|---------------------------------|:---------------------------------------------------------------------------------------------------------------|
+| FeatureName                        |User can edit his/her own article in the community|
+| Actors                                   |Logged-in user who has written some articles. |
+| Precondition                                   |User should be in his/her own `article-detail-page`.|
 
 ### Scenario
 - **GIVEN** the User is on `article-detail-page` of his/her own page
@@ -723,13 +723,13 @@ THEN the alert with message "The content of the article cannot be blank." appear
 WHEN the User clicks `OK-button`
 THEN the User stays in `article-edit-page`
 ```
-> >
-> > **Feature:** User wants to delete his/her own article in the community
-> >  
-> > **Actors:** Logged-in user who has written some articles. 
-> >  
-> > **Precondition:** User should be in his/her own `article-detail-page`.
-> >  
+
+### Meta specs 
+|        Index                             |                                                                        Content                                                                       |
+|---------------------------------|:---------------------------------------------------------------------------------------------------------------|
+| FeatureName                        |User wants to delete his/her own article in the community |
+| Actors                                   |Logged-in user who has written some articles. |
+| Precondition                                   |User should be in his/her own `article-detail-page`. |
 
 ### Scenario
 - **GIVEN** the User is on `article-detail-page` of his/her own article
@@ -752,12 +752,12 @@ THEN the User stays in `article-detail-page`
 ```
 
 
-> > **Feature:** User wants to create a new comment to the article
-> >  
-> > **Actors:** User
-> >
-> > **Precondition:** User logged in, User is in `article-detail-page`
-> >  
+### Meta specs
+|        Index                             |                                                                        Content                                                                       |
+|---------------------------------|:---------------------------------------------------------------------------------------------------------------|
+| FeatureName                        |User wants to create a new comment to the article|
+| Actors                                   |User|
+| Precondition                                   |User logged in, User is in `article-detail-page`|
 
 ### Scenario
 - **GIVEN** the User is in `article-detail-page`
@@ -783,12 +783,12 @@ THEN the `create-comment-button` is disabled.
 ```
 
 
-> > **Feature:** User wants to edit a comment he/she created
-> >  
-> > **Actors:** User
-> >
-> > **Precondition:** User logged in, User is in `article-detail-page`, User has created a comment in current article-detail page
-> >  
+### Meta specs 
+|        Index                             |                                                                        Content                                                                       |
+|---------------------------------|:---------------------------------------------------------------------------------------------------------------|
+| FeatureName                        |User wants to edit a comment he/she created |
+| Actors                                   |User |
+| Precondition                                   |User logged in, User is in `article-detail-page`, User has created a comment in current article-detail page |
 
 ### Scenario
 - **GIVEN** the User is in `article-detail-page`
@@ -835,12 +835,12 @@ THEN the `edit-confirm-button` is disabled.
 ```
 
 
-> > **Feature:** User wants to delete a comment he/she created
-> >  
-> > **Actors:** User
-> >
-> > **Precondition:** User logged in, User is in `article-detail-page`, User has created a comment in current article-detail page
-> >  
+### Meta specs 
+|        Index                             |                                                                        Content                                                                       |
+|---------------------------------|:---------------------------------------------------------------------------------------------------------------|
+| FeatureName                        |User wants to delete a comment he/she created|
+| Actors                                   |User|
+| Precondition                                   |User logged in, User is in `article-detail-page`, User has created a comment in current article-detail page|
 
 ### Scenario
 - **GIVEN** the User is in `article-detail-page`
@@ -884,8 +884,11 @@ THEN the alert disappears.
 
 
 
+
+
 ## User Interface Requirements
 ![UI Specification](https://github.com/swsnu/swpp2020-team1/blob/master/UI%20Specification_Team%201.png)
 > For further information, please check the figma link: https://www.figma.com/file/nHGIzFuzR48pIXG319arD5/Foodify?node-id=0%3A1
+
 
 
