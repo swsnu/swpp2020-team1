@@ -1,24 +1,21 @@
-import logo from './logo.svg';
 import './App.css';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import MainPage from './containers/MainPage/MainPage';
+import AddItem from './components/AddItem/AddItem';
+import ItemConfirm from './components/ItemConfirm/ItemConfirm';
 
 function App() {
   return (
+  <BrowserRouter>
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Switch>
+      <Route path = '/' exact render={()=><MainPage title={'MAIN PAGE'}/>}/>
+      <Route path = '/item/add' exact component = {AddItem}/>
+      <Route path = '/item/confirm' exact component={ItemConfirm}/>
+      <Route render={() => <h1>Not Found</h1>} />
+      </Switch>
     </div>
+  </BrowserRouter>
   );
 }
 
