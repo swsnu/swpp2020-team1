@@ -6,6 +6,9 @@ import Item from '../../components/Item/Item';
 import AddItem from '../../components/AddItem/AddItem';
 
 class ItemContainer extends Component{
+  onClickAddItemButton = () => {
+
+  }
   render() {
     const item = (
       <Item 
@@ -21,7 +24,7 @@ class ItemContainer extends Component{
       <div className="ItemContainer">
         <p className="ContainerName">Container Name: {this.props.type}</p>
         <div className="Items">{item}</div>
-        <AddItem/>
+        <button className="btn_add_item" onClick={()=>this.onClickAddItemButton()}>Add Item</button>
       </div>
     )
   }
