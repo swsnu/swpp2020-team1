@@ -7,10 +7,14 @@ import articleReducer from './store/reducers/article';
 import thunk from 'redux-thunk';
 import { connectRouter, routerMiddleware } from 'connected-react-router'; 
 import { createBrowserHistory } from 'history';
+import itemReducer from './store/reducers/item';
+import itemcountReducer from './store/reducers/itemcount';
 
 
 const history = createBrowserHistory();
 const rootReducer = combineReducers({
+  item: itemReducer,
+  itemcount: itemcountReducer,
   article: articleReducer,
   router: connectRouter(history)
 })
