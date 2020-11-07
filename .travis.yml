@@ -8,7 +8,7 @@ matrix:
         - cd frontend
       install:
         - yarn install
-        - yarn install coveralls
+        - yarn add coveralls
       script:
         - ./node_modules/.bin/eslint src/
         - yarn test --coverage --watchAll=false
@@ -30,7 +30,6 @@ matrix:
       install:
         - pip install -r requirements.txt
       before_script:
-        - cd backend
         - python3 manage.py migrate
       script:
         - pylint **/*.py --load-plugins pylint_django
