@@ -2,6 +2,11 @@ matrix:
   include:
     - language: node_js
       node_js: '12'
+      addons:
+        sonarcloud:
+          organization: "swsnu"
+          token:
+            secure: "lnprovQnADA+nQuDitPrX2/rkCGs8g8H0AkiJt0m2izeKc++qN7/x01Xbaka2GLvqmXLR/wfHsVAibB0HdD+xJVtWEdGlRCuk+7wzsCdmM9IzJgUCaNGIyx3u0lpmwhQnrcxNVByxEBognJboMN11aVUORxT/NHu92TrnfCbcqzs4JcvAablytnPm0fpycnyl4wwSYTYVxxltfMolCrIbPiIixVZRiEtL3MoGz+YrW6ZltdeYHC8CXXXXEhCJe0b0BPOTGEnpHd6dLwo/9nkjoxJLxQyyXDrVbo/YGInj2m+1XMKum/CyVNAeQubcYFYaj3nV3BPKnEKSUXKb9PVrptedWuhnOlUhLcb0V7O4nRjrcXYSuTctngKl4QPzSnnuWDu4eTSRK+DuP4Omp35mpTYxJJQg+W8DiAFuamDrK5KPvtSoaj9+Gg2om58jL2HmdofROdHOc56fGmQGbZ5p7V3I8abE6VSR4c/MGvDIg0T5I2Zgv7DLWDmYuUGIn1mHcERUF/WXlpnb1dkRUgAcy0qHSSDvxNqQgcLsLcQOU8iCwGiy6GRrGQss5fNcY+442uFE46z4G5Ze/6DhEmZx8jZECNwZjjwmB+NM6n/gzzfUMIZnmCUMp19Nw6JtA5RHhJ7M/Y2RWnA6L52vzYNHkH8mfq9jJ47/nluV5LedQQ="
       cache:
         - yarn: true
       before_install:
