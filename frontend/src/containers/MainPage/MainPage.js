@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 import ItemContainer from '../ItemContainer/ItemContainer';
 import Basket from '../../components/Basket/Basket';
 
@@ -45,4 +44,4 @@ const mapDispatchToProps = dispatch => {
 }
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(MainPage));
+export default connect(mapStateToProps, mapDispatchToProps)(MainPage);
