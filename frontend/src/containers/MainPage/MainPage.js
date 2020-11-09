@@ -5,7 +5,6 @@ import Basket from '../../components/Basket/Basket';
 
 class MainPage extends Component{
   componentDidMount() { 
-
   }
 
   onClickNotificationButton = () => {
