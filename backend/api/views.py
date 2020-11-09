@@ -88,38 +88,6 @@ def item_count_test(request): # jaeseok: this api is for debugging.
     else:
         return HttpResponseNotAllowed(['GET'])
 
-def add_item_count(item_count_dup, item, expiration_date, count, is_barcode_found):
-    '''
-    item_list:
-        GET: get all Items. this is for debugging purpose.
-        POST: add an item
-    '''
-    result = ''
-    if item_count_dup.count() == 1:
-        # item_count with same expiration date exists, modify existing record
-        same_item_count = item_count_dup[0]
-        same_item_count.count += count
-        same_item_count.save()
-        if is_barcode_found:
-            result = 'Success: item found with barcode_num, item_count found'
-        else:
-            result = 'Success: item found with item name, item_count found'
-    elif item_count_dup.count() == 0:
-        # item_count with same expiration date doesn't exists, create a new record
-        new_item_count = ItemCount(
-            item=item,
-            expiration_date=expiration_date,
-            count=count,
-        )
-        new_item_count.save()
-        if is_barcode_found:
-            result = 'Success: item found with barcode_num, item_count created'
-        else:
-            result = 'Success: item found with item name, item_count created'
-    else:
-        print("Something wrong. Duplicate item_counts in ItemCount model.")
-    return result
-
 def item_list(request):
     '''
     item_list:
