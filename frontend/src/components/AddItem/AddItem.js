@@ -121,9 +121,9 @@ editOCRResult(e) {
       console.log("myimage is null");
     }
     
-    const modelId = '8d757818-7d43-4d65-bcd6-3e5b0e23bcbf';
-    const apiKey = 'cRceuIjMuF9DAvHuC7lTOLnJxnhB0hs1';
-    let url = `/api/v2/ObjectDetection/Model/${modelId}/LabelFile/`; 
+    const modelId = 'a01501fb-cc0d-4b70-ab07-0efe2c513300';
+    const apiKey = 'e6gjXrJeR2ixG2qBXGmPI9C7riwlYjxA';
+    let url = `/api/v2/OCR/Model/${modelId}/LabelFile/`; 
 
     var data = new FormData();
     data.append('file', file); // file object
