@@ -1,5 +1,5 @@
 import './App.css';
-import { BrowserRouter, Route, Switch, withRouter } from 'react-router-dom';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import MainPage from './containers/MainPage/MainPage';
 import AddItem from './components/AddItem/AddItem';
 import ItemConfirm from './components/ItemConfirm/ItemConfirm';

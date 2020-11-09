@@ -15,7 +15,7 @@ const initialState = {
 const itemcountReducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.GET_ITEMCOUNTS:
-      return {...state, itemcounts: state.itemcounts.filter(ic => ic.item_id != action.item_id)
+      return {...state, itemcounts: state.itemcounts.filter(ic => ic.item_id !== action.item_id)
                                                     .concat(action.itemcounts)};
     case actionTypes.EDIT_ITEMCOUNT:
       return {...state, itemcounts: action.itemcounts.map(ic => {

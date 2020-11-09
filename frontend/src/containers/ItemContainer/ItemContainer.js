@@ -1,8 +1,7 @@
 import React, {Component} from 'react';
-import { Redirect } from 'react-router';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import Item from '../../components/Item/Item';
-import AddItem from '../../components/AddItem/AddItem';
 import * as actionCreators from '../../store/actions/index';
 import Grid from '@material-ui/core/Grid';
 import { Typography, Container } from '@material-ui/core';
@@ -61,4 +60,4 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ItemContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(ItemContainer));

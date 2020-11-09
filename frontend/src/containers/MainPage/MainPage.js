@@ -25,7 +25,6 @@ class MainPage extends Component {
       if (ic.length > 0) result.push({...i, 'itemcounts': ic});
       return result; 
     }, []);
-    console.log("items",items)
 
     this.setState({freezerItems: items.filter(i => i.container === 'freezer')});
     this.setState({fridgeItems: items.filter(i => i.container === 'fridge')});
