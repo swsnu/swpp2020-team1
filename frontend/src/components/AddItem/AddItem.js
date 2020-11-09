@@ -43,15 +43,16 @@ class AddItem extends Component {
   }
 
   // Used to capture webcam image
-  capture = () => {
-    // returns an encoded base64 string
-    const imageSrc = this.webcam.getScreenshot();
-    const imageFile = dataURLtoFile(imageSrc,'captured.jpeg');
-    this.setState({
-      screenShot: imageSrc,
-      imageFile: imageFile
-    });
-  }
+  // capture = () => {
+  //   // returns an encoded base64 string
+  //   const imageSrc = this.webcam.getScreenshot();
+  //   const imageFile = dataURLtoFile(imageSrc,'captured.jpeg');
+  //   this.setState({
+  //     screenShot: imageSrc,
+  //     imageFile: imageFile
+  //   });
+  //   this.handleOCR()
+  // }
   // Used to recapture webcam
   onClickRetake = (e) => {
     e.persist();
@@ -105,16 +106,22 @@ OCR(e, callback){
   xhr.send(data);
 };
 
-handleOCR = (e) => {
+handleOCR = async (e) => {
+  const imageSrc = await this.webcam.getScreenshot();
+  const imageFile = await dataURLtoFile(imageSrc,'captured.jpeg');
+  this.setState({
+    screenShot: imageSrc,
+    imageFile: imageFile
+  });
   this.OCR(e, data => this.handleDetect(data));
 }
 
-checkAPI = () => {
-  axios.get("/back/ocr/recognize")
-    .then(res => {
-      console.log(res)
-    })
-}
+// checkAPI = () => {
+//   axios.get("/back/ocr/recognize")
+//     .then(res => {
+//       console.log(res)
+//     })
+// }
 
 render() {
   const videoConstraints = {
@@ -144,7 +151,7 @@ render() {
       <div></div>
       }
       </Grid>
-      <Grid item xs={12}><button onClick={this.capture}>Capture photo</button></Grid> 
+      <Grid item xs={12}><button onClick={this.handleOCR}>Capture photo</button></Grid> 
       <Grid item xs={12}>
         {this.state.screenShot 
         ? 
@@ -156,15 +163,17 @@ render() {
         null}
       </Grid>
       <Grid item xs={12}><button onClick={this.turnOff}>Turn off webcam</button></Grid> 
-      <Grid item xs={12}><button onClick={this.handleOCR}>Use Ocr</button></Grid> 
+      {/* <Grid item xs={12}><button onClick={this.handleOCR}>Use Ocr</button></Grid>  */}
       <Grid item xs={12}>
-        <textarea
-        value={this.state.OCRResult}
-        onChange={this.editOCRResult}
-        style={{
-          width: 200,
-          height: 200
-        }}></textarea></Grid>
+        <TextField
+          multiline
+          rows={4}
+          variant="outlined"
+          floatingLabelText="Expiration Date"
+          onChange={this.editOCRResult}
+          label={this.state.OCRResult}
+        />
+        </Grid>
     </Grid>
     );
   }
