@@ -4,7 +4,10 @@ import { connect } from 'react-redux';
 import Item from '../../components/Item/Item';
 import AddItem from '../../components/AddItem/AddItem';
 import * as actionCreators from '../../store/actions/index';
-
+import Grid from '@material-ui/core/Grid';
+import { Typography, Container } from '@material-ui/core';
+import IconButton from '@material-ui/core/IconButton';
+import AddBoxIcon from '@material-ui/icons/AddBox';
 
 class ItemContainer extends Component{
   onClickAddItemButton = () => {
@@ -12,7 +15,7 @@ class ItemContainer extends Component{
   }
 
   onRemoveItem = (id, count) => {
-    this.props.onEditItemCount(id, count);
+    this.props.onEditItemCount(id, count-1);
   }
 
   render() {
@@ -20,23 +23,28 @@ class ItemContainer extends Component{
     if (this.props.items) {
       items = this.props.items.map(i => {
         return (
-          <Item
-            name={i.name}
-            container={i.container}
-            itemcounts={i.itemcounts}
-            unit="temp-unit"
-            onRemoveItem={(ic_id, count) => this.onRemoveItem(ic_id, count)}
-          />
+          <Grid key={i.id} item>
+            <Item
+              name={i.name}
+              container={i.container}
+              itemcounts={i.itemcounts}
+              unit="temp-unit"
+              onRemoveItem={(ic_id, count) => this.onRemoveItem(ic_id, count)}
+            />
+          </Grid>
+
         );
       })
     }
 
     return (
-      <div className="ItemContainer">
-        <p className="ContainerName">Container Name: {this.props.type}</p>
-        <div className="Items">{items}</div>
-        <button className="btn_add_item" onClick={()=>this.onClickAddItemButton()}>Add Item</button>
-      </div>
+      <Container>
+        <Typography variant="h4" className="ContainerName">{this.props.type.toUpperCase()}</Typography>
+        <Grid container spacing={3} direction="row" className="ItemContainer">
+          {items}
+          <IconButton className="btn_add_item" onClick={()=>this.onClickAddItemButton()}><AddBoxIcon /></IconButton>
+        </Grid>
+      </Container>
     );
   }
 }

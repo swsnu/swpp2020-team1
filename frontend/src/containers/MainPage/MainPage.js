@@ -12,44 +12,24 @@ class MainPage extends Component {
     shelfItems: null
   }
   
-  componentDidMount() { 
-    this.props.onGetItems();
-    this.props.onGetItemCounts();
+  async componentDidMount() { 
+    const user_id = 1;
 
-    let items = this.props.items.map(i => {
+    await this.props.onGetUserItems(user_id);
+    for (const item of this.props.items) {
+      await this.props.onGetItemCounts(item.id)
+    }
+
+    let items = this.props.items.reduce((result, i) => {
       const ic = this.props.itemcounts.filter(ic => ic.item_id === i.id);
-      return {...i, 'itemcounts': ic};
-    });
+      if (ic.length > 0) result.push({...i, 'itemcounts': ic});
+      return result; 
+    }, []);
+    console.log("items",items)
 
     this.setState({freezerItems: items.filter(i => i.container === 'freezer')});
     this.setState({fridgeItems: items.filter(i => i.container === 'fridge')});
     this.setState({shelfItems: items.filter(i => i.container === 'shelf')});
-
-
-    // filter, join table (in django?)
-  //   this.setState({freezerItems: this.props.itemcounts
-  //     .filter(ic => ic.container === 'freezer')
-  //     .map(ic => {
-  //       let item = this.props.items.find(i => i.id === ic.item_id);
-  //       return {...ic, 'name': item.name, 'category_id': item.category_id};
-  //     })
-  //   });
-  
-  //   this.setState({fridgeItems: this.props.itemcounts
-  //     .filter(ic => ic.container === 'fridge')
-  //     .map(ic => {
-  //       let item = this.props.items.find(i => i.id === ic.item_id);
-  //       return {...ic, 'name': item.name, 'category_id': item.category_id};
-  //     })
-  //   });
-
-  //   this.setState({shelfItems: this.props.itemcounts
-  //     .filter(ic => ic.container === 'shelf')
-  //     .map(ic => {
-  //       let item = this.props.items.find(i => i.id === ic.item_id);
-  //       return {...ic, 'name': item.name, 'category_id': item.category_id};
-  //     })
-  //   });
   
   }
 
@@ -65,7 +45,6 @@ class MainPage extends Component {
 
     return (
       <div className="MainPage">
-        <div className="title">{this.props.title}</div>
         <ItemContainer type="freezer" items={this.state.freezerItems}/>
         <ItemContainer type="fridge" items={this.state.fridgeItems}/>
         <ItemContainer type="shelf" items={this.state.shelfItems}/>
@@ -87,8 +66,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onGetItems: () => dispatch(actionCreators.getItems()),
-    onGetItemCounts: () => dispatch(actionCreators.getItemCounts()),
+    onGetUserItems: (user_id) => dispatch(actionCreators.getUserItems(user_id)),
+    onGetItemCounts: (item_id) => dispatch(actionCreators.getItemCounts(item_id)),
   }
 }
 
