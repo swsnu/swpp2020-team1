@@ -1,3 +1,5 @@
+''' admin.py: register models '''
+
 from django.contrib import admin
 from .models import Category, Barcode, Item, ItemCount
 
