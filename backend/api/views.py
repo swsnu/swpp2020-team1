@@ -6,7 +6,7 @@ from json import JSONDecodeError
 from django.http import HttpResponse, JsonResponse, HttpResponseNotAllowed, HttpResponseBadRequest
 from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.csrf import ensure_csrf_cookie
-from django.conf import settings
+from django.contrib.auth import get_user_model
 from .models import Category, Barcode, Item, ItemCount
 
 # Create your views here.
@@ -24,7 +24,8 @@ def signup(request):
         except (KeyError, JSONDecodeError) as error:
             print(error)
             return HttpResponseBadRequest()
-        settings.AUTH_USER_MODEL.objects.create_user(username=username, password=password)
+        User = get_user_model()
+        User.objects.create_user(username=username, password=password)
         return HttpResponse(status=201)
     else:
         return HttpResponseNotAllowed(['POST'])
