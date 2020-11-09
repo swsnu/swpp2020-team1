@@ -1,31 +1,50 @@
 import React, {Component} from 'react';
-import { Redirect } from 'react-router';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import Item from '../../components/Item/Item';
-import AddItem from '../../components/AddItem/AddItem';
+import * as actionCreators from '../../store/actions/index';
+import Grid from '@material-ui/core/Grid';
+import { Typography, Container } from '@material-ui/core';
+import IconButton from '@material-ui/core/IconButton';
+import AddBoxIcon from '@material-ui/icons/AddBox';
 
 class ItemContainer extends Component{
   onClickAddItemButton = () => {
-
+    this.props.history.push('/item/add');
   }
+
+  onRemoveItem = (id, count) => {
+    this.props.onEditItemCount(id, count-1);
+  }
+
   render() {
-    const item = (
-      <Item 
-      barcode_name="temp-barcode"
-      item_name="temp-item"
-      expiration_date="temp-expiration"
-      container="temp-container"
-      unit="temp-unit"
-      count={1}
-      /> 
+    let items = null;
+    if (this.props.items) {
+      items = this.props.items.map(i => {
+        return (
+          <Grid key={i.id} item>
+            <Item
+              name={i.name}
+              container={i.container}
+              itemcounts={i.itemcounts}
+              unit="temp-unit"
+              onRemoveItem={(ic_id, count) => this.onRemoveItem(ic_id, count)}
+            />
+          </Grid>
+
+        );
+      })
+    }
+
+    return (
+      <Container>
+        <Typography variant="h4" className="ContainerName">{this.props.type.toUpperCase()}</Typography>
+        <Grid container spacing={3} direction="row" className="ItemContainer">
+          {items}
+          <IconButton className="btn_add_item" onClick={()=>this.onClickAddItemButton()}><AddBoxIcon /></IconButton>
+        </Grid>
+      </Container>
     );
-    return(
-      <div className="ItemContainer">
-        <p className="ContainerName">Container Name: {this.props.type}</p>
-        <div className="Items">{item}</div>
-        <button className="btn_add_item" onClick={()=>this.onClickAddItemButton()}>Add Item</button>
-      </div>
-    )
   }
 }
 
@@ -37,8 +56,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-
+    onEditItemCount: () => dispatch(actionCreators.editItemCount()),
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ItemContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(ItemContainer));
