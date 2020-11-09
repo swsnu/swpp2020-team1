@@ -58,9 +58,6 @@ MIDDLEWARE = [
 CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_ALLOW_ALL = True
 # ALLOWED_HOSTS = ['*']
-# CORS_ORIGIN_WHITELIST = (
-#     'https://app.nanonets.com/api/v2/ObjectDetection/Model/8d757818-7d43-4d65-bcd6-3e5b0e23bcbf/LabelFile/',
-# )
 
 ROOT_URLCONF = 'backend.urls'
 
