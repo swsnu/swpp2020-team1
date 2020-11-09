@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { withRouter } from 'react-router';
 
 class AddItem extends Component {
   render() {
@@ -24,4 +23,4 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(AddItem));
+export default connect(mapStateToProps, mapDispatchToProps)(AddItem);

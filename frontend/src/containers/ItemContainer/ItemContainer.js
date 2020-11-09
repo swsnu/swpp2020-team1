@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import { Redirect } from 'react-router';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 import Item from '../../components/Item/Item';
 import AddItem from '../../components/AddItem/AddItem';
 import * as actionCreators from '../../store/actions/index';
@@ -54,4 +53,4 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(ItemContainer));
+export default connect(mapStateToProps, mapDispatchToProps)(ItemContainer);
