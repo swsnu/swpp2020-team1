@@ -7,7 +7,6 @@ import axios from 'axios';
 // material-ui components
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import { CircularProgress } from '@material-ui/core';
 import { Grid } from '@material-ui/core';
 import Scanner from './Scanner';
 import Result from './Result';
@@ -26,6 +25,37 @@ function dataURLtoFile(dataurl, filename) {
 
 const BARCODE_TERM = 'Scanning Barcode...'
 const EXPIRATION_TERM = 'Scanning Expiration Date...'
+
+function parseDate(text) {
+// DD-MM-YYYY
+  const re1 = /(?<date>0?[1-9]|[12][0-9]|3[01])[\/\-\.](?<month>0?[1-9]|1[012])[\/\-\.](?<year>\d{4})/g;
+// YYYY-MM-DD
+  const re2 = /(?<year>\d{4})[\/\-\.](?<month>0?[1-9]|1[012])[\/\-\.](?<date>0?[1-9]|[12][0-9]|3[01])/g;
+  const matched1 = text.matchAll(re1);
+  const matched2 = text.matchAll(re2);
+
+  let year, month, date;
+  for(let match of matched1) {
+    console.log("match1: "+match);
+    year = match.groups.year;
+    month = match.groups.month;
+    date = match.groups.date;
+    console.log("YEAR: "+year);
+    console.log("MONTH: "+month);
+    console.log("DATE: "+date);
+
+  }
+  for(let match of matched2) {
+    console.log("match2: "+match);
+    year = match.groups.year;
+    month = match.groups.month;
+    date = match.groups.date;
+    console.log("YEAR: "+year);
+    console.log("MONTH: "+month);
+    console.log("DATE: "+date);
+  }
+  return "Expiration: "+year+"/"+month+"/"+date
+}
 
 class AddItem extends Component {
   state = {
@@ -58,18 +88,6 @@ class AddItem extends Component {
     this.webcam = webcam;
   }
 
-  // Used to capture webcam image
-  // capture = () => {
-  //   // returns an encoded base64 string
-  //   const imageSrc = this.webcam.getScreenshot();
-  //   const imageFile = dataURLtoFile(imageSrc,'captured.jpeg');
-  //   this.setState({
-  //     screenShot: imageSrc,
-  //     imageFile: imageFile
-  //   });
-  //   this.handleOCR()
-  // }
-  // Used to recapture webcam
   onClickRetake = (e) => {
     e.persist();
     this.setState({
@@ -77,12 +95,17 @@ class AddItem extends Component {
     });
   }
 
-  handleDetect(imageText) {
-    console.log("imageText_addCard: ", imageText);
-    this.setState({ 
-      OCRResult: imageText 
-    });
-  }
+handleDetect(imageText) {
+  console.log("imageText_addCard: ", imageText);
+  let ymd = parseDate(imageText);
+  this.setState({
+    OCRResult: ymd 
+  })
+}
+
+editOCRResult(e) {
+  this.setState({ OCRResult: e.target.value });
+}
 
   editOCRResult(e) {
     this.setState({ OCRResult: e.target.value });
@@ -97,7 +120,7 @@ class AddItem extends Component {
     while(!myImage){
       console.log("myimage is null");
     }
-
+    
     const modelId = '8d757818-7d43-4d65-bcd6-3e5b0e23bcbf';
     const apiKey = 'cRceuIjMuF9DAvHuC7lTOLnJxnhB0hs1';
     let url = `/api/v2/ObjectDetection/Model/${modelId}/LabelFile/`; 
