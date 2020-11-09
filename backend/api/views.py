@@ -24,8 +24,8 @@ def signup(request):
         except (KeyError, JSONDecodeError) as error:
             print(error)
             return HttpResponseBadRequest()
-        User = get_user_model()
-        User.objects.create_user(username=username, password=password)
+        user = get_user_model()
+        user.objects.create_user(username=username, password=password)
         return HttpResponse(status=201)
     else:
         return HttpResponseNotAllowed(['POST'])
@@ -148,7 +148,10 @@ def item_list(request):
 
         barcode = Barcode.objects.filter(barcode_num=barcode_num).first() if barcode_num else None
         category = Category.objects.filter(id=category_id).first() if category_id else None
-        result_str = ''
+        same_item = None
+        new_item = None
+        same_item_count = None
+        new_item_count = None
 
         item_dup = Item.objects.filter(user_id=user.id, barcode__barcode_num=barcode_num)
         if item_dup.count() == 1:
@@ -163,7 +166,23 @@ def item_list(request):
                 item_id=same_item.id,
                 expiration_date=expiration_date
             )
-            result_str = add_item_count(item_count_dup, same_item, expiration_date, count, True)
+            if item_count_dup.count() == 1:
+                # item_count with same expiration date exists, modify existing record
+                same_item_count = item_count_dup[0]
+                same_item_count.count += count
+                same_item_count.save()
+                result_str = 'Success: item found with barcode_num, item_count found'
+            elif item_count_dup.count() == 0:
+                # item_count with same expiration date doesn't exists, create a new record
+                new_item_count = ItemCount(
+                    item=same_item,
+                    expiration_date=expiration_date,
+                    count=count,
+                )
+                new_item_count.save()
+                result_str = 'Success: item found with barcode_num, item_count created'
+            else:
+                print("Something wrong. Duplicate item_counts in ItemCount model.")
         elif item_dup.count() == 0:
             # no record with same user_id and barcode_num.
             if barcode is not None:
@@ -188,8 +207,23 @@ def item_list(request):
                         item_id=same_item.id,
                         expiration_date=expiration_date
                     )
-                    result_str = add_item_count(
-                        item_count_dup, same_item, expiration_date, count, False)
+                    if item_count_dup.count() == 1:
+                        # item_count with same expiration date exists, modify existing record
+                        same_item_count = item_count_dup[0]
+                        same_item_count.count += count
+                        same_item_count.save()
+                        result_str = 'Success: item found with item name, item_count found'
+                    elif item_count_dup.count() == 0:
+                        # item_count with same expiration date doesn't exists, create a new record
+                        new_item_count = ItemCount(
+                            item=same_item,
+                            expiration_date=expiration_date,
+                            count=count,
+                        )
+                        new_item_count.save()
+                        result_str = 'Success: item found with item name, item_count created'
+                    else:
+                        print("Something wrong. Duplicate item_counts in ItemCount model.")
                 elif item_name_dup.count() == 0:
                     # no record with same user_id and item name. create a new item and a item_count
                     new_item = Item(
@@ -211,11 +245,52 @@ def item_list(request):
                     print("Something wrong. Duplicate items in Item model.")
         else:
             print("Somthing wrong. Duplicate items in Item model.")
-        if result_str == '':
-            result_str = 'Failed: something wrong'
-        response_dict = {
-            'result_str': result_str
-        }
+        response_dict = {}
+
+        if same_item is not None:
+            response_dict['item_found'] = True
+            response_dict['item'] = {
+                'id': same_item.id,
+                'name': same_item.name,
+                'container': same_item.container,
+                'user_id': same_item.user_id,
+                'category_id': same_item.category_id,
+                'barcode_num': same_item.barcode_id
+            }
+        elif new_item is not None:
+            response_dict['item_found'] = False
+            response_dict['item'] = {
+                'id': new_item.id,
+                'name': new_item.name,
+                'container': new_item.container,
+                'user_id': new_item.user_id,
+                'category_id': new_item.category_id,
+                'barcode_num': new_item.barcode_id
+            }
+        else:
+            print("Failed: cannot add item.")
+            return HttpResponseBadRequest()
+
+        if same_item_count is not None:
+            response_dict['item_count_found'] = True
+            response_dict['item_count'] = {
+                'id': same_item_count.id,
+                'item_id': same_item_count.item_id,
+                'expiration_date': same_item_count.expiration_date,
+                'count': same_item_count.count
+            }
+        elif new_item_count is not None:
+            response_dict['item_count_found'] = False
+            response_dict['item_count'] = {
+                'id': new_item_count.id,
+                'item_id': new_item_count.item_id,
+                'expiration_date': new_item_count.expiration_date,
+                'count': new_item_count.count
+            }
+        else:
+            print("Failed: cannot add item count.")
+            return HttpResponseBadRequest()
+
         return JsonResponse(response_dict, status=201)
     else:
         return HttpResponseNotAllowed(['GET', 'POST'])
@@ -242,3 +317,49 @@ def item_count_list(request, item_id=0):
         return JsonResponse(all_item_count_list, safe=False)
     else:
         return HttpResponseNotAllowed(['GET'])
+
+def item_count_info(request, item_count_id=0):
+    '''
+    item_count_info:
+        PUT: modify count of the item_count
+    '''
+    if request.method == 'PUT':
+        is_deleted = False
+        try:
+            item_count = ItemCount.objects.get(id=item_count_id)
+        except ItemCount.DoesNotExist as error:
+            print(error)
+            return HttpResponse(status=404)
+        try:
+            body = request.body.decode()
+            count = json.loads(body)['count']
+        except (KeyError, JSONDecodeError) as error:
+            print(error)
+            return HttpResponseBadRequest()
+        if count > 0:
+            item_count.count = count
+            item_count.save()
+        elif count == 0:
+            item_count.delete()
+            is_deleted = True
+        else:
+            print("ERROR: illegal count {}".format(count))
+            return HttpResponseBadRequest()
+        response_dict = {}
+        if is_deleted:
+            response_dict = {
+                'is_deleted': True
+            }
+        else:
+            response_dict = {
+                'is_deleted': False,
+                'item_count': {
+                    'id': item_count.id,
+                    'item_id': item_count.item_id,
+                    'expiration_date': item_count.expiration_date,
+                    'count': item_count.count
+                }
+            }
+        return JsonResponse(response_dict, status=200)
+    else:
+        return HttpResponseNotAllowed(['PUT'])
