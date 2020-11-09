@@ -1,5 +1,6 @@
 import React, { Component} from "react";
 import { connect } from "react-redux";
+import { withRouter } from "react-router";
 import Webcam from 'react-webcam';
 import axios from 'axios';
 
