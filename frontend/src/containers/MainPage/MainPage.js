@@ -4,7 +4,6 @@ import ItemContainer from '../ItemContainer/ItemContainer';
 import Basket from '../../components/Basket/Basket';
 import * as actionCreators from '../../store/actions/index';
 
-
 class MainPage extends Component {
   state = {
     freezerItems: null,

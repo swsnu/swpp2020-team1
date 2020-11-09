@@ -1,0 +1,9 @@
+.Scanner {
+  border-top: 10px solid #f10293;
+
+}
+
+.Scanner .viewport {
+  width: 100%;
+  margin: 0 auto;
+}
