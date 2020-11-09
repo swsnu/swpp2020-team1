@@ -1,0 +1,8 @@
+# db file
+*.sqlite3
+
+# python cache
+__pycache__/
+
+# misc
+.DS_Store
