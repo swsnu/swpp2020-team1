@@ -6,7 +6,6 @@ import axios from 'axios';
 // material-ui components
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import { CircularProgress } from '@material-ui/core';
 import { Grid } from '@material-ui/core';
 
 function dataURLtoFile(dataurl, filename) {
@@ -21,6 +20,37 @@ function dataURLtoFile(dataurl, filename) {
   return new File([u8arr], filename, {type:mime});
 }
 
+function parseDate(text) {
+// DD-MM-YYYY
+  const re1 = /(?<date>0?[1-9]|[12][0-9]|3[01])[\/\-\.](?<month>0?[1-9]|1[012])[\/\-\.](?<year>\d{4})/g;
+// YYYY-MM-DD
+  const re2 = /(?<year>\d{4})[\/\-\.](?<month>0?[1-9]|1[012])[\/\-\.](?<date>0?[1-9]|[12][0-9]|3[01])/g;
+  const matched1 = text.matchAll(re1);
+  const matched2 = text.matchAll(re2);
+
+  let year, month, date;
+  for(let match of matched1) {
+    console.log("match1: "+match);
+    year = match.groups.year;
+    month = match.groups.month;
+    date = match.groups.date;
+    console.log("YEAR: "+year);
+    console.log("MONTH: "+month);
+    console.log("DATE: "+date);
+
+  }
+  for(let match of matched2) {
+    console.log("match2: "+match);
+    year = match.groups.year;
+    month = match.groups.month;
+    date = match.groups.date;
+    console.log("YEAR: "+year);
+    console.log("MONTH: "+month);
+    console.log("DATE: "+date);
+  }
+  return "Expiration: "+year+"/"+month+"/"+date
+}
+
 class AddItem extends Component {
   state = {
     webcam: true,
@@ -28,7 +58,7 @@ class AddItem extends Component {
     imageSrc: "",
     imageFile: "",
     OCRResult: "",
-    saveImage: false
+    saveImage: false,
   }
 
   turnOff = () => {
@@ -42,18 +72,6 @@ class AddItem extends Component {
     this.webcam = webcam;
   }
 
-  // Used to capture webcam image
-  // capture = () => {
-  //   // returns an encoded base64 string
-  //   const imageSrc = this.webcam.getScreenshot();
-  //   const imageFile = dataURLtoFile(imageSrc,'captured.jpeg');
-  //   this.setState({
-  //     screenShot: imageSrc,
-  //     imageFile: imageFile
-  //   });
-  //   this.handleOCR()
-  // }
-  // Used to recapture webcam
   onClickRetake = (e) => {
     e.persist();
     this.setState({
@@ -63,9 +81,10 @@ class AddItem extends Component {
 
 handleDetect(imageText) {
   console.log("imageText_addCard: ", imageText);
-  this.setState({ 
-    OCRResult: imageText 
-  });
+  let ymd = parseDate(imageText);
+  this.setState({
+    OCRResult: ymd 
+  })
 }
 
 editOCRResult(e) {
@@ -104,6 +123,8 @@ OCR(e, callback){
   xhr.open("POST", url);
   xhr.setRequestHeader("authorization", "Basic " + btoa(`${apiKey}:`));
   xhr.send(data);
+
+  
 };
 
 handleOCR = async (e) => {
@@ -115,13 +136,6 @@ handleOCR = async (e) => {
   });
   this.OCR(e, data => this.handleDetect(data));
 }
-
-// checkAPI = () => {
-//   axios.get("/back/ocr/recognize")
-//     .then(res => {
-//       console.log(res)
-//     })
-// }
 
 render() {
   const videoConstraints = {
