@@ -31,8 +31,11 @@ function parseDate(text) {
   const re1 = /(?<date>0?[1-9]|[12][0-9]|3[01])[\/\-\.](?<month>0?[1-9]|1[012])[\/\-\.](?<year>\d{4})/g;
 // YYYY-MM-DD
   const re2 = /(?<year>\d{4})[\/\-\.](?<month>0?[1-9]|1[012])[\/\-\.](?<date>0?[1-9]|[12][0-9]|3[01])/g;
+// MM-DD
+  const re3 = /(?<month>0?[1-9]|1[012])[\/\-\.](?<date>0?[1-9]|[12][0-9]|3[01])/g; 
   const matched1 = text.matchAll(re1);
   const matched2 = text.matchAll(re2);
+  const matched3 = text.matchAll(re3);
 
   let year, month, date;
   for(let match of matched1) {
@@ -43,11 +46,19 @@ function parseDate(text) {
     console.log("YEAR: "+year);
     console.log("MONTH: "+month);
     console.log("DATE: "+date);
-
   }
   for(let match of matched2) {
     console.log("match2: "+match);
     year = match.groups.year;
+    month = match.groups.month;
+    date = match.groups.date;
+    console.log("YEAR: "+year);
+    console.log("MONTH: "+month);
+    console.log("DATE: "+date);
+  }
+  for(let match of matched3) {
+    console.log("match3: "+match);
+    year = new Date().getFullYear();
     month = match.groups.month;
     date = match.groups.date;
     console.log("YEAR: "+year);
@@ -71,9 +82,14 @@ class AddItem extends Component {
   }
 
   db_temp = {
-    item: [
+    Barcodes: [
       { id: 1, barcode_num: 8801115114154, item_name: '서울우유 1.5L', category: 1 },
-      { id: 2, barcode_num: 8801019310720, item_name: '홈런볼 230g', category: 2 }
+      { id: 2, barcode_num: 8801019310720, item_name: '홈런볼 230g', category: 2 },
+      { id: 3, barcode_num: 8801155721527, item_name: '더 진한 딸기우유 500mL', category: 1 }
+    ],
+    Categories: [
+      { id: 1, name: '우유'},
+      { id: 2, name: '과자'}
     ]
   }
 
@@ -162,13 +178,36 @@ editOCRResult(e) {
   //     })
   // }
 
-  _onDetected = (result) => {
-    this.setState({
+  _onDetected = async (result) => {
+    console.log(result.codeResult.code)
+    let barcode_info_tmp = this.db_temp.Barcodes.filter(barcode => barcode.barcode_num == result.codeResult.code)[0]
+    let category_info_tmp = null;
+    if(barcode_info_tmp != null) {
+      category_info_tmp = this.db_temp.Categories.filter(category => category.id == barcode_info_tmp.category)[0];
+      
+      this.setState({
       ...this.state, 
       is_barcode_scanning: false,
       status: EXPIRATION_TERM,
-      results: [result]
-    });
+      results: [ ...this.state.results, { name: barcode_info_tmp.item_name, container: "fridge", 
+                              category_id: category_info_tmp.name, barcode_num: barcode_info_tmp.barcode_num, 
+                              expiration_date: null, count: 0 }]
+      });
+    } else {
+      this.setState({
+      ...this.state, 
+      is_barcode_scanning: false,
+      status: EXPIRATION_TERM,
+      results: [ ...this.state.results, { name: null, container: "fridge", 
+                              category_id: null, barcode_num: result.codeResult.code, 
+                              expiration_date: null, count: 0 }]
+      });
+    }
+  }
+
+  onClickRemoveButton = async () => {
+    this.setState({ ...this.state, is_barcode_scanning: true });
+    this.state.results.pop();
   }
 
   render() {
@@ -184,12 +223,9 @@ editOCRResult(e) {
       alignItems="center"
       >
         <Grid item xs={12}>
-          <div>
-            Status: {this.state.status} 
-            is_barcode_scanning: {this.state.is_barcode_scanning ? "true" : "false"}
-          </div>
+          <div> {this.state.status} </div>
           <ul className="results">
-            {this.state.results.map((result, i) => (<Result key={result.codeResult.code + i} result={result} />))}
+            {this.state.results.map((result, i) => (<Result key={i} result={result} onClickRemoveButton={this.onClickRemoveButton}/>))}
           </ul>
         <div>{this.state.is_barcode_scanning ? <Scanner onDetected={this._onDetected}/> : null}</div>
         {!this.state.is_barcode_scanning 
