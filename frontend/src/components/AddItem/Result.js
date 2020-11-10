@@ -11,10 +11,24 @@ class Result extends Component {
           <li> Barcode: {result.barcode_num} </li>
           <li> Name: {result.name} </li>
           <li> Category: {result.category_id} </li>
+          <li> Expiration Date: {result.expiration_date} </li>
         </div>
         <div>
+          <button onClick={this.props.onClickMinusButton}> - </button>
+          {result.count}
+          <button onClick={this.props.onClickPlusButton}> + </button>
+        </div>
+        <div>
+          Problem with Barcode?
+          <button onClick={this.props.onClickRetakeBarcodeButton} >Retake</button>
+        </div>
+        <div>
+          Problem with Expiration Date?
+          <button onClick={this.props.onClickRetakeExpirationDateButton} >Retake</button>
+        </div>
+        <div>
+          Want to Edit Manually?
           <button onClick={this.props.onClickEditButton} >Edit</button>
-          <button onClick={this.props.onClickRemoveButton} >Remove</button>
         </div>
       </React.Fragment>
     )

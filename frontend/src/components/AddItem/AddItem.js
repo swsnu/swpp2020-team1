@@ -65,7 +65,7 @@ function parseDate(text) {
     console.log("MONTH: "+month);
     console.log("DATE: "+date);
   }
-  return `Expiration: ${year}/${month}/${date}`
+  return year+"/"+month+"/"+date
 }
 
 class AddItem extends Component {
@@ -76,21 +76,12 @@ class AddItem extends Component {
     imageFile: "",
     OCRResult: "",
     saveImage: false,
-    is_barcode_scanning: true,
-    status: BARCODE_TERM,
+    is_editing: false,
+    is_barcode_scanning: false,
+    is_confirmed: true,
+    is_retaking: false,
+    result: null,
     results: []
-  }
-
-  db_temp = {
-    Barcodes: [
-      { id: 1, barcode_num: 8801115114154, item_name: '서울우유 1.5L', category: 1 },
-      { id: 2, barcode_num: 8801019310720, item_name: '홈런볼 230g', category: 2 },
-      { id: 3, barcode_num: 8801155721527, item_name: '더 진한 딸기우유 500mL', category: 1 }
-    ],
-    Categories: [
-      { id: 1, name: '우유'},
-      { id: 2, name: '과자'}
-    ]
   }
 
   turnOff = () => {
@@ -111,17 +102,14 @@ class AddItem extends Component {
     });
   }
 
-handleDetect(imageText) {
-  console.log("imageText_addCard: ", imageText);
-  let ymd = parseDate(imageText);
-  this.setState({
-    OCRResult: ymd 
-  })
-}
-
-editOCRResult(e) {
-  this.setState({ OCRResult: e.target.value });
-}
+  handleDetect(imageText) {
+    console.log("imageText_addCard: ", imageText);
+    let ymd = parseDate(imageText);
+    this.setState({
+      OCRResult: ymd,
+      result: { ...this.state.result, expiration_date: ymd } 
+    })
+  }
 
   editOCRResult(e) {
     this.setState({ OCRResult: e.target.value });
@@ -162,11 +150,24 @@ editOCRResult(e) {
   };
 
   handleOCR = async (e) => {
+    if(!this.state.is_retaking && (this.state.result != null) ) {
+      this.setState({
+        screenShot: null,
+        imageFile: null,
+        results: [ ...this.state.results, this.state.result ]
+      })
+      this.setState({
+        result: null
+      })
+    }
     const imageSrc = await this.webcam.getScreenshot();
     const imageFile = await dataURLtoFile(imageSrc,'captured.jpeg');
     this.setState({
+      ...this.state,
       screenShot: imageSrc,
-      imageFile: imageFile
+      imageFile: imageFile,
+      is_barcode_scanning: true,
+      is_confirmed: true
     });
     this.OCR(e, data => this.handleDetect(data));
   }
@@ -203,15 +204,22 @@ editOCRResult(e) {
             this.setState({
               ...this.state, 
               is_barcode_scanning: false,
+              is_confirmed: false,
               status: EXPIRATION_TERM,
-              results: [ ...this.state.results, { 
+              result: { ...this.state.result,  
                 name: item_name,
                 container: "fridge", 
                 category_id: category_id,
                 barcode_num: barcode_num,
                 expiration_date: null, 
-                count: 0 }]
-              });
+                count: 1 }
+              }, () => {
+                setTimeout(() => {
+                  this.setState({
+                    ...this.state
+                  });
+                }, 1000)}
+            )
           }
         }
       )
@@ -231,13 +239,14 @@ editOCRResult(e) {
             ...this.state, 
             is_barcode_scanning: false,
             status: EXPIRATION_TERM,
-            results: [ ...this.state.results, { 
+            is_confirmed: false,
+            result: { ...this.state.result,  
               name: item_name,
               container: "fridge", 
               category_id: category_id,
               barcode_num: barcode_num,
               expiration_date: null, 
-              count: 0 }]
+              count: 1 }
             });
         })
         .catch(err => {
@@ -247,21 +256,59 @@ editOCRResult(e) {
             ...this.state, 
             is_barcode_scanning: false,
             status: EXPIRATION_TERM,
-            results: [ ...this.state.results, { 
+            is_confirmed: false,
+            result: { ...this.state.result,  
               name: item_name, 
               container: "fridge", 
               category_id: category_id, 
               barcode_num: barcode_num, 
               expiration_date: null, 
-              count: 0 }]
+              count: 1 }
             });
         });
     }
   }
 
-  onClickRemoveButton = async () => {
-    this.setState({ ...this.state, is_barcode_scanning: true });
-    this.state.results.pop();
+  onClickRetakeBarcodeButton = () => {
+    this.setState({ ...this.state, is_retaking: true, is_barcode_scanning: true });
+  }
+
+  onClickRetakeExpirationDateButton = () => {
+    this.setState({ ...this.state, is_retaking: true, is_barcode_scanning: false });
+  }
+
+  onClickEditButton = () => {
+    this.setState({ ...this.state, is_editing: true });
+  }
+
+  onClickMoveToConfirmButton = () => {
+    //console.log("prev result" , this.state.result)
+    //console.log("prev results", this.state.results)
+    let updatedResults = this.state.results;
+    let result = this.state.result;
+    updatedResults = updatedResults.concat(result);
+    //console.log("updated", updatedResults);
+    Promise.resolve()
+    .then(() => {
+      this.setState({results: updatedResults })
+    })
+    .then(() => {
+      //console.log("after result", this.state.result)
+      console.log("after results", this.state.results)
+      this.props.history.push('/item/confirm', {items: this.state.results});
+    })
+  }
+
+  onClickMinusButton = () => {
+    if(this.state.result != null && this.state.result.count > 1) {
+      let updated_num = this.state.result.count - 1
+      this.setState({ ...this.state, result: { ...this.state.result, count: updated_num }})
+    }
+  }
+
+  onClickPlusButton = () => {
+    let updated_num = this.state.result.count + 1
+    this.setState({ ...this.state, result: { ...this.state.result, count: updated_num }})
   }
 
   render() {
@@ -277,27 +324,32 @@ editOCRResult(e) {
       alignItems="center"
       >
         <Grid item xs={12}>
-          <div> {this.state.status} </div>
+          <div>{ this.state.is_retaking ? "(Retaking)" : (this.state.is_barcode_scanning ? BARCODE_TERM : EXPIRATION_TERM) }</div>
           <ul className="results">
-            {this.state.results.map((result, i) => (<Result key={i} result={result} onClickRemoveButton={this.onClickRemoveButton}/>))}
+            {!this.state.is_confirmed ? <Result result={this.state.result}
+                onClickMinusButton={this.onClickMinusButton}
+                onClickPlusButton={this.onClickPlusButton}
+                onClickRetakeBarcodeButton={this.onClickRetakeBarcodeButton}
+                onClickRetakeExpirationDateButton={this.onClickRetakeExpirationDateButton} 
+                onClickEditButton={this.onClickEditButton} /> : null }
           </ul>
-        <div>{this.state.is_barcode_scanning ? <Scanner onDetected={this._onDetected}/> : null}</div>
-        {!this.state.is_barcode_scanning 
-        ?
-        <Webcam
-        audio={false}
-        height={350}
-        ref={this.setRef}
-        screenshotFormat="image/jpeg"
-        width={350}
-        videoConstraints={videoConstraints}
-        />
-        :
-        <div></div>
-        }
+        <div>{this.state.is_barcode_scanning ? 
+              <Scanner onDetected={this._onDetected}/> : 
+              <Webcam
+              audio={false}
+              height={350}
+              ref={this.setRef}
+              screenshotFormat="image/jpeg"
+              width={350}
+              videoConstraints={videoConstraints}
+              />
+              }
+        </div>
+        
         </Grid>
-        <Grid item xs={12}><button onClick={this.handleOCR}>Capture photo</button></Grid> 
-        <Grid item xs={12}>
+        <Grid item xs={12}><button onClick={this.handleOCR}>Capture photo</button></Grid>
+        
+        {/*<Grid item xs={12}>
           {this.state.screenShot 
           ? 
           <div>
@@ -306,7 +358,7 @@ editOCRResult(e) {
           </div>
           :
           null}
-        </Grid>
+          </Grid>*/}
         <Grid item xs={12}><button onClick={this.turnOff}>Turn off webcam</button></Grid> 
         {/*<Grid item xs={12}><button onClick={this.handleOCR}>Use Ocr</button></Grid> */}
         <Grid item xs={12}>
@@ -319,6 +371,11 @@ editOCRResult(e) {
             label={this.state.OCRResult}
           />
         </Grid>
+        <div>
+          {(this.state.result != null) ? 
+            <button onClick={this.onClickMoveToConfirmButton}>Move to ConfirmItem</button> : 
+            null}
+        </div> 
       </Grid>
     );
   }
