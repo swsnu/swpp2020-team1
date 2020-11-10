@@ -7,3 +7,9 @@
   width: 100%;
   margin: 0 auto;
 }
+
+.Scanner .drawingBuffer {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
