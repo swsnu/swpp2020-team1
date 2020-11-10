@@ -286,6 +286,88 @@ def item_count_list(request, item_id=0):
     else:
         return HttpResponseNotAllowed(['GET'])
 
+def barcode_info(request, barcode_num=0):
+    '''
+    barcode_info:
+        GET: get barcode info
+    '''
+    if request.method == 'GET':
+        try:
+            barcode = Barcode.objects.get(barcode_num=str(barcode_num))
+        except Barcode.DoesNotExist as error:
+            print(error)
+            return HttpResponse(status=404)
+        return JsonResponse({
+            'barcode_num': barcode.barcode_num,
+            'item_name': barcode.item_name,
+            'category': barcode.category
+        })
+    else:
+        return HttpResponseNotAllowed(['GET'])
+
+def barcode_list(request):
+    '''
+    barcode_list:
+        POST: add barcode info
+    '''
+    if request.method == 'POST':
+        try:
+            body = request.body.decode()
+            barcode_num = json.loads(body)['barcode_num']
+            item_name = json.loads(body)['item_name']
+            category = json.loads(body)['category']
+        except (KeyError, JSONDecodeError) as e:
+            return HttpResponseBadRequest()
+        barcode = Barcode(barcode_num=barcode_num, item_name=item_name, category=category)
+        barcode.save()
+        response_dict = {
+            'barcode_num': barcode.barcode_num, 
+            'item_name': barcode.item_name,
+            'category': barcode.category
+        }
+        return JsonResponse(response_dict, status=201)
+    else:
+        return HttpResponseNotAllowed(['POST'])
+
+def category_info(request, category_id=0):
+    '''
+    category_info:
+        GET: category_info
+    '''
+    if request.method == 'GET':
+        try:
+            category = Category.objects.get(id=category_id)
+        except Category.DoesNotExist as error:
+            print(error)
+            return HttpResponse(status=404)
+        return JsonResponse({
+            'id': category.id,
+            'name': category.name,
+        })
+    else:
+        return HttpResponseNotAllowed(['GET'])
+
+def category_list(request):
+    '''
+    category_list:
+        POST: add category info
+    '''
+    if request.method == 'POST':
+        try:
+            body = request.body.decode()
+            name = json.loads(body)['name']
+        except (KeyError, JSONDecodeError) as e:
+            return HttpResponseBadRequest()
+        category = Category(name=name)
+        category.save()
+        response_dict = {
+            'id': category.id,
+            'name': category.name
+        }
+        return JsonResponse(response_dict, status=201)
+    else:
+        return HttpResponseNotAllowed(['POST'])
+
 def item_count_info(request, item_count_id=0):
     '''
     item_count_info:
