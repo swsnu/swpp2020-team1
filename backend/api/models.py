@@ -14,7 +14,13 @@ class Barcode(models.Model):
     ''' Barcode: storing information about barcode numbers '''
     barcode_num = models.CharField(max_length=32, primary_key=True, unique=True)
     item_name = models.CharField(max_length=128)
-    category = models.CharField(max_length=32)
+    category = models.ForeignKey(
+        Category,
+        on_delete=models.SET_NULL,
+        related_name='category_barcode',
+        blank=True,
+        null=True
+    )
 
 class Item(models.Model):
     ''' Item: information about items without expiration_date and count '''

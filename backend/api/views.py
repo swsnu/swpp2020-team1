@@ -234,7 +234,7 @@ def item_list(request):
             return HttpResponseBadRequest()
 
         if same_item_count is not None:
-            response_dict['item_count_found'] = True
+            response_dict['itemcount_found'] = True
             response_dict['itemcount'] = {
                 'id': same_item_count.id,
                 'item_id': same_item_count.item_id,
@@ -242,7 +242,7 @@ def item_list(request):
                 'count': same_item_count.count
             }
         elif new_item_count is not None:
-            response_dict['item_count_found'] = False
+            response_dict['itemcount_found'] = False
             response_dict['itemcount'] = {
                 'id': new_item_count.id,
                 'item_id': new_item_count.item_id,
@@ -294,7 +294,8 @@ def barcode_info(request, barcode_num=0):
         return JsonResponse({
             'barcode_num': barcode.barcode_num,
             'item_name': barcode.item_name,
-            'category': barcode.category
+            'category_id': barcode.category.id,
+            'category_name': barcode.category.name
         })
     else:
         return HttpResponseNotAllowed(['GET'])
@@ -309,16 +310,18 @@ def barcode_list(request):
             body = request.body.decode()
             barcode_num = json.loads(body)['barcode_num']
             item_name = json.loads(body)['item_name']
-            category = json.loads(body)['category']
+            category_id = json.loads(body)['category_id']
         except (KeyError, JSONDecodeError) as error:
             print(error)
             return HttpResponseBadRequest()
+        category = Category.objects.filter(id=category_id).first() if category_id else None
         barcode = Barcode(barcode_num=barcode_num, item_name=item_name, category=category)
         barcode.save()
         response_dict = {
             'barcode_num': barcode.barcode_num,
             'item_name': barcode.item_name,
-            'category': barcode.category
+            'category_id': barcode.category.id,
+            'category_name': barcode.category.name
         }
         return JsonResponse(response_dict, status=201)
     else:
