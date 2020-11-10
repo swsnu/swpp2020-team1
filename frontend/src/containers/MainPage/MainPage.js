@@ -3,12 +3,17 @@ import { connect } from 'react-redux';
 import ItemContainer from '../ItemContainer/ItemContainer';
 import Basket from '../../components/Basket/Basket';
 import * as actionCreators from '../../store/actions/index';
+import axios from 'axios';
 
 class MainPage extends Component {
   
   async componentDidMount() { 
     // temporary user
     const user_id = 1;
+    
+    // temporary login
+    await axios.post('/signin/', {'username': 'user1', 'password': 'ccccccc8'})
+      .then(res => console.log(res));
 
     await this.props.onGetUserItems(user_id);
     for (const item of this.props.items) {

@@ -18,6 +18,10 @@ const itemReducer = (state = initialState, action) => {
       return {...state, items: action.items};
     case actionTypes.GET_USER_ITEMS:
       return {...state, items: action.items};
+    // After adding item, we always redirect to main page where we send GET request for items & itemcounts
+    // Therefore we don't have to add the items to the state here
+    case actionTypes.ADD_ITEM:
+      return state;
     default:
       break;
   }
