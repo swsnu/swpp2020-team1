@@ -28,11 +28,11 @@ const EXPIRATION_TERM = 'Scanning Expiration Date...'
 
 function parseDate(text) {
 // DD-MM-YYYY
-  const re1 = /(?<date>0?[1-9]|[12][0-9]|3[01])[\/\-\.](?<month>0?[1-9]|1[012])[\/\-\.](?<year>\d{4})/g;
+  const re1 = /.*(?<date>0?[1-9]|[12][0-9]|3[01]).*[\/\-\.].*(?<month>0?[1-9]|1[012]).*[\/\-\.].*(?<year>\d{4}).*/g;
 // YYYY-MM-DD
-  const re2 = /(?<year>\d{4})[\/\-\.](?<month>0?[1-9]|1[012])[\/\-\.](?<date>0?[1-9]|[12][0-9]|3[01])/g;
+  const re2 = /.*(?<year>\d{4}).*[\/\-\.].*(?<month>0?[1-9]|1[012]).*[\/\-\.].*(?<date>0?[1-9]|[12][0-9]|3[01]).*/g;
 // MM-DD
-  const re3 = /(?<month>0?[1-9]|1[012])[\/\-\.](?<date>0?[1-9]|[12][0-9]|3[01])/g; 
+  const re3 = /.*(?<month>0?[1-9]|1[012]).*[\/\-\.].*(?<date>0?[1-9]|[12][0-9]|3[01]).*/g; 
   const matched1 = text.matchAll(re1);
   const matched2 = text.matchAll(re2);
   const matched3 = text.matchAll(re3);
@@ -65,7 +65,7 @@ function parseDate(text) {
     console.log("MONTH: "+month);
     console.log("DATE: "+date);
   }
-  return "Expiration: "+year+"/"+month+"/"+date
+  return `Expiration: ${year}/${month}/${date}`
 }
 
 class AddItem extends Component {
@@ -171,37 +171,91 @@ editOCRResult(e) {
     this.OCR(e, data => this.handleDetect(data));
   }
 
-  // checkAPI = () => {
-  //   axios.get("/back/ocr/recognize")
-  //     .then(res => {
-  //       console.log(res)
-  //     })
-  // }
-
   _onDetected = async (result) => {
-    console.log(result.codeResult.code)
-    let barcode_info_tmp = this.db_temp.Barcodes.filter(barcode => barcode.barcode_num == result.codeResult.code)[0]
-    let category_info_tmp = null;
-    if(barcode_info_tmp != null) {
-      category_info_tmp = this.db_temp.Categories.filter(category => category.id == barcode_info_tmp.category)[0];
-      
-      this.setState({
-      ...this.state, 
-      is_barcode_scanning: false,
-      status: EXPIRATION_TERM,
-      results: [ ...this.state.results, { name: barcode_info_tmp.item_name, container: "fridge", 
-                              category_id: category_info_tmp.name, barcode_num: barcode_info_tmp.barcode_num, 
-                              expiration_date: null, count: 0 }]
-      });
-    } else {
-      this.setState({
-      ...this.state, 
-      is_barcode_scanning: false,
-      status: EXPIRATION_TERM,
-      results: [ ...this.state.results, { name: null, container: "fridge", 
-                              category_id: null, barcode_num: result.codeResult.code, 
-                              expiration_date: null, count: 0 }]
-      });
+    let barcode_num = result.codeResult.code;
+    let user_id = 1; // <TEMPORARY> 나중에 map어쩌고props로 user정보가져오셈
+    let item_name = "";
+    let category_id = "";
+    console.log(`barcode_num: ${barcode_num}`)
+    /*
+     * Check if <new_item> is in <user>'s Item DB
+     * [ Goal ] To check whether item has <user-custom name>
+     * key: (user_id, barcode_num)
+     */
+    let custom_item = null;
+    axios.get(`/item/user/${user_id}/`)
+      .then(res => 
+        {
+          // console.log(`res.data[1].barcode_id: ${res.data[1].barcode_id}`);
+          // console.log(`res.data[1].user_id: ${res.data[1].user_id}`);
+          // console.log(`new item's barcode\n${barcode_num}`);
+          // console.log(`new item's user_id: ${user_id}`);
+          custom_item = res.data.filter(item => 
+            (item.barcode_id == barcode_num && item.user_id == user_id)
+          )
+          // console.log(custom_item);
+          // console.log(`custom_item count: ${custom_item.length}`)
+          if(custom_item.length){
+            custom_item = custom_item[custom_item.length - 1];
+            item_name = custom_item.name; 
+            category_id = custom_item.category_id 
+            // console.log(`custom name: ${custom_item.name}`);
+            this.setState({
+              ...this.state, 
+              is_barcode_scanning: false,
+              status: EXPIRATION_TERM,
+              results: [ ...this.state.results, { 
+                name: item_name,
+                container: "fridge", 
+                category_id: category_id,
+                barcode_num: barcode_num,
+                expiration_date: null, 
+                count: 0 }]
+              });
+          }
+        }
+      )
+     /*
+     * Item is new to this user!
+     * Check if <new_item> is in Barcode DB
+     * [ Goal ] To set item's <default name>
+     * key: (barcode_num)
+     */
+    if(custom_item == null){
+      axios.get(`/barcode/${barcode_num}/`)
+        .then(res => {
+          // console.log(res);
+          item_name = res.data.item_name;
+          category_id = res.data.category;
+          this.setState({
+            ...this.state, 
+            is_barcode_scanning: false,
+            status: EXPIRATION_TERM,
+            results: [ ...this.state.results, { 
+              name: item_name,
+              container: "fridge", 
+              category_id: category_id,
+              barcode_num: barcode_num,
+              expiration_date: null, 
+              count: 0 }]
+            });
+        })
+        .catch(err => {
+          // Item not found in Barcode DB
+          // console.log(err);
+          this.setState({
+            ...this.state, 
+            is_barcode_scanning: false,
+            status: EXPIRATION_TERM,
+            results: [ ...this.state.results, { 
+              name: item_name, 
+              container: "fridge", 
+              category_id: category_id, 
+              barcode_num: barcode_num, 
+              expiration_date: null, 
+              count: 0 }]
+            });
+        });
     }
   }
 
