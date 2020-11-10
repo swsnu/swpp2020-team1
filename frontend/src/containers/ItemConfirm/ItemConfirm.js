@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Typography, Container, Button, TextField, Select, InputLabel, MenuItem, Dialog, DialogTitle, DialogContent, DialogActions } from "@material-ui/core";
+import { Typography, Container, Button, TextField, Select, InputLabel, MenuItem, Dialog, DialogTitle, DialogContent, DialogActions, Card, Grid } from "@material-ui/core";
 import * as actionCreators from '../../store/actions/index';
 import './ItemConfirm.css';
 
@@ -116,10 +116,35 @@ class ItemConfirm extends Component {
       // temporary category name
       const categoryName = this.category[item.category_id] || this.category[0];
       return (
-        <Container key={idx}>
-          <Typography>{item.name} - {item.barcode_num} - {item.expiration_date} - {categoryName} - {item.container} - {item.count}</Typography>
+        <Card key={idx} className="new_item">
+          <Grid container spacing={2}>
+            <Grid item xs={2}>
+              <Typography color="textSecondary">Name</Typography>
+              <Typography>{item.name}</Typography>
+            </Grid>
+            <Grid item xs={2}>
+              <Typography color="textSecondary">Barcode number</Typography>
+              <Typography>{item.barcode_num}</Typography>
+            </Grid>
+            <Grid item xs={2}>
+              <Typography color="textSecondary">Expiration date</Typography>
+              <Typography>{item.expiration_date}</Typography>
+            </Grid>
+            <Grid item xs={2}>
+              <Typography color="textSecondary">Count</Typography>
+              <Typography>{item.count}</Typography>
+              </Grid>
+            <Grid item xs={2}>
+              <Typography color="textSecondary">Category</Typography>
+              <Typography>{categoryName}</Typography>
+            </Grid>
+            <Grid item xs={2}>
+              <Typography color="textSecondary">Container</Typography>
+              <Typography>{item.container}</Typography>
+            </Grid>            
+          </Grid>
           <Button className="btn_item_edit" onClick={() => this.onClickEditItemButton(item, idx)}>edit</Button>
-        </Container>
+        </Card>
       );
     });
 
