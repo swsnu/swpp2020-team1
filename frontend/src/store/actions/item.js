@@ -1,5 +1,7 @@
 import * as actionTypes from './actionTypes'; 
 import axios from 'axios';
+axios.defaults.xsrfCookieName = 'csrftoken';
+axios.defaults.xsrfHeaderName = 'X-CSRFToken';
 
 export const getItems_ = (items) => {
     return { type: actionTypes.GET_ITEMS, items: items };

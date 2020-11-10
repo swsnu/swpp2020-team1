@@ -18,10 +18,14 @@ const itemcountReducer = (state = initialState, action) => {
       return {...state, itemcounts: state.itemcounts.filter(ic => ic.item_id !== action.item_id)
                                                     .concat(action.itemcounts)};
     case actionTypes.EDIT_ITEMCOUNT:
-      return {...state, itemcounts: action.itemcounts.map(ic => {
-        if (ic.id === action.itemcount.id) return action.itemcount;
-        else return ic;
-      })}
+      if (action.is_deleted) {
+        return {...state, itemcounts: state.itemcounts.filter(ic => ic.id !== action.id)};
+      } else {
+        return {...state, itemcounts: state.itemcounts.map(ic => {
+          if (ic.id === action.id) return action.itemcount;
+          else return ic;
+        })}
+      }
     default:
       break;
   }
