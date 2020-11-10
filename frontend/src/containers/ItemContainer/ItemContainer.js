@@ -56,7 +56,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onEditItemCount: () => dispatch(actionCreators.editItemCount()),
+    onEditItemCount: (id, count) => dispatch(actionCreators.editItemCount(id, count)),
   }
 }
 
