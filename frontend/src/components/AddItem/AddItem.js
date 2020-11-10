@@ -84,6 +84,19 @@ class AddItem extends Component {
     results: []
   }
 
+  // TEMPORARY
+  db_temp = {
+    Barcodes: [
+      { id: 1, barcode_num: 8801115114154, item_name: '서울우유 1.5L', category: 1 },
+      { id: 2, barcode_num: 8801019310720, item_name: '홈런볼 230g', category: 2 },
+      { id: 3, barcode_num: 8801155721527, item_name: '더 진한 딸기우유 500mL', category: 1 }
+    ],
+    Categories: [
+      { id: 3, name: '우유'},
+      { id: 4, name: '과자'}
+    ]
+  }
+
   turnOff = () => {
     this.setState({
       webcam: false
@@ -138,8 +151,10 @@ class AddItem extends Component {
         if (this.status === 200) {
           console.log(this.responseText);
           var jsonResponse = JSON.parse(this.responseText);
-          text = jsonResponse["result"][0].prediction[0].ocr_text; 
-          callback(text)
+          if(jsonResponse["result"][0].prediction[0]){
+            text = jsonResponse["result"][0].prediction[0].ocr_text; 
+            callback(text)
+          }
         }
       }
     });
@@ -202,7 +217,6 @@ class AddItem extends Component {
             category_id = custom_item.category_id 
             // console.log(`custom name: ${custom_item.name}`);
             this.setState({
-              ...this.state, 
               is_barcode_scanning: false,
               is_confirmed: false,
               status: EXPIRATION_TERM,
@@ -210,6 +224,7 @@ class AddItem extends Component {
                 name: item_name,
                 container: "fridge", 
                 category_id: category_id,
+                category: this.db_temp.Categories.filter(category => (category_id == category.id))[0].name,
                 barcode_num: barcode_num,
                 expiration_date: null, 
                 count: 1 }
@@ -223,6 +238,7 @@ class AddItem extends Component {
           }
         }
       )
+
      /*
      * Item is new to this user!
      * Check if <new_item> is in Barcode DB
@@ -232,11 +248,13 @@ class AddItem extends Component {
     if(custom_item == null){
       axios.get(`/barcode/${barcode_num}/`)
         .then(res => {
-          // console.log(res);
+          console.log(res);
           item_name = res.data.item_name;
-          category_id = res.data.category;
+          category_id = res.data.category_id;
+          console.log("CATEGORY")
+          console.log(`category_id: ${category_id}`)
+          console.log(this.db_temp.Categories.filter(category => (category_id == category.id))[0])
           this.setState({
-            ...this.state, 
             is_barcode_scanning: false,
             status: EXPIRATION_TERM,
             is_confirmed: false,
@@ -244,6 +262,7 @@ class AddItem extends Component {
               name: item_name,
               container: "fridge", 
               category_id: category_id,
+              category: this.db_temp.Categories.filter(category => (category_id == category.id))[0].name,
               barcode_num: barcode_num,
               expiration_date: null, 
               count: 1 }
@@ -253,7 +272,6 @@ class AddItem extends Component {
           // Item not found in Barcode DB
           // console.log(err);
           this.setState({
-            ...this.state, 
             is_barcode_scanning: false,
             status: EXPIRATION_TERM,
             is_confirmed: false,
@@ -261,6 +279,7 @@ class AddItem extends Component {
               name: item_name, 
               container: "fridge", 
               category_id: category_id, 
+              category: "",
               barcode_num: barcode_num, 
               expiration_date: null, 
               count: 1 }
