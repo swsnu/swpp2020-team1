@@ -12,7 +12,7 @@ class MainPage extends Component {
     const user_id = 2;
     
     // temporary login
-    await axios.post('/signin/', {'username': 'user1', 'password': 'pw1'})
+    await axios.post('/signin/', {'username': 'user1', 'password': 'pwpwpwpw'})
       .then(res => console.log(res));
 
     await this.props.onGetUserItems(user_id);

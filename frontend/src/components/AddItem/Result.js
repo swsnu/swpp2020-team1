@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import AddItem from './AddItem';
+import { Typography, Container, Button, TextField, Grid, Dialog, DialogTitle, DialogContent, DialogActions, MenuItem, InputLabel, Select } from '@material-ui/core';
+import './Result.css';
 
 class Result extends Component {
   render() {
@@ -7,28 +8,26 @@ class Result extends Component {
     if (!result) { return null }
     return (
       <React.Fragment>
-        <div>
-          <li> Barcode: {result.barcode_num} </li>
-          <li> Name: {result.name} </li>
-          <li> Category: {result.category} </li>
-          <li> Expiration Date: {result.expiration_date} </li>
-        </div>
-        <div>
-          <button onClick={this.props.onClickMinusButton}> - </button>
+        <div className="Result">
+          <p> <b>Barcode:</b> {result.barcode_num} </p>
+          <p> <b>Name:</b> {result.name} </p>
+          <p> <b>Category:</b> {result.category_id} </p>
+          <p> <b>Expiration Date:</b> {result.expiration_date} </p>
+          <Button onClick={this.props.onClickMinusButton}> - </Button>
           {result.count}
-          <button onClick={this.props.onClickPlusButton}> + </button>
+          <Button onClick={this.props.onClickPlusButton}> + </Button>
         </div>
         <div>
           Problem with Barcode?
-          <button onClick={this.props.onClickRetakeBarcodeButton} >Retake</button>
+          <Button onClick={this.props.onClickRetakeBarcodeButton} >Retake</Button>
         </div>
         <div>
           Problem with Expiration Date?
-          <button onClick={this.props.onClickRetakeExpirationDateButton} >Retake</button>
+          <Button onClick={this.props.onClickRetakeExpirationDateButton} >Retake</Button>
         </div>
         <div>
           Want to Edit Manually?
-          <button onClick={this.props.onClickEditButton} >Edit</button>
+          <Button onClick={this.props.onClickEditButton} >Edit</Button>
         </div>
       </React.Fragment>
     )

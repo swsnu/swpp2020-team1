@@ -5,9 +5,7 @@ import Webcam from 'react-webcam';
 import axios from 'axios';
 
 // material-ui components
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
-import { Grid } from '@material-ui/core';
+import { Typography, Container, Button, TextField, Grid, Dialog, DialogTitle, DialogContent, DialogActions, MenuItem, InputLabel, Select } from '@material-ui/core';
 import Scanner from './Scanner';
 import Result from './Result';
 
@@ -69,6 +67,8 @@ function parseDate(text) {
 }
 
 class AddItem extends Component {
+  containers = ['freezer', 'fridge', 'shelf'];
+
   state = {
     webcam: true,
     screenShot: null,
@@ -81,7 +81,14 @@ class AddItem extends Component {
     is_confirmed: true,
     is_retaking: false,
     result: null,
-    results: []
+    results: [],
+    edit: {
+      name: null,
+      barcode_num: null,
+      expiration_date: null,
+      count: null,
+      container: null
+    }
   }
 
   // TEMPORARY
@@ -190,8 +197,10 @@ class AddItem extends Component {
   _onDetected = async (result) => {
     let barcode_num = result.codeResult.code;
     let user_id = 1; // <TEMPORARY> 나중에 map어쩌고props로 user정보가져오셈
-    let item_name = "";
-    let category_id = "";
+    let item_name = (this.state.result ? this.state.result.name : "");
+    let category_id = (this.state.result ? this.state.result.category_id : "");
+    let expiration_date = (this.state.result ? this.state.result.expiration_date : "");
+    let count = (this.state.result ? this.state.result.count : 1);
     console.log(`barcode_num: ${barcode_num}`)
     /*
      * Check if <new_item> is in <user>'s Item DB
@@ -222,12 +231,12 @@ class AddItem extends Component {
               status: EXPIRATION_TERM,
               result: { ...this.state.result,  
                 name: item_name,
-                container: "fridge", 
+                container: this.containers[0], 
                 category_id: category_id,
                 category: this.db_temp.Categories.filter(category => (category_id == category.id))[0].name,
                 barcode_num: barcode_num,
-                expiration_date: null, 
-                count: 1 }
+                expiration_date: expiration_date, 
+                count: count }
               }, () => {
                 setTimeout(() => {
                   this.setState({
@@ -251,22 +260,24 @@ class AddItem extends Component {
           console.log(res);
           item_name = res.data.item_name;
           category_id = res.data.category_id;
-          console.log("CATEGORY")
-          console.log(`category_id: ${category_id}`)
-          console.log(this.db_temp.Categories.filter(category => (category_id == category.id))[0])
           this.setState({
             is_barcode_scanning: false,
             status: EXPIRATION_TERM,
             is_confirmed: false,
             result: { ...this.state.result,  
               name: item_name,
-              container: "fridge", 
+              container: this.containers[0], 
               category_id: category_id,
               category: this.db_temp.Categories.filter(category => (category_id == category.id))[0].name,
               barcode_num: barcode_num,
-              expiration_date: null, 
-              count: 1 }
-            });
+              expiration_date: expiration_date, 
+              count: count }
+            }, () => {
+                setTimeout(() => {
+                  this.setState({
+                    ...this.state
+                  });
+                }, 1000)});
         })
         .catch(err => {
           // Item not found in Barcode DB
@@ -277,13 +288,18 @@ class AddItem extends Component {
             is_confirmed: false,
             result: { ...this.state.result,  
               name: item_name, 
-              container: "fridge", 
+              container: this.containers[0], 
               category_id: category_id, 
               category: "",
               barcode_num: barcode_num, 
-              expiration_date: null, 
-              count: 1 }
-            });
+              expiration_date: expiration_date, 
+              count: count }
+            }, () => {
+                setTimeout(() => {
+                  this.setState({
+                    ...this.state
+                  });
+                }, 1000)});
         });
     }
   }
@@ -297,7 +313,15 @@ class AddItem extends Component {
   }
 
   onClickEditButton = () => {
-    this.setState({ ...this.state, is_editing: true });
+    let edit_default = {
+      ...this.state.edit,
+      name: this.state.result.name,
+      barcode_num: this.state.result.barcode_num,
+      expiration_date: this.state.result.expiration_date,
+      count: this.state.result.count,
+      container: this.state.result.container
+    }
+    this.setState({ is_editing: true, edit: edit_default });
   }
 
   onClickMoveToConfirmButton = () => {
@@ -330,6 +354,23 @@ class AddItem extends Component {
     this.setState({ ...this.state, result: { ...this.state.result, count: updated_num }})
   }
 
+  onCancelEdit = () => {
+    this.setState({is_editing: false, edit: null});
+  }
+
+  onConfirmEdit = () => {
+    let confirm_item = {
+      ...this.state.result,
+      name: this.state.edit.name,
+      barcode_num: this.state.edit.barcode_num,
+      expiration_date: this.state.edit.expiration_date,
+      count: this.state.edit.count,
+      container: this.state.edit.container
+    }
+
+    this.setState({is_editing: false, result: confirm_item});
+  }
+
   render() {
     const videoConstraints = {
       facingMode: 'user',
@@ -343,15 +384,62 @@ class AddItem extends Component {
       alignItems="center"
       >
         <Grid item xs={12}>
-          <div>{ this.state.is_retaking ? "(Retaking)" : (this.state.is_barcode_scanning ? BARCODE_TERM : EXPIRATION_TERM) }</div>
-          <ul className="results">
+          <Dialog open={this.state.is_editing} onClose={() => this.setState({is_editing: false})}>
+            <DialogTitle id="edit_dialog_title">Edit your item</DialogTitle>
+            <DialogContent>
+            <form>
+              <TextField 
+                value={this.state.edit.name}
+                onChange={e => this.setState({ edit: { ...this.state.edit, name: e.target.value }})}
+                className="item_name_edit margin" 
+                label="Name"
+                margin="dense" />
+              <TextField 
+                value={this.state.edit.barcode_num}
+                onChange={e => this.setState({ edit: { ...this.state.edit, barcode_num: e.target.value }})}
+                className="item_barcode_edit margin" 
+                label="Barcode number"
+                margin="dense" />
+              <TextField
+                value={this.state.edit.expiration_date}
+                onChange={e => this.setState({ edit: { ...this.state.edit, expiration_date: e.target.value }})} 
+                className="item_expiration_date_edit margin" 
+                label="Expiration date"
+                margin="dense" />
+              <TextField 
+                value={this.state.edit.count}
+                onChange={e => this.setState({ edit: { ...this.state.edit, count: e.target.value }})}
+                className="item_count_edit margin" 
+                label="Count"
+                margin="dense" />
+              <InputLabel id="select_container_label">Container</InputLabel>
+              <Select 
+                labelId="select_container_label"
+                value={this.state.edit.container}
+                onChange={e => this.setState({ edit: { ...this.state.edit, container: e.target.value }})}
+                className="item_container_edit margin" 
+                label="Container">
+                {this.containers.map(c => (
+                  <MenuItem key={c} value={c}>{c}</MenuItem>
+                ))}
+              </Select>
+            </form>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={this.onCancelEdit}>Cancel</Button>
+              <Button onClick={this.onConfirmEdit}>Ok</Button>
+            </DialogActions>
+          </Dialog>
+
+          <Typography>{ this.state.is_retaking ? "(Retaking)" : (this.state.is_barcode_scanning ? BARCODE_TERM : EXPIRATION_TERM) }</Typography>
+          <div className="results">
             {!this.state.is_confirmed ? <Result result={this.state.result}
                 onClickMinusButton={this.onClickMinusButton}
                 onClickPlusButton={this.onClickPlusButton}
                 onClickRetakeBarcodeButton={this.onClickRetakeBarcodeButton}
                 onClickRetakeExpirationDateButton={this.onClickRetakeExpirationDateButton} 
                 onClickEditButton={this.onClickEditButton} /> : null }
-          </ul>
+          </div>
         <div>{this.state.is_barcode_scanning ? 
               <Scanner onDetected={this._onDetected}/> : 
               <Webcam
@@ -366,7 +454,7 @@ class AddItem extends Component {
         </div>
         
         </Grid>
-        <Grid item xs={12}><button onClick={this.handleOCR}>Capture photo</button></Grid>
+        <Grid item xs={12}><Button onClick={this.handleOCR}>Capture photo</Button></Grid>
         
         {/*<Grid item xs={12}>
           {this.state.screenShot 
@@ -378,8 +466,8 @@ class AddItem extends Component {
           :
           null}
           </Grid>*/}
-        <Grid item xs={12}><button onClick={this.turnOff}>Turn off webcam</button></Grid> 
-        {/*<Grid item xs={12}><button onClick={this.handleOCR}>Use Ocr</button></Grid> */}
+        <Grid item xs={12}><Button onClick={this.turnOff}>Turn off webcam</Button></Grid> 
+        {/*<Grid item xs={12}><Button onClick={this.handleOCR}>Use Ocr</Button></Grid> */}
         <Grid item xs={12}>
           <TextField
             multiline
@@ -392,7 +480,7 @@ class AddItem extends Component {
         </Grid>
         <div>
           {(this.state.result != null) ? 
-            <button onClick={this.onClickMoveToConfirmButton}>Move to ConfirmItem</button> : 
+            <Button onClick={this.onClickMoveToConfirmButton}>Move to ConfirmItem</Button> : 
             null}
         </div> 
       </Grid>
