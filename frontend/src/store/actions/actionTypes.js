@@ -1,6 +1,7 @@
 // Item
 export const GET_ITEMS = 'GET_ITEMS';
 export const GET_USER_ITEMS = 'GET_USER_ITEMS';
+export const ADD_ITEM = 'ADD_ITEM';
 
 // ItemCount
 export const GET_ITEMCOUNTS = 'GET_ITEMCOUNTS';

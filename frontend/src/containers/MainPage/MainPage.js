@@ -3,14 +3,20 @@ import { connect } from 'react-redux';
 import ItemContainer from '../ItemContainer/ItemContainer';
 import Basket from '../../components/Basket/Basket';
 import * as actionCreators from '../../store/actions/index';
+import axios from 'axios';
 
 class MainPage extends Component {
   
   async componentDidMount() { 
     // temporary user
-    const user_id = 1;
+    const user_id = 2;
+    
+    // temporary login
+    await axios.post('/signin/', {'username': 'user1', 'password': 'pw1'})
+      .then(res => console.log(res));
 
     await this.props.onGetUserItems(user_id);
+    console.log(this.props.items)
     for (const item of this.props.items) {
       this.props.onGetItemCounts(item.id)
     }
