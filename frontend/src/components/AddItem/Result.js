@@ -10,7 +10,7 @@ class Result extends Component {
         <div>
           <li> Barcode: {result.barcode_num} </li>
           <li> Name: {result.name} </li>
-          <li> Category: {result.category_id} </li>
+          <li> Category: {result.category} </li>
           <li> Expiration Date: {result.expiration_date} </li>
         </div>
         <div>
