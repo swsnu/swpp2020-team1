@@ -139,7 +139,6 @@ def item_list(request):
                 same_item_count = item_count_dup[0]
                 same_item_count.count += count
                 same_item_count.save()
-                result_str = 'Success: item found with barcode_num, item_count found'
             elif item_count_dup.count() == 0:
                 # item_count with same expiration date doesn't exists, create a new record
                 new_item_count = ItemCount(
@@ -148,7 +147,6 @@ def item_list(request):
                     count=count,
                 )
                 new_item_count.save()
-                result_str = 'Success: item found with barcode_num, item_count created'
             else:
                 print("Something wrong. Duplicate item_counts in ItemCount model.")
         elif item_dup.count() == 0:
@@ -161,7 +159,6 @@ def item_list(request):
                     expiration_date=expiration_date, count=count)
                 new_item.save()
                 new_item_count.save()
-                result_str = 'Success: item created with barcode_num, item_count created'
             else:
                 # barcode number is not provided. find record with same item name with empty barcode
                 item_name_dup = Item.objects.filter(user_id=user.id, name=name, barcode=None)
@@ -180,7 +177,6 @@ def item_list(request):
                         same_item_count = item_count_dup[0]
                         same_item_count.count += count
                         same_item_count.save()
-                        result_str = 'Success: item found with item name, item_count found'
                     elif item_count_dup.count() == 0:
                         # item_count with same expiration date doesn't exists, create a new record
                         new_item_count = ItemCount(
@@ -189,7 +185,6 @@ def item_list(request):
                             count=count,
                         )
                         new_item_count.save()
-                        result_str = 'Success: item found with item name, item_count created'
                     else:
                         print("Something wrong. Duplicate item_counts in ItemCount model.")
                 elif item_name_dup.count() == 0:
@@ -208,7 +203,6 @@ def item_list(request):
                     )
                     new_item.save()
                     new_item_count.save()
-                    result_str = 'Success: item created with item name, item_count created'
                 else:
                     print("Something wrong. Duplicate items in Item model.")
         else:
@@ -316,12 +310,13 @@ def barcode_list(request):
             barcode_num = json.loads(body)['barcode_num']
             item_name = json.loads(body)['item_name']
             category = json.loads(body)['category']
-        except (KeyError, JSONDecodeError) as e:
+        except (KeyError, JSONDecodeError) as error:
+            print(error)
             return HttpResponseBadRequest()
         barcode = Barcode(barcode_num=barcode_num, item_name=item_name, category=category)
         barcode.save()
         response_dict = {
-            'barcode_num': barcode.barcode_num, 
+            'barcode_num': barcode.barcode_num,
             'item_name': barcode.item_name,
             'category': barcode.category
         }
@@ -356,7 +351,8 @@ def category_list(request):
         try:
             body = request.body.decode()
             name = json.loads(body)['name']
-        except (KeyError, JSONDecodeError) as e:
+        except (KeyError, JSONDecodeError) as error:
+            print(error)
             return HttpResponseBadRequest()
         category = Category(name=name)
         category.save()
@@ -403,7 +399,7 @@ def item_count_info(request, item_count_id=0):
         else:
             response_dict = {
                 'is_deleted': False,
-                'item_count': {
+                'itemcount': {
                     'id': item_count.id,
                     'item_id': item_count.item_id,
                     'expiration_date': item_count.expiration_date,
