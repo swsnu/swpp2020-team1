@@ -13,14 +13,11 @@ class ItemConfirm extends Component {
     category_id_create: 0,
     container_create: this.containers[0],
     count_create: 0,
-    // for testing. In the future, this wll be given as props
-    items: [
-      {'name': 'item1', 'barcode_num': '100', 'expiration_date': '2020/11/11', 'category_id': 1, 'container': 'freezer', 'count': 1},
-      {'name': 'item2', 'barcode_num': '101', 'expiration_date': '2020/11/11', 'category_id': 1, 'container': 'freezer', 'count': 2},
-      {'name': 'item3', 'barcode_num': '102', 'expiration_date': '2020/11/11', 'category_id': 2, 'container': 'freezer', 'count': 3},
-    ],
+
+    items: [],
     editDialogOpen: false,
     editingItemIdx: 0,
+    
     name_edit: '',
     barcode_edit: '',
     expiration_date_edit: '',
@@ -31,7 +28,7 @@ class ItemConfirm extends Component {
 
   componentDidMount() {
     // this.props.onGetCategories();
-    // this.setState({items: this.props.location.state.items});
+    this.setState({items: this.props.location.state.items});
   }
 
   validateInputs() {
@@ -103,7 +100,6 @@ class ItemConfirm extends Component {
 
   onClickConfirmButton = () => {
     for (let item of this.state.items) {
-      console.log(item)
       this.props.onAddItem(item);
     }
     this.props.history.push('/');
