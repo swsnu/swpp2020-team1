@@ -4,5 +4,8 @@
 # python cache
 __pycache__/
 
+# migrations
+backend/api/migrations/*.py
+
 # misc
 .DS_Store
