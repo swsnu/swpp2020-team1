@@ -137,8 +137,8 @@ editOCRResult(e) {
       console.log("myimage is null");
     }
     
-    const modelId = 'a01501fb-cc0d-4b70-ab07-0efe2c513300';
-    const apiKey = 'e6gjXrJeR2ixG2qBXGmPI9C7riwlYjxA';
+    const modelId = '04e7198a-8507-4543-a1a1-18d9f35c3fd1';
+    const apiKey = 'RnrIBDQiOkkHu5EkaeZ3EAQtQMcJmSOv';
     let url = `/api/v2/OCR/Model/${modelId}/LabelFile/`; 
 
     var data = new FormData();
@@ -195,7 +195,7 @@ editOCRResult(e) {
           )
           // console.log(custom_item);
           // console.log(`custom_item count: ${custom_item.length}`)
-          if(custom_item.length){
+          if(custom_item.length>0){
             custom_item = custom_item[custom_item.length - 1];
             item_name = custom_item.name; 
             category_id = custom_item.category_id 
