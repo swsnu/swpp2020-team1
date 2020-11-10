@@ -235,7 +235,7 @@ def item_list(request):
 
         if same_item_count is not None:
             response_dict['item_count_found'] = True
-            response_dict['item_count'] = {
+            response_dict['itemcount'] = {
                 'id': same_item_count.id,
                 'item_id': same_item_count.item_id,
                 'expiration_date': same_item_count.expiration_date,
@@ -243,7 +243,7 @@ def item_list(request):
             }
         elif new_item_count is not None:
             response_dict['item_count_found'] = False
-            response_dict['item_count'] = {
+            response_dict['itemcount'] = {
                 'id': new_item_count.id,
                 'item_id': new_item_count.item_id,
                 'expiration_date': new_item_count.expiration_date,
