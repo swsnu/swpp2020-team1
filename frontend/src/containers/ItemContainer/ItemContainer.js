@@ -10,7 +10,7 @@ import AddBoxIcon from '@material-ui/icons/AddBox';
 
 class ItemContainer extends Component{
   onClickAddItemButton = () => {
-    this.props.history.push('/item/add');
+    this.props.history.push('/item/add', {container: this.props.type});
   }
 
   onRemoveItem = (id, count) => {
