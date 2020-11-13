@@ -15,7 +15,7 @@ matrix:
         - yarn install
         - yarn add coveralls
       script:
-        - ./node_modules/.bin/eslint src/
+        - "./node_modules/.bin/eslint src/"
         - yarn test --coverage --watchAll=false
         - cd ..
         - sonar-scanner
