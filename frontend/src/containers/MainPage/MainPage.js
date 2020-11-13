@@ -16,7 +16,6 @@ class MainPage extends Component {
       .then(res => console.log(res));
 
     await this.props.onGetUserItems(user_id);
-    console.log(this.props.items)
     for (const item of this.props.items) {
       this.props.onGetItemCounts(item.id)
     }
