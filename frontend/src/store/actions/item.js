@@ -30,6 +30,7 @@ export const addItem_ = (item, itemcount) => {
 };
 
 export const addItem = (item) => {  
+    console.log("putting", item);
     return dispatch => {
         return axios.post(`/item/`, item)
                     .then(res => {dispatch(addItem_(res.data.item, res.data.itemcount)); console.log(res)});

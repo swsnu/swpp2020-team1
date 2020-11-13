@@ -2,17 +2,16 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Typography, Container, Button, TextField, Select, InputLabel, MenuItem, Dialog, DialogTitle, DialogContent, DialogActions, Card, Grid } from "@material-ui/core";
 import * as actionCreators from '../../store/actions/index';
+import EditItem from '../../components/AddItem/EditItem';
 import './ItemConfirm.css';
 
 class ItemConfirm extends Component {
-  // temporary
-  category = ['고기', '계란', '파', '우유', '과자'];
   containers = ['freezer', 'fridge', 'shelf'];
   state = {
     name_create: '',
     barcode_create: '',
     expiration_date_create: '',
-    category_create: 0,
+    category_name_create: 0,
     container_create: this.containers[0],
     count_create: 0,
 
@@ -20,6 +19,7 @@ class ItemConfirm extends Component {
     editDialogOpen: false,
     editingItemIdx: 0,
     
+    item_edit: '',
     name_edit: '',
     barcode_edit: '',
     expiration_date_edit: '',
@@ -40,21 +40,16 @@ class ItemConfirm extends Component {
   onClickEditItemButton = (item, idx) => {
     this.setState({
       editingItemIdx: idx,
-      name_edit: item.name,
-      barcode_edit: item.barcode_num,
-      expiration_date_edit: item.expiration_date,
-      category_edit: this.category[item.category_id] || this.category[0],
-      container_edit: item.container,
-      count_edit: item.count,
+      item_edit: item,
       editDialogOpen: true
     });
   }
 
-  onCancelEdit = () => {
+  onCancelEditButton = () => {
     this.setState({editDialogOpen: false});
   }
 
-  onConfirmEdit = () => {
+  onConfirmEditButton = (edit) => {
     if (!this.validateInputs()) {
       // set error message below input field
       return;
@@ -63,12 +58,13 @@ class ItemConfirm extends Component {
       items: this.state.items.map((item, idx) => {
         if (idx === this.state.editingItemIdx) {
           return {
-            'name': this.state.name_edit, 
-            'barcode_num': this.state.barcode_edit, 
-            'expiration_date': this.state.expiration_date_edit, 
-            'category_id': this.category.findIndex(c => c === this.state.category_edit) || 0,
-            'container': this.state.container_edit, 
-            'count': parseInt(this.state.count_edit)
+            'name': edit.name, 
+            'barcode_num': edit.barcode_num, 
+            'expiration_date': edit.expiration_date,
+            'category_id': edit.category_id, 
+            'category_name': edit.category_name,
+            'container': edit.container, 
+            'count': parseInt(edit.count)
           };
         } else {
           return item;
@@ -88,13 +84,14 @@ class ItemConfirm extends Component {
         'name': this.state.name_create, 
         'barcode_num': this.state.barcode_create, 
         'expiration_date': this.state.expiration_date_create,
-        'category_id': this.category.findIndex(c => c === this.state.category_create) || 0, 
+        'category_id': 1,
+        'category_name': this.state.category_name_create, 
         'container': this.state.container_create, 
         'count': parseInt(this.state.count_create)}),
       name_create: '',
       barcode_create: '',
       expiration_date_create: '',
-      category_create: this.category[0],
+      category_create: 0,
       container_create: this.containers[0],
       count_create: 0,
     });
@@ -114,7 +111,6 @@ class ItemConfirm extends Component {
   render() {
     const newItems = this.state.items.map((item, idx) => {
       // temporary category name
-      const categoryName = this.category[item.category_id] || this.category[0];
       return (
         <Card key={idx} className="new_item">
           <Grid container spacing={2}>
@@ -136,7 +132,7 @@ class ItemConfirm extends Component {
               </Grid>
             <Grid item xs={2}>
               <Typography color="textSecondary">Category</Typography>
-              <Typography>{categoryName}</Typography>
+              <Typography>{item.category_name}</Typography>
             </Grid>
             <Grid item xs={2}>
               <Typography color="textSecondary">Container</Typography>
@@ -151,61 +147,7 @@ class ItemConfirm extends Component {
     return (
       <div className="ItemConfirm">
         <Dialog open={this.state.editDialogOpen} onClose={() => this.setState({editDialogOpen: false})}>
-          <DialogTitle id="edit_dialog_title">Edit your item</DialogTitle>
-          <DialogContent>
-          <form>
-            <TextField 
-              value={this.state.name_edit}
-              onChange={e => this.setState({name_edit: e.target.value})}
-              className="item_name_edit margin" 
-              label="Name"
-              margin="dense" />
-            <TextField 
-              value={this.state.barcode_edit}
-              onChange={e => this.setState({barcode_edit: e.target.value})}              
-              className="item_barcode_edit margin" 
-              label="Barcode number"
-              margin="dense" />
-            <TextField 
-              value={this.state.expiration_date_edit}
-              onChange={e => this.setState({expiration_date_edit: e.target.value})}               
-              className="item_expiration_date_edit margin" 
-              label="Expiration date"
-              margin="dense" />
-            <TextField 
-              value={this.state.count_edit}
-              onChange={e => this.setState({count_edit: e.target.value})}               
-              className="item_count_edit margin" 
-              label="Count"
-              margin="dense" />
-            <InputLabel id="select_category_edit_label">Category</InputLabel>
-            <Select 
-              labelId="select_category_edit_label"
-              value={this.state.category_edit} 
-              onChange={e => this.setState({category_edit: e.target.value})} 
-              className="item_category_edit margin" 
-              label="Category">
-              {this.category.map(c => (
-                <MenuItem key={c} value={c}>{c}</MenuItem>
-              ))}
-            </Select>
-            <InputLabel id="select_container_label">Container</InputLabel>
-            <Select 
-              labelId="select_container_label"
-              value={this.state.container_edit} 
-              onChange={e => this.setState({container_edit: e.target.value})} 
-              className="item_container_edit margin" 
-              label="Container">
-              {this.containers.map(c => (
-                <MenuItem key={c} value={c}>{c}</MenuItem>
-              ))}
-            </Select>
-          </form>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={this.onCancelEdit}>Cancel</Button>
-            <Button onClick={this.onConfirmEdit}>Ok</Button>
-          </DialogActions>
+          <EditItem result={this.state.item_edit} onCancelEdit={this.onCancelEditButton} onConfirmEdit={this.onConfirmEditButton}></EditItem>
         </Dialog>
 
         <Typography variant="h5">New Items</Typography>
@@ -237,16 +179,13 @@ class ItemConfirm extends Component {
               label="Count"
               margin="dense" />
             <InputLabel id="select_category_create_label">Category</InputLabel>
-            <Select 
+            <TextField 
               labelId="select_category_create_label"
               value={this.state.category_create} 
               onChange={e => this.setState({category_create: e.target.value})} 
               className="item_category_create margin" 
               label="Category">
-              {this.category.map(c => (
-                <MenuItem key={c} value={c}>{c}</MenuItem>
-              ))}
-            </Select>
+            </TextField>
             <InputLabel id="select_container_label">Container</InputLabel>
             <Select 
               labelId="select_container_label"

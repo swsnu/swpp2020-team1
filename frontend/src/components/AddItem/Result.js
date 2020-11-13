@@ -11,11 +11,12 @@ class Result extends Component {
         <div className="Result">
           <p> <b>Barcode:</b> {result.barcode_num} </p>
           <p> <b>Name:</b> {result.name} </p>
-          <p> <b>Category:</b> {result.category_id} </p>
+          <p> <b>Category:</b> {result.category_name} </p>
           <p> <b>Expiration Date:</b> {result.expiration_date} </p>
-          <Button onClick={this.props.onClickMinusButton}> - </Button>
+          <p> <b>Container:</b> {result.container} </p>
+          <Button onClick={this.props.onClickCountMinusButton}> - </Button>
           {result.count}
-          <Button onClick={this.props.onClickPlusButton}> + </Button>
+          <Button onClick={this.props.onClickCountPlusButton}> + </Button>
         </div>
         <div>
           Problem with Barcode?
