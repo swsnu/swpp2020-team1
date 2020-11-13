@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import { shallow, mount } from 'enzyme';
 import { Provider } from 'react-redux';
-import { Route, Redirect, Switch, BrowserRouter, MemoryRouter } from 'react-router-dom';
+import { Route, Redirect, Switch, BrowserRouter } from 'react-router-dom';
 
 import MainPage from './MainPage';
 import store from '../../store/store';
@@ -33,11 +33,11 @@ describe('<MainPage />', () => {
     mockHistory = {push: jest.fn()}
     mainPage = (
       <Provider store={store}>
-        <MemoryRouter>
+        <BrowserRouter>
         <Switch>
           <Route path='/' exact render={() => <MainPage history={mockHistory}/>} />
         </Switch>
-        </MemoryRouter>
+        </BrowserRouter>
       </Provider>
     );
 
@@ -45,8 +45,6 @@ describe('<MainPage />', () => {
 
 
   it('should render mainPage', () => {
-    console.log(store);
-    console.log(mainPage);
     const component = mount(mainPage);
     const wrapper = component.find('.MainPage');
     console.log(wrapper)
