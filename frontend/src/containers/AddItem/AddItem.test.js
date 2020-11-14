@@ -122,7 +122,7 @@ describe('<AddItem />', () => {
     expect(component.find(EditItem).length).toEqual(1);
   })
 
-  it('should render without error5', async () => {
+  it('should render without error6', async () => {
     const component = mount(<AddItem history={mockHistory} location={{state: {container: "fridge"}}}></AddItem>);
     await component.update()
     component.setState({ is_confirmed: false, currentResult: result })
