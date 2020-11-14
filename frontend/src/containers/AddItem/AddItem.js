@@ -158,6 +158,8 @@ class AddItem extends Component {
           // console.log(`res.data[1].user_id: ${res.data[1].user_id}`);
           // console.log(`new item's barcode\n${barcode_num}`);
           // console.log(`new item's user_id: ${user_id}`);
+          console.log(res)
+          console.log(barcode_num, " wow ", user_id)
           custom_item = res.data.filter(item => 
             (item.barcode_id == barcode_num && item.user_id == user_id)
           )
@@ -192,7 +194,7 @@ class AddItem extends Component {
     if(custom_item == null){
       axios.get(`/barcode/${barcode_num}/`)
         .then(res => {
-          console.log(res);
+          console.log(res.data.item_name, "item_name");
           item_name = res.data.item_name;
           category_id = res.data.category_id;
           category_name = res.data.category_name;
@@ -322,7 +324,7 @@ class AddItem extends Component {
                 <Button id="AddManuallyButton" onClick={this.onClickManualAddButton}>Add Manually</Button>
                 <Typography>{ this.state.is_retaking ? "(Retaking)" : (this.state.is_barcode_scanning ? BARCODE_TERM : EXPIRATION_TERM) }</Typography>
                 <div>{this.state.webcam ? (this.state.is_barcode_scanning ? 
-                      <Scanner id="Scanner" onDetected={() => this._onDetected} ref="Scanner"/> : 
+                      <Scanner id="Scanner" onDetected={this._onDetected} ref="Scanner"/> : 
                       <Webcam
                       audio={false}
                       height={350}
