@@ -104,9 +104,7 @@ class AddItem extends Component {
   };
 
   handleOCR = async (e) => {
-    console.log('handleOCR clicked')
     if(!this.state.is_retaking && (this.state.currentResult !== this.default_result)) {
-      console.log("result saved")
       this.setState((prevState, props) => ({
         screenShot: null,
         imageFile: null,
@@ -114,11 +112,8 @@ class AddItem extends Component {
         currentResult: this.default_result
       }))
     }
-    console.log('handleOCR clicked 2')
     const imageSrc = await this.webcam.getScreenshot();
-    console.log('handleOCR clicked 3')
     const imageFile = await dataURLtoFile(imageSrc,'captured.jpeg');
-    console.log('handleOCR finished converting')
     this.setState((prevState, props) => ({
       screenShot: imageSrc,
       imageFile: imageFile,

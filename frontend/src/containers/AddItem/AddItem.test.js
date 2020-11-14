@@ -31,7 +31,7 @@ jest.mock('axios');
 jest.mock('../../components/AddItem/Scanner')
 
 describe('<AddItem />', () => {
-  it('should render without errors', () => {
+  it('should render EditItem and change information correctly', () => {
     const component = mount(<AddItem history={mockHistory} location={{state: {container: "fridge"}}}></AddItem>);
     component.setState({ is_editing: true, currentResult: result })
     component.update()
@@ -47,59 +47,67 @@ describe('<AddItem />', () => {
     expect(component.state().currentResult.container).toBe('fridge');
   })
 
-  it('should render without error', () => {
-    const component2 = mount(<AddItem history={mockHistory} location={{state: {container: "fridge"}}}></AddItem>);
-    component2.setState({ is_editing: true, currentResult: result2 })
-    component2.update()
+  it('should get a default container value as freezer', () => {
+    const component = mount(<AddItem history={mockHistory} location={{state: {container: "fridge"}}}></AddItem>);
+    component.setState({ is_editing: true, currentResult: result2 })
+    component.update()
 
-    let wrapper2 = component2.find(EditItem).find(Select);
+    let wrapper2 = component.find(EditItem).find(Select);
     expect(wrapper2.text()).toBe("freezer");
   })
 
-  it('should render without error3', async () => {
-    const component3 = mount(<AddItem location={{state: {container: "fridge"}}}></AddItem>);
-    await component3.update()
-    expect(component3.find('button').find('#handleOCR').length).toBe(1);
-    await component3.find('button').find('#handleOCR').simulate('click');
+  it('should render Scanner correctly', async () => {
+    const component = mount(<AddItem location={{state: {container: "fridge", currentResult: result }}}></AddItem>);
+    await component.update()
+    expect(component.find('button').find('#handleOCR').length).toBe(1);
+    await component.find('button').find('#handleOCR').simulate('click');
     
-    await component3.instance().forceUpdate()
-    await component3.update()
-    console.log(component3.debug())
-    expect(component3.find('#Scanner').length).toBe(1);
-    //find('#handleOCR').simulate('click')
-    //component3.setState({ is_barcode_scanning: true })
-    //component3.update()
+    await component.instance().forceUpdate()
+    await component.update()
+    expect(component.find('#Scanner').length).toBe(1);
+
+    component.setState({ is_retaking: false })
+    await component.find('button').find('#handleOCR').simulate('click');
   })
 
-  it('should render without error4', async () => {
-    const component4 = mount(<AddItem history={mockHistory} location={{state: {container: "fridge"}}}></AddItem>);
-    await component4.update()
-    expect(component4.find('button').find('#AddManuallyButton').length).toBe(1);
-    component4.find('button').find('#AddManuallyButton').simulate('click');
+    it('should render Scanner correctly 2', async () => {
+    const component = mount(<AddItem location={{state: {container: "fridge" }}}></AddItem>);
+    await component.update()
     
-    await component4.instance().forceUpdate()
-    await component4.update()
-
-    expect(component4.find(EditItem).length).toBe(1);
-    component4.find(EditItem).find('button').find('.btn_cancel_edit').simulate('click')
-    await component4.update()
-
-    component4.setState({ is_confirmed: false, currentResult: result })
-    await component4.update()
-    expect(component4.find('button').find('#AddManuallyButton').length).toBe(1);
-    component4.find('button').find('#AddManuallyButton').simulate('click');
-
-    await component4.instance().forceUpdate()
-    await component4.update()
-
-    expect(component4.find(EditItem).length).toBe(1);
-    //expect(component3.find('#Scanner').length).toBe(1);
-    //find('#handleOCR').simulate('click')
-    //component3.setState({ is_barcode_scanning: true })
-    //component3.update()
+    expect(component.find('button').find('#handleOCR').length).toBe(1);
+    component.setState({currentResult: result, is_retaking: false})
+    await component.find('button').find('#handleOCR').simulate('click');
+    
+    await component.instance().forceUpdate()
+    await component.update()
+    expect(component.find('#Scanner').length).toBe(1);
   })
 
-  it('should render without error5', async () => {
+  it('should render ManuallAdd correctly', async () => {
+    const component = mount(<AddItem history={mockHistory} location={{state: {container: "fridge"}}}></AddItem>);
+    await component.update()
+    expect(component.find('button').find('#AddManuallyButton').length).toBe(1);
+    component.find('button').find('#AddManuallyButton').simulate('click');
+    
+    await component.instance().forceUpdate()
+    await component.update()
+
+    expect(component.find(EditItem).length).toBe(1);
+    component.find(EditItem).find('button').find('.btn_cancel_edit').simulate('click')
+    await component.update()
+
+    component.setState({ is_confirmed: false, currentResult: result })
+    await component.update()
+    expect(component.find('button').find('#AddManuallyButton').length).toBe(1);
+    component.find('button').find('#AddManuallyButton').simulate('click');
+
+    await component.instance().forceUpdate()
+    await component.update()
+
+    expect(component.find(EditItem).length).toBe(1);
+  })
+
+  it('should render Result value correctly', async () => {
     const component = mount(<AddItem history={mockHistory} location={{state: {container: "fridge"}}}></AddItem>);
     await component.update()
     component.setState({ is_confirmed: false, currentResult: result })
@@ -125,7 +133,32 @@ describe('<AddItem />', () => {
     expect(component.find(EditItem).length).toEqual(1);
   })
 
-  it('should render without error6', async () => {
+  it('should render Result value correctly 2', async () => {
+    const component = mount(<AddItem history={mockHistory} location={{state: {container: "fridge"}}}></AddItem>);
+    await component.update()
+    component.setState({ is_confirmed: false, currentResult: result })
+    
+    await component.instance().forceUpdate()
+    await component.update()
+
+    const wrapper = component.find(Result)
+    expect(wrapper.length).toBe(1);
+
+    wrapper.find('button').find('#onClickRetakeBarcodeButton').simulate('click');
+    await component.update()
+    expect(component.state()["is_retaking"]).toBe(true);
+    component.setState({ is_confirmed: false, is_retaking: false, currentResult: result })
+
+    await component.update()
+    wrapper.find('button').find('#onClickRetakeExpirationDateButton').simulate('click');
+    expect(component.state()["is_retaking"]).toBe(true);
+    await component.update()
+
+  })
+
+  
+
+  it('should move all the information to Confirm Page correctly', async () => {
     const component = mount(<AddItem history={mockHistory} location={{state: {container: "fridge"}}}></AddItem>);
     await component.update()
     component.setState({ is_confirmed: false, currentResult: result })
@@ -185,14 +218,6 @@ describe('<AddItem />', () => {
     }))
     component.instance()._onDetected({ codeResult: { code: 8801231255 } });
 
-    axios.get.mockResolvedValue(({
-      data: [{
-      }]
-    }))
-    component.instance()._onDetected({ codeResult: { code: 8801231255 } });
-
-    //const spyGet = jest.spyOn(axios, 'get')
-
     const wrapper = component.find('textarea').find('#ExpirationDateTextField')
     expect(wrapper.length).toBe(1);
   })
@@ -209,9 +234,14 @@ describe('<AddItem />', () => {
     }))
     component.instance()._onDetected({ codeResult: { code: 8801231255 } });
 
-    //const spyGet = jest.spyOn(axios, 'get')
-
     const wrapper = component.find('textarea').find('#ExpirationDateTextField')
     expect(wrapper.length).toBe(1);
+  })
+
+  it('should work handleDetect function', async () => {
+    const component = mount(<AddItem location={{state: {container: "fridge"}}}></AddItem>);
+    await component.update()
+    component.instance().handleDetect("////2020.11.14/////");
+    expect(component.state().OCRResult).toEqual('2020/11/14');
   })
 })
