@@ -10,10 +10,10 @@ class MainPage extends Component {
   async componentDidMount() { 
     // temporary user
     const user_id = 2;
-    
+
     // temporary login
     await axios.post('/signin/', {'username': 'user1', 'password': 'pwpwpwpw'})
-      .then(res => console.log(res));
+      .then(res => console.log(res))
 
     await this.props.onGetUserItems(user_id);
     for (const item of this.props.items) {
@@ -25,9 +25,9 @@ class MainPage extends Component {
 
   }
 
-  onClickCommunityButton = () => {
+  // onClickCommunityButton = () => {
 
-  }
+  // }
 
   render() {
     let items = this.props.items.reduce((result, i) => {

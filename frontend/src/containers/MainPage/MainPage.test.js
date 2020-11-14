@@ -5,7 +5,7 @@ import { Provider } from 'react-redux';
 import { Route, Redirect, Switch, BrowserRouter } from 'react-router-dom';
 
 import MainPage from './MainPage';
-import store from '../../store/store';
+import { getMockStore } from '../../mock';
 import * as itemActionCreators from '../../store/actions/item';
 import * as itemcountActionCreators from '../../store/actions/itemcount';
 
@@ -15,14 +15,32 @@ function flushPromises() {
 
 const stubInitialState = {
   item: {
-    items: [],
+    items: [  
+      {'id': 1, 'user_id': 2, 'container': 'freezer', 'barcode_num': 100, 'name': 'steak', 'category_id': 1},
+      {'id': 2, 'user_id': 2, 'container': 'freezer', 'barcode_num': 101, 'name': 'chicken', 'category_id': 2},
+      {'id': 3, 'user_id': 2, 'container': 'freezer', 'barcode_num': 102, 'name': 'egg', 'category_id': 3},
+      {'id': 4, 'user_id': 2, 'container': 'fridge', 'barcode_num': 103, 'name': 'kimchi', 'category_id': 4},
+      {'id': 5, 'user_id': 2, 'container': 'shelf', 'barcode_num': 104, 'name': 'par', 'category_id': 5},
+      {'id': 6, 'user_id': 2, 'container': 'shelf', 'barcode_num': 105, 'name': 'apple', 'category_id': 6},
+      {'id': 7, 'user_id': 2, 'container': 'shelf', 'barcode_num': 106, 'name': 'bread', 'category_id': 7},
+  ],
   },
   itemcount: {
-    itemcounts: [],
+    itemcounts: [
+      {'id': 1, 'item_id': 1, 'expiration_date': '20201231', 'count': 2},
+      {'id': 2, 'item_id': 1, 'expiration_date': '20201231', 'count': 1},
+      {'id': 3, 'item_id': 2, 'expiration_date': '20201231', 'count': 3},
+      {'id': 4, 'item_id': 3, 'expiration_date': '20201231', 'count': 1},
+      {'id': 5, 'item_id': 4, 'expiration_date': '20201231', 'count': 1},
+    ],
+  },
+  article: {
+    articles: [],
+    selectedArticle: []
   }
 };
 
-// const mockStore = getMockStore(stubInitialState);
+const mockStore = getMockStore(stubInitialState);
 
 describe('<MainPage />', () => {
 
@@ -32,7 +50,7 @@ describe('<MainPage />', () => {
   beforeEach(() => {
     mockHistory = {push: jest.fn()}
     mainPage = (
-      <Provider store={store}>
+      <Provider store={mockStore}>
         <BrowserRouter>
         <Switch>
           <Route path='/' exact render={() => <MainPage history={mockHistory}/>} />
@@ -44,65 +62,45 @@ describe('<MainPage />', () => {
   })
 
 
-  it('should render mainPage', () => {
+  it('should render mainPage', async () => {
+    const spyPost = jest.spyOn(axios, 'post')
+      .mockImplementation(url => {
+        return new Promise((resolve, reject) => {
+          resolve();
+        })
+      })
+    const spyGet = jest.spyOn(axios, 'get')
+      .mockImplementation(url => {
+        return new Promise((resolve, reject) => {
+          resolve({data: []});
+        })
+      })
     const component = mount(mainPage);
     const wrapper = component.find('.MainPage');
-    console.log(wrapper)
     expect(wrapper.length).toBe(1);
 
+    const mainPageInstance = component.find(MainPage.WrappedComponent).instance();
+    await flushPromises();
   });
 
-
-  // it('should handle createArticle', async () => {
-  //   const spyCreateArticle = jest.spyOn(articleActionCreators, 'createArticle')
-  //     .mockImplementation(art => {return dispatch => Promise.resolve({article:art})});
-  //   const component = mount(mainPage);
-  //   const mainPageInstance = component.find(MainPage.WrappedComponent).instance();
-
-  //   const title = component.find('#article-title-input');
-  //   title.simulate('change', { target: { value: 'title' } });
-  //   expect(mainPageInstance.state.title).toEqual('title');
-  //   const content = component.find('#article-content-input');
-  //   content.simulate('change', { target: { value: 'content' } });
-  //   expect(mainPageInstance.state.content).toEqual('content');
-
-  //   const createButton = component.find('#confirm-create-article-button');
-  //   createButton.simulate('click');
-  //   await flushPromises();
-  //   expect(spyCreateArticle).toHaveBeenCalled();
-  //   expect(mockHistory.push).toHaveBeenCalled();
-  // })
-
-  // it('should handle tab buttons', () => {
-  //   const component = mount(mainPage);
-  //   const mainPageInstance = component.find(MainPage.WrappedComponent).instance();
-
-  //   const previewTabButton = component.find('#preview-tab-button');
-  //   previewTabButton.simulate('click');
-  //   expect(mainPageInstance.state.write).toBe(false);
-
-  //   const writeTabButton = component.find('#write-tab-button');
-  //   writeTabButton.simulate('click');
-  //   expect(mainPageInstance.state.write).toBe(true);
-  // })
-
-
-  // it('should handle back button', () => {
-  //   const component = mount(mainPage);
-  //   const backButton = component.find('#back-create-article-button');
-  //   backButton.simulate('click');
-  //   expect(mockHistory.push).toHaveBeenCalled();
-  // })
-
-  // it('should handle logout', async () => {
-  //   const spyUpdateUser = jest.spyOn(userActionCreators, 'updateUser')
-  //     .mockImplementation(user => {return dispatch => Promise.resolve()});
-  //   const component = mount(mainPage);
-  //   const logoutButton = component.find('#logout-button');
-  //   logoutButton.simulate('click');
-  //   await flushPromises();
-  //   expect(spyUpdateUser).toHaveBeenCalled();
-  // })
+  it('should handle notification button', async () => {
+    const spyPost = jest.spyOn(axios, 'post')
+      .mockImplementation(url => {
+        return new Promise((resolve, reject) => {
+          resolve();
+        })
+      })
+    const spyGet = jest.spyOn(axios, 'get')
+      .mockImplementation(url => {
+        return new Promise((resolve, reject) => {
+          resolve({data: []});
+        })
+      })
+    const component = mount(mainPage);
+    const notiButton = component.find('.btn_notification');
+    await flushPromises();
+    notiButton.simulate('click');
+  });
 
 });
 
