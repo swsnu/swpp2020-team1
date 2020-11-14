@@ -10,7 +10,8 @@ export const getItemCounts_ = (item_id, itemcounts) => {
 export const getItemCounts = (item_id) => {  
     return dispatch => {
         return axios.get(`/item/${item_id}/count/`)
-                    .then(res => dispatch(getItemCounts_(item_id, res.data)));
+                    .then(res => dispatch(getItemCounts_(item_id, res.data)))
+                    .catch(e => {});
     }; 
 };
 
@@ -24,6 +25,7 @@ export const editItemCount = (id, count) => {
                   .then(res => {
                     dispatch(editItemCount_(id, res.data.is_deleted, res.data.itemcount)); 
                     // console.log("data:",res.data)
-                  });
+                  })
+                  .catch(e => {});
   }
 }
