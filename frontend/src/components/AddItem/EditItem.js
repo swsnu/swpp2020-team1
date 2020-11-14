@@ -89,8 +89,8 @@ class EditItem extends Component {
           </form>
         </DialogContent>
         <DialogActions>
-          <Button onClick={this.props.onCancelEdit}>Cancel</Button>
-          <Button onClick={() => this.props.onConfirmEdit(this.state)}>Ok</Button>
+          <Button className="btn_cancel_edit" onClick={this.props.onCancelEdit}>Cancel</Button>
+          <Button className="btn_confirm_edit" onClick={() => this.props.onConfirmEdit(this.state)}>Ok</Button>
         </DialogActions>
       </React.Fragment>
     )
