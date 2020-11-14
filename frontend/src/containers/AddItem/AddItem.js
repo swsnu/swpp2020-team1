@@ -181,6 +181,7 @@ class AddItem extends Component {
           }
         }
       )
+      .catch(e => {});
 
      /*
      * Item is new to this user!
