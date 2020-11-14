@@ -38,8 +38,6 @@ class EditItem extends Component {
   }
 
   render() {
-    if(!this.props.result) { return null }
-
     return (
       <React.Fragment>
         <DialogTitle id="edit_dialog_title">Edit your item</DialogTitle>

@@ -57,7 +57,7 @@ class AddItem extends Component {
     this.webcam = webcam;
   }
 
-  handleDetect(imageText) {
+  handleDetect = (imageText) => {
     console.log("imageText_addCard: ", imageText);
     let ymd = parseDate(imageText);
     this.setState((prevState, props) => ({
@@ -66,11 +66,11 @@ class AddItem extends Component {
     }))
   }
 
-  setExpirationDate(e) {
+  setExpirationDate = (e) => { 
     this.setState({ OCRResult: e.target.value });
   }
 
-  getExpirationDateFromImage(e, callback){
+  getExpirationDateFromImage = (e, callback) => {
     e.preventDefault();
     // https://app.nanonets.com/api/v2/ObjectDetection/Model/8d757818-7d43-4d65-bcd6-3e5b0e23bcbf/LabelFile/
     let myImage = this.state.screenShot;
@@ -107,6 +107,7 @@ class AddItem extends Component {
   };
 
   handleOCR = async (e) => {
+    console.log('handleOCR clicked')
     if(!this.state.is_retaking && (this.state.currentResult !== this.default_result)) {
       console.log("result saved")
       this.setState((prevState, props) => ({
@@ -116,8 +117,11 @@ class AddItem extends Component {
         currentResult: this.default_result
       }))
     }
+    console.log('handleOCR clicked 2')
     const imageSrc = await this.webcam.getScreenshot();
+    console.log('handleOCR clicked 3')
     const imageFile = await dataURLtoFile(imageSrc,'captured.jpeg');
+    console.log('handleOCR finished converting')
     this.setState((prevState, props) => ({
       screenShot: imageSrc,
       imageFile: imageFile,
@@ -125,6 +129,7 @@ class AddItem extends Component {
       is_confirmed: (this.state.is_retaking ? false : true),
       is_retaking: false
     }))
+    console.log('handleOCR clicked updated')
     this.getExpirationDateFromImage(e, data => this.handleDetect(data));
     console.log("After exp date", this.state.currentResult)
   }
@@ -267,7 +272,7 @@ class AddItem extends Component {
       let updated_num = parseInt(this.state.currentResult.count) - 1
       this.setState({ currentResult: { ...this.state.currentResult, count: updated_num }})
     } else {
-      this.setState({ currentResult: { ...this.state.currentResult, count: '1'}})
+      this.setState({ currentResult: { ...this.state.currentResult, count: 1 }})
     }
   }
 
@@ -316,10 +321,10 @@ class AddItem extends Component {
                     onClickEditButton={this.onClickEditButton} /> : null }
               </div>
               <div style={{backgroundColor: '#FFFFFF'}/*{position: 'absolute', zIndex : '1'}*/}>
-                <Button onClick={this.onClickManualAddButton}>Add Manually</Button>
+                <Button id="AddManuallyButton" onClick={this.onClickManualAddButton}>Add Manually</Button>
                 <Typography>{ this.state.is_retaking ? "(Retaking)" : (this.state.is_barcode_scanning ? BARCODE_TERM : EXPIRATION_TERM) }</Typography>
                 <div>{this.state.webcam ? (this.state.is_barcode_scanning ? 
-                      <Scanner onDetected={this._onDetected} ref="Scanner"/> : 
+                      <Scanner id="Scanner" onDetected={() => this._onDetected} ref="Scanner"/> : 
                       <Webcam
                       audio={false}
                       height={350}
@@ -333,7 +338,7 @@ class AddItem extends Component {
               </div>
             </div>
           </Grid>
-          <Grid item xs={12}><Button onClick={this.handleOCR}>Capture photo</Button></Grid>
+          <Grid item xs={12}><Button id="handleOCR" onClick={this.handleOCR}>Capture photo</Button></Grid>
           
           {/*<Grid item xs={12}>
             {this.state.screenShot 
@@ -345,12 +350,13 @@ class AddItem extends Component {
             :
             null}
             </Grid>*/}
-          <Grid item xs={12}><Button onClick={this.onClickWebcamOnOff}>Webcam On/Off</Button></Grid> 
+          <Grid item xs={12}><Button id='onClickWebcamOnOffButton' onClick={this.onClickWebcamOnOff}>Webcam On/Off</Button></Grid> 
           {/*<Grid item xs={12}><Button onClick={this.handleOCR}>Use Ocr</Button></Grid> */}
           <Grid item xs={12}>
             <TextField
               multiline
               rows={4}
+              id="ExpirationDateTextField"
               variant="outlined"
               onChange={this.setExpirationDate}
               label={this.state.OCRResult}
@@ -358,7 +364,7 @@ class AddItem extends Component {
           </Grid>
           <div>
             {(this.state.currentResult != null) ? 
-              <Button onClick={this.onClickMoveToConfirmButton}>Move to ConfirmItem</Button> : 
+              <Button id='onClickMoveToConfirmButton' onClick={this.onClickMoveToConfirmButton}>Move to ConfirmItem</Button> : 
               null}
           </div> 
         </Grid>
@@ -367,16 +373,4 @@ class AddItem extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-
-  }
-}
-
-const mapDispatchToProps = dispatch => {
-  return {
-
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(AddItem);
+export default AddItem;

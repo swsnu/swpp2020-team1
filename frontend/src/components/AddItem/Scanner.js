@@ -36,7 +36,6 @@ class Scanner extends Component {
       
       multiple: false,
       locate: true,
-      debug: true
     }, function(err) {
       if (err) {
         return console.log(err);
@@ -56,12 +55,12 @@ class Scanner extends Component {
 
   render() {
     return (
-      <div className="Scanner">
+      <div className="ScannerMine">
         <div id="interactive" className="viewport">
-          <video class="videoCamera" 
-            autoPlay={true} preload="auto" 
-            src="" muted="true" playsInline={true}></video>
-          <canvas class="drawingBuffer"></canvas>
+          <video className="videoCamera" 
+            preload="auto" 
+            src="" muted={true} playsInline={true}></video>
+          <canvas className="drawingBuffer"></canvas>
         </div>
       </div>
     )
