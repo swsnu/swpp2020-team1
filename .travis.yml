@@ -36,7 +36,7 @@ matrix:
       install:
         - pip install -r requirements.txt
       before_script:
-        - python manage.py makemigrations
+        - python3 manage.py makemigrations
         - python3 manage.py migrate
       script:
         - pylint **/*.py --load-plugins pylint_django --disable=R1705,R0911,R0912,R0914,R0915 --ignore=tests.py
