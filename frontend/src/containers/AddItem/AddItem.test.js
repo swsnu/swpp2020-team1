@@ -25,9 +25,11 @@ let result2 = {
   container: null
 }
 
+let mockHistory = {push: jest.fn()};
+
 describe('<AddItem />', () => {
   it('should render without errors', () => {
-    const component = mount(<AddItem location={{state: {container: "fridge"}}}></AddItem>);
+    const component = mount(<AddItem history={mockHistory} location={{state: {container: "fridge"}}}></AddItem>);
     component.setState({ is_editing: true, currentResult: result })
     component.update()
 
@@ -43,7 +45,7 @@ describe('<AddItem />', () => {
   })
 
   it('should render without error', () => {
-    const component2 = mount(<AddItem location={{state: {container: "fridge"}}}></AddItem>);
+    const component2 = mount(<AddItem history={mockHistory} location={{state: {container: "fridge"}}}></AddItem>);
     component2.setState({ is_editing: true, currentResult: result2 })
     component2.update()
 
@@ -67,7 +69,7 @@ describe('<AddItem />', () => {
   })*/
 
   it('should render without error4', async () => {
-    const component4 = mount(<AddItem location={{state: {container: "fridge"}}}></AddItem>);
+    const component4 = mount(<AddItem history={mockHistory} location={{state: {container: "fridge"}}}></AddItem>);
     await component4.update()
     expect(component4.find('button').find('#AddManuallyButton').length).toBe(1);
     component4.find('button').find('#AddManuallyButton').simulate('click');
@@ -95,7 +97,7 @@ describe('<AddItem />', () => {
   })
 
   it('should render without error5', async () => {
-    const component = mount(<AddItem location={{state: {container: "fridge"}}}></AddItem>);
+    const component = mount(<AddItem history={mockHistory} location={{state: {container: "fridge"}}}></AddItem>);
     await component.update()
     component.setState({ is_confirmed: false, currentResult: result })
     
@@ -121,7 +123,7 @@ describe('<AddItem />', () => {
   })
 
   it('should render without error5', async () => {
-    const component = mount(<AddItem location={{state: {container: "fridge"}}}></AddItem>);
+    const component = mount(<AddItem history={mockHistory} location={{state: {container: "fridge"}}}></AddItem>);
     await component.update()
     component.setState({ is_confirmed: false, currentResult: result })
     
@@ -136,7 +138,7 @@ describe('<AddItem />', () => {
   })
 
   it('should turn off the webcam when clicking WEBCAM ON/OFF', async () => {
-    const component = mount(<AddItem location={{state: {container: "fridge"}}}></AddItem>);
+    const component = mount(<AddItem history={mockHistory} location={{state: {container: "fridge"}}}></AddItem>);
     await component.update()
     component.setState({ is_confirmed: false, currentResult: result })
     await component.update()
@@ -153,7 +155,7 @@ describe('<AddItem />', () => {
   })
 
   it('should work with setExpirationDate function', async () => {
-    const component = mount(<AddItem location={{state: {container: "fridge"}}}></AddItem>);
+    const component = mount(<AddItem history={mockHistory} location={{state: {container: "fridge"}}}></AddItem>);
     await component.update()
     component.setState({ is_confirmed: false, currentResult: result })
     await component.update()
