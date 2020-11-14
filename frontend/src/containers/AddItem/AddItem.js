@@ -76,9 +76,6 @@ class AddItem extends Component {
     let myImage = this.state.screenShot;
     let file =this.state.imageFile;
     var text = "";
-    while(!myImage){
-      console.log("myimage is null");
-    }
     
     const modelId = '04e7198a-8507-4543-a1a1-18d9f35c3fd1';
     const apiKey = 'RnrIBDQiOkkHu5EkaeZ3EAQtQMcJmSOv';
