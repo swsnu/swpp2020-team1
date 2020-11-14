@@ -58,5 +58,14 @@
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.5",
     "enzyme-to-json": "^3.6.1"
+  },
+  "jest": {
+    "collectCoverageFrom" : [ 
+      "src/**/*.{js,jsx}", 
+      "!src/index.js", 
+      "!src/reportWebVitals.js",
+      "!src/setupProxy.js",
+      "!src/setupTests.js"
+    ] 
   }
 }
