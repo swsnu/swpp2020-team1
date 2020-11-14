@@ -6,6 +6,7 @@ import Scanner from '../../components/AddItem/Scanner';
 import Result from '../../components/AddItem/Result';
 import { Dialog, Button, TextField, DialogTitle, DialogContent, DialogActions, MenuItem, InputLabel, Select } from '@material-ui/core';
 import Quagga from 'quagga';
+import axios from 'axios';
 
 let result = {
   name: 'Seoul milk',
@@ -26,6 +27,8 @@ let result2 = {
 }
 
 let mockHistory = {push: jest.fn()};
+jest.mock('axios');
+jest.mock('../../components/AddItem/Scanner')
 
 describe('<AddItem />', () => {
   it('should render without errors', () => {
@@ -53,7 +56,7 @@ describe('<AddItem />', () => {
     expect(wrapper2.text()).toBe("freezer");
   })
 
-  /*it('should render without error3', async () => {
+  it('should render without error3', async () => {
     const component3 = mount(<AddItem location={{state: {container: "fridge"}}}></AddItem>);
     await component3.update()
     expect(component3.find('button').find('#handleOCR').length).toBe(1);
@@ -66,7 +69,7 @@ describe('<AddItem />', () => {
     //find('#handleOCR').simulate('click')
     //component3.setState({ is_barcode_scanning: true })
     //component3.update()
-  })*/
+  })
 
   it('should render without error4', async () => {
     const component4 = mount(<AddItem history={mockHistory} location={{state: {container: "fridge"}}}></AddItem>);
@@ -168,14 +171,47 @@ describe('<AddItem />', () => {
     expect(component.state().OCRResult).toEqual('2020/03/22');
   })
 
-  /*it('should work _onDetected function', async () => {
+  it('should work _onDetected function', async () => {
     const component = mount(<AddItem location={{state: {container: "fridge"}}}></AddItem>);
     await component.update()
     component.instance()._onDetected("8801231255");
     component.setState({ is_barcode_scanning: true });
-    component.instance()._onDetected("8801231255");
+    axios.get.mockResolvedValue(({
+      data: [{
+        barcode_id: "8801231255",
+        name: "milk",
+        user_id: 1
+      }]
+    }))
+    component.instance()._onDetected({ codeResult: { code: 8801231255 } });
+
+    axios.get.mockResolvedValue(({
+      data: [{
+      }]
+    }))
+    component.instance()._onDetected({ codeResult: { code: 8801231255 } });
+
+    //const spyGet = jest.spyOn(axios, 'get')
 
     const wrapper = component.find('textarea').find('#ExpirationDateTextField')
     expect(wrapper.length).toBe(1);
-  })*/
+  })
+
+  it('should work _onDetected function 2', async () => {
+    const component = mount(<AddItem location={{state: {container: "fridge"}}}></AddItem>);
+    await component.update()
+    component.instance()._onDetected("8801231255");
+    component.setState({ is_barcode_scanning: true });
+
+    axios.get.mockResolvedValue(({
+      data: [{
+      }]
+    }))
+    component.instance()._onDetected({ codeResult: { code: 8801231255 } });
+
+    //const spyGet = jest.spyOn(axios, 'get')
+
+    const wrapper = component.find('textarea').find('#ExpirationDateTextField')
+    expect(wrapper.length).toBe(1);
+  })
 })
