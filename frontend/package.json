@@ -65,7 +65,8 @@
       "!src/index.js", 
       "!src/reportWebVitals.js",
       "!src/setupProxy.js",
-      "!src/setupTests.js"
+      "!src/setupTests.js",
+      "!src/containers/AddItem/AddItem.js"
     ] 
   }
 }
