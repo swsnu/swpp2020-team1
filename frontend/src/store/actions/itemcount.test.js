@@ -40,7 +40,7 @@ const stubInitialState = {
   },
 }
 
-describe('store/actions/item', () => {
+describe('store/actions/itemcount', () => {
   let mockStore;
   beforeEach(() => {
     mockStore = getMockStore(stubInitialState);
@@ -49,68 +49,62 @@ describe('store/actions/item', () => {
     jest.clearAllMocks() 
   });
 
-  it('getItems should fetch items correctly', (done) => {
+  it('getItemCounts should fetch itemcounts correctly', (done) => {
     const spyAxiosGet = jest.spyOn(axios, 'get')
       .mockImplementation(url => {
         return new Promise((resolve, reject) => {
           const result = {
             status: 200,
-            data: [stubItem]
+            data: [stubItemCounts]
           };
           resolve(result);
           reject();
         });
       })
 
-      mockStore.dispatch(actionCreators.getItems()).then(() => {
-        expect(spyAxiosGet).toHaveBeenCalledTimes(1);
-        const state = mockStore.getState();
-        expect(state.item.items).toEqual([stubItem]);
-        done();
-      });
-  });
-
-  it('getUserItems should fetch user items correctly', (done) => {
-    const spyAxiosGet = jest.spyOn(axios, 'get')
-      .mockImplementation(url => {
-        return new Promise((resolve, reject) => {
-          const result = {
-            status: 200,
-            data: [stubItem]
-          };
-          resolve(result);
-          reject();
-        });
-      })
-
-      mockStore.dispatch(actionCreators.getUserItems(stubItem.userId)).then(() => {
-        expect(spyAxiosGet).toHaveBeenCalledTimes(1);
-        const state = mockStore.getState();
-        expect(state.item.items).toEqual([stubItem]);
-        done();
-      });
-  });
-
-it('addItem should add items correctly', (done) => {
-  const spyAxiosPost = jest.spyOn(axios, 'post')
-    .mockImplementation((url, item) => {
-      return new Promise((resolve, reject) => {
-        const result = {
-          status: 200,
-          data: stubItem
-        };
-        resolve(result);
-        reject();
-      });
-    })
-  const history = createBrowserHistory();
-  const mockProps = {history};
-
-  mockStore.dispatch(actionCreators.addItem(mockProps, stubItem))
-    .then(() => {
-        expect(spyAxiosPost).toHaveBeenCalledTimes(1);
-        done();
+    mockStore.dispatch(actionCreators.getItemCounts(stubItem.id)).then(() => {
+      expect(spyAxiosGet).toHaveBeenCalledTimes(1);
+      const state = mockStore.getState();
+      expect(state.itemcount.itemcounts).toEqual([stubItemCounts]);
+      done();
     });
   });
+
+  // export const editItemCount_ = (id, is_deleted, itemcount) => {
+  //   return { type: actionTypes.EDIT_ITEMCOUNT, id, is_deleted, itemcount};
+  // }
+  
+  // export const editItemCount = (id, count) => {
+  //   return dispatch => {
+  //       return axios.put(`/item/count/${id}/`, {'count': count})
+  //                   .then(res => {
+  //                     dispatch(editItemCount_(id, res.data.is_deleted, res.data.itemcount)); 
+  //                     console.log("data:",res.data)});
+  //   }
+  // }
+  it('editItemCount should edit itemcount correctly', (done) => {
+    const spyAxiosPut = jest.spyOn(axios, 'put')
+      .mockImplementation((url, count) => {
+        return new Promise((resolve, reject) => {
+          const result = {
+            status: 200,
+            data: {
+              is_deleted: false,
+              itemcount: [stubItemCounts]
+            }
+          };
+          resolve(result);
+        });
+      })
+
+    const mockCount = {'count': 10};
+    mockStore.dispatch(actionCreators.editItemCount(stubItemCounts.id, mockCount))
+      .then(() => {
+        expect(spyAxiosPut).toHaveBeenCalledTimes(1);
+        // const state = mockStore.getState();
+        // expect(state.itemcount.itemcounts).toEqual([stubItemCounts]);
+        done();
+      });
+});
 
 })

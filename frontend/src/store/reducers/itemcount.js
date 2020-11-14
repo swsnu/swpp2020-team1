@@ -22,7 +22,7 @@ const itemcountReducer = (state = initialState, action) => {
         return {...state, itemcounts: state.itemcounts.filter(ic => ic.id !== action.id)};
       } else {
         return {...state, itemcounts: state.itemcounts.map(ic => {
-          if (ic.id === action.id) return action.itemcount;
+          if (ic.id === action.id) return action.itemcounts;
           else return ic;
         })}
       }
