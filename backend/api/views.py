@@ -147,8 +147,6 @@ def item_list(request):
                     count=count,
                 )
                 new_item_count.save()
-            else:
-                print("Something wrong. Duplicate item_counts in ItemCount model.")
         elif item_dup.count() == 0:
             # no record with same user_id and barcode_num.
             if barcode is not None:
@@ -185,8 +183,6 @@ def item_list(request):
                             count=count,
                         )
                         new_item_count.save()
-                    else:
-                        print("Something wrong. Duplicate item_counts in ItemCount model.")
                 elif item_name_dup.count() == 0:
                     # no record with same user_id and item name. create a new item and a item_count
                     new_item = Item(
@@ -203,12 +199,7 @@ def item_list(request):
                     )
                     new_item.save()
                     new_item_count.save()
-                else:
-                    print("Something wrong. Duplicate items in Item model.")
-        else:
-            print("Somthing wrong. Duplicate items in Item model.")
         response_dict = {}
-
         if same_item is not None:
             response_dict['item_found'] = True
             response_dict['item'] = {
