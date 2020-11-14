@@ -11,7 +11,7 @@ class ItemConfirm extends Component {
     name_create: '',
     barcode_create: '',
     expiration_date_create: '',
-    category_name_create: 0,
+    category_name_create: '',
     container_create: this.containers[0],
     count_create: 0,
 
@@ -19,13 +19,6 @@ class ItemConfirm extends Component {
     editDialogOpen: false,
     editingItemIdx: 0,
     
-    item_edit: '',
-    name_edit: '',
-    barcode_edit: '',
-    expiration_date_edit: '',
-    category_edit: 1,
-    container_edit: this.containers[0],
-    count_edit: 0,
   }
 
   componentDidMount() {
@@ -33,9 +26,9 @@ class ItemConfirm extends Component {
     this.setState({items: this.props.location.state ? this.props.location.state.items : []});
   }
 
-  validateInputs() {
-    return true;
-  }
+  // validateInputs() {
+  //   return true;
+  // }
 
   onClickEditItemButton = (item, idx) => {
     this.setState({
@@ -50,10 +43,10 @@ class ItemConfirm extends Component {
   }
 
   onConfirmEditButton = (edit) => {
-    if (!this.validateInputs()) {
-      // set error message below input field
-      return;
-    }
+    // if (!this.validateInputs()) {
+    //   // set error message below input field
+    //   return;
+    // }
     this.setState({
       items: this.state.items.map((item, idx) => {
         if (idx === this.state.editingItemIdx) {
@@ -74,11 +67,10 @@ class ItemConfirm extends Component {
   }
   
   onClickAddItemButton = () => {
-    if (!this.validateInputs()) {
-      // set error message below input field 
-
-      return;
-    }
+    // if (!this.validateInputs()) {
+    //   // set error message below input field 
+    //   return;
+    // }
     this.setState({
       items: this.state.items.concat({
         'name': this.state.name_create, 
@@ -180,17 +172,18 @@ class ItemConfirm extends Component {
               margin="dense" />
             <InputLabel id="select_category_create_label">Category</InputLabel>
             <TextField 
-              labelId="select_category_create_label"
-              value={this.state.category_create} 
-              onChange={e => this.setState({category_create: e.target.value})} 
-              className="item_category_create margin" 
+              labelid="select_category_name_create_label"
+              value={this.state.category_name_create} 
+              onChange={e => this.setState({category_name_create: e.target.value})} 
+              className="item_category_name_create margin" 
               label="Category">
             </TextField>
             <InputLabel id="select_container_label">Container</InputLabel>
             <Select 
-              labelId="select_container_label"
+              
+              labelid="select_container_label"
               value={this.state.container_create} 
-              onChange={e => this.setState({container_create: e.target.value})} 
+              onChange={e => {this.setState({container_create: e.target.value}); console.log("set container")}} 
               className="item_container_create margin" 
               label="Container">
               {this.containers.map(c => (
