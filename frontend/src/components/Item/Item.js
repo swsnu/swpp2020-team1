@@ -11,7 +11,7 @@ const Item = props => {
       <Container key={ic.id}>
         <div className="expiration_date">Expiration date: {ic.expiration_date}</div>
         <div className="count">Count: {ic.count}</div>  
-        <IconButton onClick={() => props.onRemoveItem(ic.id, ic.count)}><RemoveIcon/></IconButton>
+        <IconButton className="btn_remove_item" onClick={() => props.onRemoveItem(ic.id, ic.count)}><RemoveIcon/></IconButton>
       </Container>
     );
   })

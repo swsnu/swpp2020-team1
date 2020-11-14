@@ -35,7 +35,7 @@ class Scanner extends Component {
       },
       
       multiple: false,
-      locate: true,
+      locate: true
     }, function(err) {
       if (err) {
         return console.log(err);
