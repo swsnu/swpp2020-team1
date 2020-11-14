@@ -21,6 +21,9 @@ export const editItemCount_ = (id, is_deleted, itemcount) => {
 export const editItemCount = (id, count) => {
   return dispatch => {
       return axios.put(`/item/count/${id}/`, {'count': count})
-                  .then(res => {dispatch(editItemCount_(id, res.data.is_deleted, res.data.itemcount)); console.log("data:",res.data)});
+                  .then(res => {
+                    dispatch(editItemCount_(id, res.data.is_deleted, res.data.itemcount)); 
+                    // console.log("data:",res.data)
+                  });
   }
 }

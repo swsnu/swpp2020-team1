@@ -21,7 +21,7 @@ export const getUserItems_ = (items) => {
 export const getUserItems = (user_id) => {  
     return dispatch => {
         return axios.get(`/item/user/${user_id}/`)
-                    .then(res => dispatch(getItems_(res.data)));
+                    .then(res => dispatch(getUserItems_(res.data)));
     }; 
 };
 
@@ -33,6 +33,9 @@ export const addItem = (item) => {
     console.log("putting", item);
     return dispatch => {
         return axios.post(`/item/`, item)
-                    .then(res => {dispatch(addItem_(res.data.item, res.data.itemcount)); console.log(res)});
+                    .then(res => {
+                        dispatch(addItem_(res.data.item, res.data.itemcount)); 
+                        // console.log(res)
+                    });
     }; 
 };
