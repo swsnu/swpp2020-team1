@@ -14,6 +14,7 @@ class MainPage extends Component {
     // temporary login
     await axios.post('/signin/', {'username': 'user1', 'password': 'pwpwpwpw'})
       .then(res => console.log(res))
+      .catch(e => console.log(e))
 
     await this.props.onGetUserItems(user_id);
     for (const item of this.props.items) {
