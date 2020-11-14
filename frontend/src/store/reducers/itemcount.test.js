@@ -95,14 +95,13 @@ describe('itemcount reducer', () => {
       type: actionTypes.EDIT_ITEMCOUNT,
       is_deleted: false,
       id: 2,
-      itemcounts:  {
+      itemcount: {
         'id': 2, 
         'itemId': 2, 
         'expirationDate': '20201123', 
         'count': 10
       } 
     });
-
     expect(updateState).toEqual({
       itemcounts: [{
         'id': 1, 
