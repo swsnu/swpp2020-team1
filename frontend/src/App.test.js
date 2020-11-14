@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom';
 import App from './App';
 import { Provider } from 'react-redux';
 import store from './store/store';
+import { createMemoryHistory } from 'history';
+
 
 it('renders without crashing', () => {
   const div = document.createElement('div');
