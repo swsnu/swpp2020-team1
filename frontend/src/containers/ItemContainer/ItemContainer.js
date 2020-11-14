@@ -37,13 +37,16 @@ class ItemContainer extends Component{
     }
 
     return (
-      <Container>
-        <Typography variant="h4" className="ContainerName">{this.props.type.toUpperCase()}</Typography>
-        <Grid container spacing={3} direction="row" className="ItemContainer">
-          {items}
-          <IconButton className="btn_add_item" onClick={()=>this.onClickAddItemButton()}><AddBoxIcon /></IconButton>
-        </Grid>
-      </Container>
+        <div className="ItemContainer">
+          <Container>
+            <Typography variant="h4" className="ContainerName">{this.props.type.toUpperCase()}</Typography>
+            <Grid container spacing={3} direction="row" className="ItemGrid">
+              {items}
+              <IconButton className="btn_add_item" onClick={()=>this.onClickAddItemButton()}><AddBoxIcon /></IconButton>
+            </Grid>
+          </Container>
+        </div>
+
     );
   }
 }
