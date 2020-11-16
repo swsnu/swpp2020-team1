@@ -1,50 +1,44 @@
-matrix:
-  include:
-    - language: node_js
-      node_js: '12'
-      addons:
-        sonarcloud:
-          organization: "swsnu"
-          token:
+matrix: 
+  include: 
+    - 
+      addons: 
+        sonarcloud: 
+          organization: swsnu
+          token: 
             secure: "Y5hoMLTVvo/nI86z6k+KEIDL38FyPVGrwdnBWrKNLueUsvXFEAJBQMVUqrhm9KnyoY5MN0MxLMyOzgnNUETfIczqCgfJ4zzSVaYTCBDgo18j8o/i6lZ/iYYZM/mwX5VKMq/ZJC/T/l4dqpt7jdKYARWWlzpwwr8OCP6Npi7pQhEH2BN+uUusKOVtsWZ9/c2kTKj3MfG0OiUie5G4hSQv/xZOgYvyxiIk6tZI4GQVgXp8dtkEUPHWvLSMue+kXWopqLr5ChDiS908rGHuGki3xPCuFVJNI0uwf3rKLcL5uV7XmMSEjXBqHie9z/QUpjQIsUf7XKOscsvj267aqAdqv6tzWEJQyUQ532MdUBHGzrcl7D8vydJ/VQdJWxF0MKaMmdOL4wI2v4/MO9AfVJYvdwCeAzWL5y18hQhF0RvMDQMcmuHsNBEB/7PvWirn+KGVKnMBwxWVl+lnlWmhjv026xcOveSfqT/BSvd2ndpZZSilmh2qt64fnhT5NU4/VFgvQFtCF2Pd7Kd3EbJrGfHmXRnSWEk4xt284i84XKLHrgBazEvfkQNm//7U5w/Q1/lW2u2owqFM+kwzZ8+GeGr7wuKBTWg+GBcLspaX4C+vSqXwQ2UBYmBAtJ0B4d+dZ5+zOXUgkpSIRmK7waDVkjhOFo/qV4PFLNmlFXagtpJzwLo="
-      cache:
-        - yarn: true
-      before_install:
-        - cd frontend
-      install:
-        - yarn install
-        - yarn add coveralls
-      script:
+      after_success: 
+        - sonar-scanner
+        - "cd backend"
+        - "coveralls --merge=../frontend/coverage/coverage.json"
+      before_script: 
+        - "python manage.py makemigrations"
+        - "python manage.py migrate"
+      cache: 
+        - 
+          yarn: true
+        - 
+          pip: true
+      dist: bionic
+      install: 
+        - "cd frontend"
+        - "yarn install"
+        - "yarn add coveralls"
+        - "cd ../backend"
+        - "source ~/virtualenv/python3.7/bin/activate"
+        - "pip install -r requirements.txt"
+        - "pip install coverage pyyaml coveralls"
+        - "gem install coveralls-lcov"
+      language: node_js
+      node_js: 12
+      python: 3.7
+      script: 
+        - "cd ../frontend"
         - "./node_modules/.bin/eslint src/"
-        - yarn test --coverage --watchAll=false
-        - cd ..
-        - sonar-scanner
-      after_success:
-        - cat ./frontend/coverage/lcov.info | ./frontend/node_modules/coveralls/bin/coveralls.js
-    
-    - language: python
-      python: '3.7'
-      addons:
-        sonarcloud:
-          organization: "swsnu"
-          token:
-            secure: "Y5hoMLTVvo/nI86z6k+KEIDL38FyPVGrwdnBWrKNLueUsvXFEAJBQMVUqrhm9KnyoY5MN0MxLMyOzgnNUETfIczqCgfJ4zzSVaYTCBDgo18j8o/i6lZ/iYYZM/mwX5VKMq/ZJC/T/l4dqpt7jdKYARWWlzpwwr8OCP6Npi7pQhEH2BN+uUusKOVtsWZ9/c2kTKj3MfG0OiUie5G4hSQv/xZOgYvyxiIk6tZI4GQVgXp8dtkEUPHWvLSMue+kXWopqLr5ChDiS908rGHuGki3xPCuFVJNI0uwf3rKLcL5uV7XmMSEjXBqHie9z/QUpjQIsUf7XKOscsvj267aqAdqv6tzWEJQyUQ532MdUBHGzrcl7D8vydJ/VQdJWxF0MKaMmdOL4wI2v4/MO9AfVJYvdwCeAzWL5y18hQhF0RvMDQMcmuHsNBEB/7PvWirn+KGVKnMBwxWVl+lnlWmhjv026xcOveSfqT/BSvd2ndpZZSilmh2qt64fnhT5NU4/VFgvQFtCF2Pd7Kd3EbJrGfHmXRnSWEk4xt284i84XKLHrgBazEvfkQNm//7U5w/Q1/lW2u2owqFM+kwzZ8+GeGr7wuKBTWg+GBcLspaX4C+vSqXwQ2UBYmBAtJ0B4d+dZ5+zOXUgkpSIRmK7waDVkjhOFo/qV4PFLNmlFXagtpJzwLo="
-      cache:
-        - pip: true
-      before_install:
-        - cd backend
-      install:
-        - pip install -r requirements.txt
-      before_script:
-        - python manage.py makemigrations
-        - python3 manage.py migrate
-      script:
-        - pylint **/*.py --load-plugins pylint_django --disable=R1705,R0911,R0912,R0914,R0915 --ignore=tests.py
-        - coverage run --source='./api' manage.py test
-        - coverage xml
-        - cd ..
-        - sonar-scanner
-      after_success:
-        - coveralls
-      after_script:
-        - cd ..
+        - "yarn test --coverage --watchAll=false"
+        - "coveralls-lcov -v -n coverage/lcov.info > coverage/coverage.json"
+        - "cd ../backend"
+        - "pylint **/*.py --load-plugins pylint_django --disable=R1705,R0911,R0912,R0914,R0915 --ignore=tests.py"
+        - "coverage run --source='./api' manage.py test"
+        - "coverage report"
+        - "coverage xml"
+        - "cd .."
