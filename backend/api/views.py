@@ -410,7 +410,16 @@ def recipe_list(request):
         GET: get all recipes
     '''
     if request.method == 'GET':
-        recipes = list(Recipe.objects.all().values())
+        recipes = [
+            {
+                'id': recipe.id,
+                'title': recipe.title,
+                'description': recipe.description,
+                'video_url': recipe.video_url,
+                'rating_average': -1 if recipe.rating_count == 0 else \
+                                recipe.rating_sum / recipe.rating_count
+            }
+            for recipe in Recipe.objects.all()]
         return JsonResponse(recipes, safe=False)
     else:
         return HttpResponseNotAllowed(['GET'])
@@ -428,13 +437,13 @@ def recipe_info(request, recipe_id=0):
         except Recipe.DoesNotExist as error:
             print(error)
             return HttpResponse(status=404)
-        rating_average = -1 if recipe.rating_count == 0 else recipe.rating_sum / recipe.rating_count
         return JsonResponse({
                 'id': recipe.id,
                 'title': recipe.title,
                 'description': recipe.description,
                 'video_url': recipe.video_url,
-                'rating_average': rating_average
+                'rating_average': -1 if recipe.rating_count == 0 else \
+                                recipe.rating_sum / recipe.rating_count
         })
     elif request.method == 'PUT':
         # check if logged in
