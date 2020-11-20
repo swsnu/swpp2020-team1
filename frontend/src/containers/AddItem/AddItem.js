@@ -146,7 +146,7 @@ class AddItem extends Component {
      * key: (user_id, barcode_num)
      */
     let custom_item = null;
-    axios.get(`/item/user/${user_id}/`)
+    axios.get(`/back/item/user/${user_id}/`)
       .then(res => 
         {
           // console.log(`res.data[1].barcode_id: ${res.data[1].barcode_id}`);
@@ -187,7 +187,7 @@ class AddItem extends Component {
      * key: (barcode_num)
      */
     if(custom_item == null){
-      axios.get(`/barcode/${barcode_num}/`)
+      axios.get(`/back/barcode/${barcode_num}/`)
         .then(res => {
           console.log(res.data.item_name, "item_name");
           item_name = res.data.item_name;

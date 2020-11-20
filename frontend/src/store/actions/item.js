@@ -9,7 +9,7 @@ export const getItems_ = (items) => {
 
 export const getItems = () => {  
     return dispatch => {
-        return axios.get('/item/')
+        return axios.get('/back/item/')
                     .then(res => dispatch(getItems_(res.data)))
                     .catch(e => {});
     }; 
@@ -21,7 +21,7 @@ export const getUserItems_ = (items) => {
 
 export const getUserItems = (user_id) => {  
     return dispatch => {
-        return axios.get(`/item/user/${user_id}/`)
+        return axios.get(`/back/item/user/${user_id}/`)
                     .then(res => dispatch(getUserItems_(res.data)))
                     .catch(e => {});
     }; 
@@ -33,7 +33,7 @@ export const addItem_ = (item, itemcount) => {
 
 export const addItem = (item) => {  
     return dispatch => {
-        return axios.post(`/item/`, item)
+        return axios.post(`/back/item/`, item)
                     .then(res => {
                         dispatch(addItem_(res.data.item, res.data.itemcount)); 
                         // console.log(res)
