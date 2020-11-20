@@ -76,7 +76,7 @@ describe('store/actions/itemcount', () => {
   
   // export const editItemCount = (id, count) => {
   //   return dispatch => {
-  //       return axios.put(`/item/count/${id}/`, {'count': count})
+  //       return axios.put(`/back/item/count/${id}/`, {'count': count})
   //                   .then(res => {
   //                     dispatch(editItemCount_(id, res.data.is_deleted, res.data.itemcount)); 
   //                     console.log("data:",res.data)});
