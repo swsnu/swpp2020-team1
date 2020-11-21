@@ -43,9 +43,6 @@ class AddItem extends Component {
     resultList: []
   }
 
-  componentDidMount() {
-  }
-
   onClickWebcamOnOff = () => {
     this.setState({
       webcam: !this.state.webcam

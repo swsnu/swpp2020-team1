@@ -1,0 +1,17 @@
+.MainPage {
+    background-color: #f4f4f4;
+}
+
+.title {
+    left: 0px;
+    top: 8px;
+
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-style: normal;
+    font-weight: 900;
+    font-size: 36px;
+    line-height: 45px;
+    text-align: center;
+
+    color: #E8A065;
+}
