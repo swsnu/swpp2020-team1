@@ -1,0 +1,40 @@
+.ItemGrid {
+    display: grid;
+    grid-template-rows: auto;
+    grid-auto-flow: column;
+    overflow-x: scroll;
+    vertical-align: middle;
+}
+
+.ItemGridTile {
+    flex: 0 0 auto;
+    margin: 5px;
+}
+
+.ItemGridFridge {
+    display: grid;
+    grid-template-rows: auto auto;
+    grid-auto-flow: column;
+    overflow-x: scroll;
+    vertical-align: middle;
+}
+
+.ContainerName {
+    /* text */
+    left: 14px;
+    top: 70px;
+
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: 900;
+    font-size: 24px;
+    line-height: 24px;
+    /* or 100% */
+
+    display: flex;
+    align-items: center;
+    letter-spacing: 0.25px;
+
+    color: #818181;
+
+}

@@ -1,0 +1,66 @@
+.Item {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0px 3px 4px rgba(0,0,0,0.12));
+}
+
+.item-title {
+    left: 1px;
+    top: 10px;
+
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: 900;
+    font-size: 14px;
+    line-height: 24px;
+    /* or 171% */
+
+    align-items: center;
+    text-align: center;
+    letter-spacing: 0.25px;
+
+    color: #818181;
+}
+
+.expiration_date {
+    left: 38px;
+    top: 22px;
+
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 10px;
+    line-height: 24px;
+    /* identical to box height, or 240% */
+
+    align-items: center;
+    text-align: center;
+    letter-spacing: 0.25px;
+
+    color: #E86565;
+}
+
+.count {
+    left: 63px;
+    top: 41px;
+
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 18px;
+    line-height: 24px;
+    /* identical to box height, or 133% */
+
+    align-items: center;
+    text-align: center;
+    letter-spacing: 0.3px;
+
+    color: #000000;
+}
+
+.btn_remove_item {
+    height: 20px;
+    width: 20px;
+    background-color: #E8A065;
+    filter: drop-shadow(0px 3px 5px rgba(0,0,0,0.2));
+}

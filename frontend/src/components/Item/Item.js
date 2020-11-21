@@ -4,22 +4,23 @@ import CardContent from '@material-ui/core/CardContent';
 import IconButton from '@material-ui/core/IconButton';
 import RemoveIcon from '@material-ui/icons/Remove';
 import { Typography, Container } from '@material-ui/core';
+import "./Item.css";
 
 const Item = props => {
   const itemcounts = props.itemcounts.map(ic => {
     return (
-      <Container key={ic.id}>
-        <div className="expiration_date">Expiration date: {ic.expiration_date}</div>
-        <div className="count">Count: {ic.count}</div>  
+      <div key={ic.id} className="item">
+        <div className="expiration_date">{ic.expiration_date}</div>
+        <div className="count">{ic.count}</div>  
         <IconButton className="btn_remove_item" onClick={() => props.onRemoveItem(ic.id, ic.count)}><RemoveIcon/></IconButton>
-      </Container>
+      </div>
     );
   })
 
   return (
     <Card className='Item'>
-      <Typography variant="h6" className="item-title">{props.name}</Typography>
-      <CardContent>{itemcounts}</CardContent>
+      <div className="item-title">{props.name}</div>
+      {itemcounts}
     </Card>
   )
 }
