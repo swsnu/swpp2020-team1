@@ -38,6 +38,9 @@ const stubInitialState = {
   itemcount: {
     itemcounts: [stubItemCounts],
   },
+  notification: {
+    notifications: []
+  }
 }
 
 describe('store/actions/itemcount', () => {

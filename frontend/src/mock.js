@@ -33,14 +33,25 @@ export const getMockStore = initial => {
     }
   );
 
+  const getMockNotiReducer = jest.fn(
+    initialState => (state=initialState, action) => {
+      switch(action.type){
+        default:
+          return state;
+      }
+    }
+  );
+
   const mockArticleReducer = getMockArticleReducer(initial.article);
   const mockItemReducer = getMockItemReducer(initial.item);
   const mockItemCountReducer = getMockItemCountReducer(initial.itemcount);
+  const mockNotiReducer = getMockNotiReducer(initial.notification);
   
   const rootReducer = combineReducers({
     article: mockArticleReducer,
     item: mockItemReducer,
     itemcount: mockItemCountReducer,
+    notification: mockNotiReducer,
     router: connectRouter(history)
   });
 
