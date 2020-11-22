@@ -8,6 +8,7 @@ const resultMock = {
   barcode_num: 8801115114154,
   expiration_date: '2020/11/24',
   category_name: '우유',
+  category_id: 0,
   count: 4, 
   container: 'freezer'
 }
