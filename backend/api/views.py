@@ -659,4 +659,3 @@ def noti_read(request, noti_id=0):
         return JsonResponse(response_dict, status=200)
     else:
         return HttpResponseNotAllowed(['PUT'])
-        

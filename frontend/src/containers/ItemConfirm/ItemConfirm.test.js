@@ -25,6 +25,9 @@ const stubInitialState = {
   article: {
     articles: [],
     selectedArticle: []
+  },
+  notification: {
+    notifications: []
   }
 };
 
