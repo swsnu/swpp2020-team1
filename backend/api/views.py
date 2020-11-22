@@ -7,7 +7,9 @@ from django.http import HttpResponse, JsonResponse, HttpResponseNotAllowed, Http
 from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.contrib.auth import get_user_model
-from .models import Category, Barcode, Item, ItemCount
+from .models import Category, Barcode, Item, ItemCount, Notification
+import datetime
+from datetime import timedelta
 
 # Create your views here.
 
@@ -240,6 +242,13 @@ def item_list(request):
                 'expiration_date': new_item_count.expiration_date,
                 'count': new_item_count.count
             }
+            # Add Notification for each item 
+            ## CHECK: noti_type is set to 'expire' as default..
+            expire_date_string = new_item_count.expiration_date
+            expire_date = datetime.datetime.strptime(expire_date_string, "%Y/%m/%d")
+            noti = Notification(user=user, noti_type='expire', item_count=new_item_count, is_read=False, expire_date=expire_date)
+            noti.save()
+
         else:
             print("Failed: cannot add item count.")
             return HttpResponseBadRequest()
@@ -367,6 +376,7 @@ def item_count_info(request, item_count_id=0):
         is_deleted = False
         try:
             item_count = ItemCount.objects.get(id=item_count_id)
+            item_noti = Notification.objects.get(item_count_id=item_count_id)
         except ItemCount.DoesNotExist as error:
             print(error)
             return HttpResponse(status=404)
@@ -381,6 +391,7 @@ def item_count_info(request, item_count_id=0):
             item_count.save()
         elif count == 0:
             item_count.delete()
+            item_noti.delete()
             is_deleted = True
         else:
             print("ERROR: illegal count {}".format(count))
@@ -403,3 +414,58 @@ def item_count_info(request, item_count_id=0):
         return JsonResponse(response_dict, status=200)
     else:
         return HttpResponseNotAllowed(['PUT'])
+
+def noti_list(request, user_id=0):
+    '''
+    [ GET ] return list of notifications (`expire` type)
+            for items about to expire
+            threshold: 3 days
+    '''
+    if request.method == 'GET':
+        end_date = datetime.datetime.now() + timedelta(days=3) 
+        print(end_date.date())
+        noti_list = Notification.objects.filter(
+            user_id=request.user.id
+        ).filter(
+            expire_date__lt=end_date.date()
+        )
+        return JsonResponse(list(noti_list.values()), safe=False)
+    else:
+        return HttpResponseNotAllowed(['GET'])
+
+def noti_read(request, noti_id=0):
+    '''
+    [ PUT ] set is_read as True
+            **CHECK** is_read를 false로 PUT하는 경우는 없어야 하는게 맞죠?
+
+            잠만 근데 아이템당 노티가 하난데.. (생성될때 만드니깐)
+            3일 남았습니다 => 그럼 다음날 2일 남았습니다 요렇게 또 보내는게 맞?
+            그럼 만약 3일 남았습니다(is_read FALSE) => 유저가 읽어(is_read TRUE)
+            => 2일 남았습니다는 위에 노티를 is_read FALSE로 바꿔서 다시 쏴주는건가 아니면 노티를 하나 새로 만드나??
+            으억 노티도 아무튼 구매링크랑 레시피연결이랑 해서 뭐.. 고려할게 좀 있네
+             
+    '''
+    if request.method == 'PUT':
+        try:
+            noti = Notification.objects.get(id=noti_id)
+        except Notification.DoesNotExist as error:
+            print(error)
+            return HttpResponse(status=404)
+        try:
+            body = request.body.decode()
+            is_read = json.loads(body)['is_read']
+        except (KeyError, JSONDecodeError) as error:
+            print(error)
+            return HttpResponseBadRequest()
+        if is_read:
+            noti.is_read = is_read
+            noti.save()
+        else:
+            print("ERROR: setting is_read to False")
+            return HttpResponseBadRequest()
+        response_dict = {
+            'is_read': is_read
+        }
+        return JsonResponse(response_dict, status=200)
+    else:
+        return HttpResponseNotAllowed(['PUT']) 
