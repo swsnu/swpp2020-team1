@@ -32,7 +32,7 @@ class MainPage extends Component {
     const user_id = 1;
 
     // temporary login
-    await axios.post('/back/signin/', {'username': 'jaeseoklee', 'password': '0000'})
+    await axios.post('/back/signin/', {'username': 'jaeseoklee', 'password': 'roborobo'})
       .then(res => console.log(res))
       .catch(e => console.log(e))
 
@@ -338,19 +338,23 @@ class MainPage extends Component {
     
     return (
         <div className="MainPage">
-          <div className="title">Foodify</div>
+          <div className="title">
+            <div className="titleOrange">Food</div>
+            <div className="titleBlack">ify</div>
+            <div className="btn_notification" onClick={this.onClickNotiIcon}>
+              <DeleteIcon className="btn_bell" fontSize="large" />
+              { this.state.isUnreadNotiExists ? <Circle style={styles.overlay} color="secondary"/> : null }
+            </div>
+          </div>
           {/*<Typography>{this.state.currentWidth} and {this.state.currentHeight}</Typography>*/}
           <ItemContainer type="freezer" currentWidth={this.state.currentWidth} currentHeight={this.state.currentHeight} items={freezerItems}/>
           <ItemContainer type="fridge" currentWidth={this.state.currentWidth} currentHeight={this.state.currentHeight} items={fridgeItems}/>
           <ItemContainer type="shelf" currentWidth={this.state.currentWidth} currentHeight={this.state.currentHeight} items={shelfItems}/>
           {/* <Basket/> */}
-          <button className="btn_notification" onClick={()=>this.onClickNotiIcon()}>"Notification"</button>
-          <button className="btn_community">"Community"</button>
-          <IconButton onClick={this.onClickNotiIcon}>
-            <DeleteIcon/>
-            { this.state.isUnreadNotiExists ? <Circle style={styles.overlay} color="secondary"/> : null }
-          </IconButton>
-      
+          <div className="ItemSelectDiv">
+            <div className="ItemSelectButton">SELECT Ingredients</div>
+          </div>
+
           <Dialog open={this.state.openDialog} fullScreen={true}>
             <div>
               <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
@@ -394,8 +398,8 @@ const styles = {
   overlay: {
      position: 'absolute',
      top: '12px',
-     left: '17px',
-     height: '10px',
+     right: '0px',
+     height: '12px',
      color: 'red',
   }
 }

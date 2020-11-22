@@ -19,8 +19,10 @@ const Item = props => {
 
   return (
     <Card className='Item'>
-      <div className="item-title">{props.name}</div>
-      {itemcounts}
+      <div className='ItemContents'>
+        <div className="item-title">{props.name}</div>
+        {itemcounts}
+      </div>
     </Card>
   )
 }
