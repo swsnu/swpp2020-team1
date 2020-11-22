@@ -11,6 +11,7 @@ class EditItem extends Component {
     barcode_num: '',
     expiration_date: '',
     category_name: '',
+    category_id: 0,
     count: '',
     container: '' 
   }

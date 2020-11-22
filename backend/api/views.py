@@ -380,6 +380,9 @@ def item_count_info(request, item_count_id=0):
         except ItemCount.DoesNotExist as error:
             print(error)
             return HttpResponse(status=404)
+        except Notification.DoesNotExist as error:
+            print(error)
+            return HttpResponse(status=404) 
         try:
             body = request.body.decode()
             count = json.loads(body)['count']
@@ -436,14 +439,6 @@ def noti_list(request, user_id=0):
 def noti_read(request, noti_id=0):
     '''
     [ PUT ] set is_read as True
-            **CHECK** is_read를 false로 PUT하는 경우는 없어야 하는게 맞죠?
-
-            잠만 근데 아이템당 노티가 하난데.. (생성될때 만드니깐)
-            3일 남았습니다 => 그럼 다음날 2일 남았습니다 요렇게 또 보내는게 맞?
-            그럼 만약 3일 남았습니다(is_read FALSE) => 유저가 읽어(is_read TRUE)
-            => 2일 남았습니다는 위에 노티를 is_read FALSE로 바꿔서 다시 쏴주는건가 아니면 노티를 하나 새로 만드나??
-            으억 노티도 아무튼 구매링크랑 레시피연결이랑 해서 뭐.. 고려할게 좀 있네
-             
     '''
     if request.method == 'PUT':
         try:
@@ -451,20 +446,16 @@ def noti_read(request, noti_id=0):
         except Notification.DoesNotExist as error:
             print(error)
             return HttpResponse(status=404)
-        try:
-            body = request.body.decode()
-            is_read = json.loads(body)['is_read']
-        except (KeyError, JSONDecodeError) as error:
-            print(error)
-            return HttpResponseBadRequest()
-        if is_read:
-            noti.is_read = is_read
-            noti.save()
-        else:
-            print("ERROR: setting is_read to False")
-            return HttpResponseBadRequest()
+        noti.is_read = True
+        noti.save()
         response_dict = {
-            'is_read': is_read
+            'itemcount': {
+                'id': noti.item_count.id,
+                'item_id': noti.item_count.item_id,
+                'expiration_date': noti.item_count.expiration_date,
+                'count': noti.item_count.count
+            },
+            'is_read': True
         }
         return JsonResponse(response_dict, status=200)
     else:
