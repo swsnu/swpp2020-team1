@@ -73,9 +73,6 @@ class Notification(models.Model):
         blank=True,
         null=True
     )
-<<<<<<< HEAD
-    expiration_date = models.CharField(max_length=16)
-    count = models.PositiveSmallIntegerField(default=1)
 
 class Recipe(models.Model):
     '''Recipe: information about recipe'''
@@ -103,5 +100,4 @@ class RecipeComment(models.Model):
         related_name='comment_set'
     )
     date = models.DateTimeField(auto_now_add=True)
-=======
->>>>>>> 473d50acbb08d54c8bd14f9cfe61d4ef3da2dceb
+
