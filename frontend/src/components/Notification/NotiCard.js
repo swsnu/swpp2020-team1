@@ -5,8 +5,7 @@ import { Typography, Container, ListItem, Button } from '@material-ui/core';
 import CalendarImg from '../../icons/calendar.png'
 
 const NotiCard = props => {
-  console.log("props: " + JSON.stringify(props))
-  const { notiType, itemName, expirationDate, isRead } = props.noti
+  const { id, notiType, itemName, expirationDate, isRead } = props.noti
   const expirationDateType = new Date(expirationDate)
   let creationTimestamp = expirationDateType.getTime() - 3 * 24 * 60 * 60 * 1000
   const currentTimestamp = new Date()
@@ -16,7 +15,7 @@ const NotiCard = props => {
   if (notiType === 'expire') {
     notiContent =
       <ListItem style={{backgroundColor: isRead ? '#ffffff' : 'rgba(232, 160, 101, 0.6)',
-          justifyContent: 'space-between'}}>
+          justifyContent: 'space-between', width: window.innerWidth }}>
         <div style={{width: 50}}>
           <img src={CalendarImg} width={20} height={20} />
         </div>
@@ -37,7 +36,7 @@ const NotiCard = props => {
     console.log(`Noti type ${notiType} is not supported.`)
   }
   return (
-    <Button style={{padding: 0}} onClick={props.onClick}>
+    <Button style={{padding: 0}} onClick={() => props.onRead(id)}>
       { notiContent }
     </Button>
   )
