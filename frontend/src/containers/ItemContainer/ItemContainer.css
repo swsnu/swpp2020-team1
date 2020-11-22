@@ -1,9 +1,26 @@
 .ItemGrid {
-    display: grid;
-    grid-template-rows: auto;
     grid-auto-flow: column;
     overflow-x: scroll;
     vertical-align: middle;
+    display: inline-grid;
+    float: left;
+    width: 100%;
+}
+
+.ItemGrid::-webkit-scrollbar {
+    height: 4px;              /* height of horizontal scrollbar ← You're missing this */
+    width: 4px;               /* width of vertical scrollbar */
+    border: 1px solid #d5d5d5;
+}
+
+.ItemGrid::-webkit-scrollbar-track {
+  border-radius: 0;
+  background: #eeeeee;
+}
+
+.ItemGrid::-webkit-scrollbar-thumb {
+  border-radius: 0;
+  background: #b0b0b0;
 }
 
 .ItemGridTile {
@@ -12,29 +29,80 @@
 }
 
 .ItemGridFridge {
-    display: grid;
     grid-template-rows: auto auto;
-    grid-auto-flow: column;
-    overflow-x: scroll;
-    vertical-align: middle;
 }
 
 .ContainerName {
     /* text */
-    left: 14px;
-    top: 70px;
+    text-align: left;
+    margin-right: 10px;
 
-    font-family: Roboto;
+    font-family: "Source Code Pro", Roboto;
     font-style: normal;
-    font-weight: 900;
+    font-weight: bold;
     font-size: 24px;
     line-height: 24px;
     /* or 100% */
 
-    display: flex;
     align-items: center;
     letter-spacing: 0.25px;
 
     color: #818181;
+}
 
+.AddItemButton {
+    height: 24px;
+    background-color: #E8A065;
+    border-radius: 32px;
+    filter: drop-shadow(0px 3px 5px rgba(0, 0, 0, 0.2));
+    padding-left: 5px;
+    padding-right: 20px;
+    width: 50px;
+    display: flex;
+    float: left;
+}
+
+.AddItemButton:hover {
+    cursor: pointer;
+    background-color: #000000;
+}
+
+.AddItemLine {
+    padding-left: 10px;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 9px;
+    line-height: 24px;
+    /* or 267% */
+
+    display: flex;
+    align-items: center;
+    text-align: center;
+    letter-spacing: 1.25px;
+
+    color: #FFFFFF;
+
+    /*vertical-align: middle;*/
+}
+
+.ContainerHeader {
+    display: inline-flex;
+    width: 100%;
+    /*vertical-align: middle;*/
+}
+
+.ItemContainer {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    height: fit-content;
+}
+
+.NoItem {
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 13px;
+    line-height: 24px;
+    color: black;
 }

@@ -4,11 +4,18 @@
     filter: drop-shadow(0px 3px 4px rgba(0,0,0,0.12));
 }
 
+.ItemContents {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    vertical-align: middle;
+}
+
 .item-title {
     left: 1px;
     top: 10px;
 
-    font-family: Roboto;
+    font-family: "Noto Sans KR", Roboto;
     font-style: normal;
     font-weight: 900;
     font-size: 14px;
@@ -26,7 +33,7 @@
     left: 38px;
     top: 22px;
 
-    font-family: Roboto;
+    font-family: "Noto Sans KR", Roboto;
     font-style: normal;
     font-weight: bold;
     font-size: 10px;
@@ -44,7 +51,7 @@
     left: 63px;
     top: 41px;
 
-    font-family: Roboto;
+    font-family: "Noto Sans KR", Roboto;
     font-style: normal;
     font-weight: normal;
     font-size: 18px;
