@@ -25,6 +25,7 @@ class MainPage extends Component {
     openDialog: false,
     currentHeight: 1280,
     currentWidth: 720,
+    notifications: [],
   }
   async componentDidMount() { 
     // temporary user
@@ -37,9 +38,14 @@ class MainPage extends Component {
 
     await this.props.onGetUserItems(user_id);
     for (const item of this.props.items) {
-      this.props.onGetItemCounts(item.id)
+      await this.props.onGetItemCounts(item.id)
     }
-    this.setState({ isUnreadNotiExists: this.isUnreadNotiExists() })
+    console.log("itemcounts: " + JSON.stringify(this.props.itemcounts))
+    console.log("items: " + JSON.stringify(this.props.items))
+    console.log("notifications: " + JSON.stringify(this.props.notifications))
+
+    await this.props.onGetUserNotiList(user_id)
+    this.buildNotificationInfo();
 
     window.addEventListener("resize", this.resize.bind(this));
     this.resize();
@@ -55,21 +61,50 @@ class MainPage extends Component {
     window.removeEventListener("resize", this.resize.bind(this));
   }
 
+  isUnreadNotiExists = () => {
+    if (this.state.notifications.filter(noti => !noti.isRead).length > 0) {
+      console.log(JSON.stringify("Unread: " + this.state.notifications))
+      return true;
+    }
+    else return false;
+  }
+  
+  buildNotificationInfo = () => {
+    let notiList = []
+    for (let noti of this.props.notifications) {
+      if (noti.noti_type === 'expire') {
+        let { id, noti_type, is_read, expire_date, item_count_id } = noti;
+        let itemId = this.props.itemcounts.find(ic => ic.id === item_count_id).item_id
+        let itemName = this.props.items.find(item => item.id === itemId).name
+        notiList.push({
+          id: id,
+          notiType: noti_type,
+          isRead: is_read,
+          expirationDate: expire_date,
+          itemName: itemName,
+        })
+      }
+    }
+    
+    notiList.sort((a, b) => new Date(b.expirationDate) -  new Date(a.expirationDate))
+
+    this.setState({ notifications: notiList })
+    this.setState({ isUnreadNotiExists: this.isUnreadNotiExists() })
+    console.log("notifications: " + JSON.stringify(this.state.notifications))
+  }
+
   onClickNotiIcon = () => {
     this.setState({openDialog: true})
   }
 
-  onClickNotification = () => {
-    this.setState({openDialog: false})
+  onReadNotification = async (notiId) => {
+    await this.props.onSetIsRead(notiId);
+    console.log("onSetIsRead! + notifications: " + JSON.stringify(this.props.notifications))
+    this.buildNotificationInfo();
+    this.setState({
+      openDialog: false,
+    })
   }
-
-  isUnreadNotiExists = () => {
-    // jaeseok
-    return false;
-  }
-  // onClickCommunityButton = () => {
-
-  // }
 
   render() {
     let items = this.props.items.reduce((result, i) => {
@@ -327,8 +362,8 @@ class MainPage extends Component {
             </div>
             <div>
               <List>
-                {this.notiSample.map(noti => (
-                  <NotiCard key={noti.id} noti={noti} onClick={this.onClickNotification}/>
+                {this.state.notifications.map(noti => (
+                  <NotiCard key={noti.id} noti={noti} onRead={this.onReadNotification}/>
                 ))}
               </List>
             </div>
@@ -342,6 +377,7 @@ const mapStateToProps = state => {
   return {
     items: state.item.items,
     itemcounts: state.itemcount.itemcounts,
+    notifications: state.notification.notifications,
   };
 }
 
@@ -349,6 +385,8 @@ const mapDispatchToProps = dispatch => {
   return {
     onGetUserItems: (user_id) => dispatch(actionCreators.getUserItems(user_id)),
     onGetItemCounts: (item_id) => dispatch(actionCreators.getItemCounts(item_id)),
+    onGetUserNotiList: (user_id) => dispatch(actionCreators.getUserNotiList(user_id)),
+    onSetIsRead: (noti_id) => dispatch(actionCreators.setIsRead(noti_id)),
   }
 }
 
