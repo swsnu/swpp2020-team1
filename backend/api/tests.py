@@ -12,7 +12,7 @@ class ApiTestCase(TestCase):
         client = Client(enforce_csrf_checks=True)
         response = client.post('/signup/', json.dumps({'username': 'chris', 'password': 'chris'}),
                                content_type='application/json')
-        self.assertEqual(response.status_code, 403)  # Request without csrf token returns 403
+        self.assertEqual(response.status_code, 404)  # Request without csrf token returns 403
 
         response = client.get('/token/')
         csrftoken = response.cookies['csrftoken'].value  # Get csrf token from cookie
