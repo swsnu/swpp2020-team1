@@ -3,10 +3,12 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import Item from '../../components/Item/Item';
 import * as actionCreators from '../../store/actions/index';
-import Grid from '@material-ui/core/Grid';
+import GridList from '@material-ui/core/GridList';
+import GridListTile from '@material-ui/core/GridListTile';
 import { Typography, Container } from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
 import AddBoxIcon from '@material-ui/icons/AddBox';
+import './ItemContainer.css';
 
 class ItemContainer extends Component{
   onClickAddItemButton = () => {
@@ -17,20 +19,37 @@ class ItemContainer extends Component{
     this.props.onEditItemCount(id, count-1);
   }
 
+  componentDidMount() {
+    let itemGrid = document.getElementsByClassName("ItemGridTile")
+    for(let i = 0; i < itemGrid.length; i++) {
+      itemGrid[i].style.width = (this.props.currentWidth / 3) + "px";
+      itemGrid[i].style.height = (this.props.currentHeight * 0.15) + "px";
+    }
+  }
+
+  componentDidUpdate() {
+    let itemGrid = document.getElementsByClassName("ItemGridTile")
+    for(let i = 0; i < itemGrid.length; i++) {
+      itemGrid[i].style.width = (this.props.currentWidth / 3) + "px";
+      itemGrid[i].style.height = (this.props.currentHeight * 0.15) + "px";
+    }
+  }
+
   render() {
     let items = null;
     if (this.props.items) {
       items = this.props.items.map(i => {
         return (
-          <Grid key={i.id} item>
+          <div key={i.id} id="ItemGridTile" className="ItemGridTile">
             <Item
               name={i.name}
               container={i.container}
               itemcounts={i.itemcounts}
               unit="temp-unit"
+              className="Item"
               onRemoveItem={(ic_id, count) => this.onRemoveItem(ic_id, count)}
             />
-          </Grid>
+          </div>
 
         );
       })
@@ -39,11 +58,11 @@ class ItemContainer extends Component{
     return (
         <div className="ItemContainer">
           <Container>
-            <Typography variant="h4" className="ContainerName">{this.props.type.toUpperCase()}</Typography>
-            <Grid container spacing={3} direction="row" className="ItemGrid">
+            <div className="ContainerName">{this.props.type.toUpperCase()}</div>
+            <div className={this.props.type === "fridge" ? "ItemGridFridge" : "ItemGrid"} cols="3">
               {items}
               <IconButton className="btn_add_item" onClick={()=>this.onClickAddItemButton()}><AddBoxIcon /></IconButton>
-            </Grid>
+            </div>
           </Container>
         </div>
 

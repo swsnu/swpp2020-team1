@@ -11,6 +11,7 @@ class EditItem extends Component {
     barcode_num: '',
     expiration_date: '',
     category_name: '',
+    category_id: 0,
     count: '',
     container: '' 
   }
@@ -23,7 +24,7 @@ class EditItem extends Component {
       barcode_num: (result.barcode_num ? result.barcode_num : ''),
       expiration_date: (result.expiration_date ? result.expiration_date : ''),
       category_name: (result.category_name ? result.category_name : ''),
-      count: (result.count ? result.count : '1'),
+      count: (result.count ? result.count : 1),
       container: (result.container ? result.container : this.containers[0])
     }
     

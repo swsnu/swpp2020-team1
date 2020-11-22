@@ -3,11 +3,14 @@
 
 import json
 from json import JSONDecodeError
+import datetime
+from datetime import timedelta
 from django.http import HttpResponse, JsonResponse, HttpResponseNotAllowed, HttpResponseBadRequest
 from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.contrib.auth import get_user_model
-from .models import Category, Barcode, Item, ItemCount, Recipe, RecipeComment
+from .models import Category, Barcode, Item, ItemCount, Recipe, RecipeComment, Notification
+
 
 # Create your views here.
 
@@ -240,6 +243,12 @@ def item_list(request):
                 'expiration_date': new_item_count.expiration_date,
                 'count': new_item_count.count
             }
+            expire_date_string = new_item_count.expiration_date
+            expire_date = datetime.datetime.strptime(expire_date_string, "%Y/%m/%d")
+            noti = Notification(user=user, noti_type='expire', item_count=new_item_count,
+                                is_read=False, expire_date=expire_date)
+            noti.save()
+
         else:
             print("Failed: cannot add item count.")
             return HttpResponseBadRequest()
@@ -367,7 +376,11 @@ def item_count_info(request, item_count_id=0):
         is_deleted = False
         try:
             item_count = ItemCount.objects.get(id=item_count_id)
+            item_noti = Notification.objects.get(item_count_id=item_count_id)
         except ItemCount.DoesNotExist as error:
+            print(error)
+            return HttpResponse(status=404)
+        except Notification.DoesNotExist as error:
             print(error)
             return HttpResponse(status=404)
         try:
@@ -381,6 +394,7 @@ def item_count_info(request, item_count_id=0):
             item_count.save()
         elif count == 0:
             item_count.delete()
+            item_noti.delete()
             is_deleted = True
         else:
             print("ERROR: illegal count {}".format(count))
@@ -603,3 +617,46 @@ def comment_info(request, comment_id=0):
         return HttpResponse(status=200)
     else:
         return HttpResponseNotAllowed(['GET', 'PUT', 'DELETE'])
+def noti_list(request, user_id=0):
+    '''
+    [ GET ] return list of notifications (`expire` type)
+            for items about to expire
+            threshold: 3 days
+    '''
+    if request.method == 'GET':
+        end_date = datetime.datetime.now() + timedelta(days=3)
+        print(end_date.date())
+        about_to_expire = Notification.objects.filter(
+            user_id=user_id
+        ).filter(
+            expire_date__lt=end_date.date()
+        )
+        return JsonResponse(list(about_to_expire.values()), safe=False)
+    else:
+        return HttpResponseNotAllowed(['GET'])
+
+def noti_read(request, noti_id=0):
+    '''
+    [ PUT ] set is_read as True
+    '''
+    if request.method == 'PUT':
+        try:
+            noti = Notification.objects.get(id=noti_id)
+        except Notification.DoesNotExist as error:
+            print(error)
+            return HttpResponse(status=404)
+        noti.is_read = True
+        noti.save()
+        response_dict = {
+            'itemcount': {
+                'id': noti.item_count.id,
+                'item_id': noti.item_count.item_id,
+                'expiration_date': noti.item_count.expiration_date,
+                'count': noti.item_count.count
+            },
+            'is_read': True
+        }
+        return JsonResponse(response_dict, status=200)
+    else:
+        return HttpResponseNotAllowed(['PUT'])
+        

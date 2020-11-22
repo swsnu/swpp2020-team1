@@ -25,7 +25,7 @@ SECRET_KEY = 'vtp!fkl00+-^x5_-_qmayzwvx^0m&cz&wb_t1(+fsy6d(tk=%k'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost','foodify.shop']
 
 
 # Application definition

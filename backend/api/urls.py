@@ -21,4 +21,6 @@ urlpatterns = [
     path('recipe/<int:recipe_id>/comment/', views.comment_list, name='comment_list'),
     path('recipe/comment/<int:comment_id>/', views.comment_info, name='comment_info'),
     path('token/', views.token, name='token'),
+    path('noti/user/<int:user_id>/', views.noti_list, name='noti_list'),
+    path('noti/<int:noti_id>/', views.noti_read, name='noti_read'),
 ]

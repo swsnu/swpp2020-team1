@@ -5,7 +5,7 @@ import Webcam from 'react-webcam';
 import axios from 'axios';
 
 // material-ui components
-import { Typography, Container, Button, TextField, Grid, Dialog, DialogTitle, DialogContent, DialogActions, MenuItem, InputLabel, Select } from '@material-ui/core';
+import { Typography, Button, TextField, Grid, Dialog } from '@material-ui/core';
 import parseDate from '../../components/AddItem/DateParser';
 import Scanner from '../../components/AddItem/Scanner';
 import Result from '../../components/AddItem/Result';
@@ -41,9 +41,6 @@ class AddItem extends Component {
     is_retaking: false,
     currentResult: this.default_result,
     resultList: []
-  }
-
-  componentDidMount() {
   }
 
   onClickWebcamOnOff = () => {
@@ -113,7 +110,9 @@ class AddItem extends Component {
       }))
     }
     const imageSrc = await this.webcam.getScreenshot();
+    console.log(imageSrc);
     const imageFile = await dataURLtoFile(imageSrc,'captured.jpeg');
+    console.log(imageFile);
     this.setState((prevState, props) => ({
       screenShot: imageSrc,
       imageFile: imageFile,
@@ -154,14 +153,13 @@ class AddItem extends Component {
           // console.log(`new item's barcode\n${barcode_num}`);
           // console.log(`new item's user_id: ${user_id}`);
           console.log(res)
-          console.log(barcode_num, " wow ", user_id)
           custom_item = res.data.filter(item => 
             (item.barcode_id == barcode_num && item.user_id == user_id)
           )
-          // console.log(custom_item);
           // console.log(`custom_item count: ${custom_item.length}`)
           if(custom_item.length>0){
             custom_item = custom_item[custom_item.length - 1];
+            console.log('custom_item is:', custom_item)
             item_name = custom_item.name; 
             category_id = custom_item.category_id 
             // console.log(`custom name: ${custom_item.name}`);
@@ -179,7 +177,8 @@ class AddItem extends Component {
         }
       )
       .catch(e => {});
-
+    
+    console.log('at here:', custom_item)
      /*
      * Item is new to this user!
      * Check if <new_item> is in Barcode DB
@@ -276,14 +275,17 @@ class AddItem extends Component {
     this.setState({ ...this.state, currentResult: { ...this.state.currentResult, count: updated_num }})
   }
 
+  //function for EditItem component
   onCancelEditButton = () => {
     this.setState({is_editing: false});
   }
 
+  //function for EditItem component
   onConfirmEditButton = (edit) => {
     let confirm_item = {
       ...this.state.currentResult,
       name: edit.name,
+      category_name: edit.category_name,
       barcode_num: edit.barcode_num,
       expiration_date: edit.expiration_date,
       count: edit.count,
@@ -309,11 +311,11 @@ class AddItem extends Component {
             <div>
               <div className="results" style={{backgroundColor: '#EEEEEE'}/*{backgroundColor: '#EEEEEE', position: 'absolute', zIndex: '2'}*/}>
                 {!this.state.is_confirmed ? <Result result={this.state.currentResult}
-                    onClickCountMinusButton={this.onClickCountMinusButton}
-                    onClickCountPlusButton={this.onClickCountPlusButton}
-                    onClickRetakeBarcodeButton={this.onClickRetakeBarcodeButton}
-                    onClickRetakeExpirationDateButton={this.onClickRetakeExpirationDateButton} 
-                    onClickEditButton={this.onClickEditButton} /> : null }
+                    onClickCountMinus={this.onClickCountMinusButton}
+                    onClickCountPlus={this.onClickCountPlusButton}
+                    onClickRetakeBarcode={this.onClickRetakeBarcodeButton}
+                    onClickRetakeExpirationDate={this.onClickRetakeExpirationDateButton} 
+                    onClickEdit={this.onClickEditButton} /> : null }
               </div>
               <div style={{backgroundColor: '#FFFFFF'}/*{position: 'absolute', zIndex : '1'}*/}>
                 <Button id="AddManuallyButton" onClick={this.onClickManualAddButton}>Add Manually</Button>

@@ -1,10 +1,9 @@
-''' models.py: define models '''
+'''models.py: define models'''
 
 
 from django.db import models
 from django.conf import settings
 
-# Create your models here.
 
 class Category(models.Model):
     ''' Category: storing list of food categories '''
@@ -17,42 +16,64 @@ class Barcode(models.Model):
     category = models.ForeignKey(
         Category,
         on_delete=models.SET_NULL,
-        related_name='category_barcode',
+        related_name='barcode_set',
         blank=True,
         null=True
     )
 
 class Item(models.Model):
-    ''' Item: information about items without expiration_date and count '''
+    ''' Item: information about items without expire_date and count '''
     name = models.CharField(max_length=128)
     container = models.CharField(max_length=16)
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
-        related_name='user'
+        related_name='item_set'
     )
     category = models.ForeignKey(
         Category,
         on_delete=models.SET_NULL,
-        related_name='category',
+        related_name='item_set',
         blank=True,
         null=True
     )
-    barcode = models.ForeignKey( # jaeseok: is barcode foreign key?
+    barcode = models.ForeignKey(
         Barcode,
         on_delete=models.SET_NULL,
-        related_name='barcode',
+        related_name='item_set',
         blank=True,
         null=True
     )
 
 class ItemCount(models.Model):
-    ''' ItemCount: information about expiration_date and count of the item'''
+    ''' Itemcount: storing information about expire_date and count '''
+    expiration_date = models.CharField(max_length=16)
+    count = models.PositiveSmallIntegerField(default=1)
     item = models.ForeignKey(
         Item,
         on_delete=models.CASCADE,
-        related_name='item'
+        related_name='itemcount_set'
     )
+
+class Notification(models.Model):
+    ''' Notification: storing information about notification '''
+    noti_type = models.CharField(max_length=8)
+    is_read = models.BooleanField(default=False)
+    expire_date = models.DateField(auto_now=False, auto_now_add=False)
+
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='noti_set'
+    )
+    item_count = models.ForeignKey(
+        ItemCount,
+        on_delete=models.CASCADE,
+        related_name='noti_set',
+        blank=True,
+        null=True
+    )
+<<<<<<< HEAD
     expiration_date = models.CharField(max_length=16)
     count = models.PositiveSmallIntegerField(default=1)
 
@@ -82,3 +103,5 @@ class RecipeComment(models.Model):
         related_name='comment_set'
     )
     date = models.DateTimeField(auto_now_add=True)
+=======
+>>>>>>> 473d50acbb08d54c8bd14f9cfe61d4ef3da2dceb
