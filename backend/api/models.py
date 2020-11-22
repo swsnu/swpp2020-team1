@@ -73,3 +73,35 @@ class Notification(models.Model):
         blank=True,
         null=True
     )
+<<<<<<< HEAD
+    expiration_date = models.CharField(max_length=16)
+    count = models.PositiveSmallIntegerField(default=1)
+
+class Recipe(models.Model):
+    '''Recipe: information about recipe'''
+    title = models.CharField(max_length=128)
+    description = models.TextField()
+    video_url = models.CharField(max_length=256)
+    rating_sum = models.PositiveIntegerField(default=0)
+    rating_count = models.PositiveIntegerField(default=0)
+    rating_users = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        related_name='rated_recipe_set'
+    )
+
+class RecipeComment(models.Model):
+    '''RecipeComment: information about comments of recipes'''
+    content = models.TextField()
+    author = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='comment_set'
+    )
+    recipe = models.ForeignKey(
+        Recipe,
+        on_delete=models.CASCADE,
+        related_name='comment_set'
+    )
+    date = models.DateTimeField(auto_now_add=True)
+=======
+>>>>>>> 473d50acbb08d54c8bd14f9cfe61d4ef3da2dceb

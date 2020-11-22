@@ -9,8 +9,7 @@ from django.http import HttpResponse, JsonResponse, HttpResponseNotAllowed, Http
 from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.contrib.auth import get_user_model
-from .models import Category, Barcode, Item, ItemCount, Notification
-
+from .models import Category, Barcode, Item, ItemCount, Recipe, RecipeComment, Notification
 
 
 # Create your views here.
@@ -419,6 +418,205 @@ def item_count_info(request, item_count_id=0):
     else:
         return HttpResponseNotAllowed(['PUT'])
 
+def recipe_list(request):
+    '''
+    recipe_list:
+        GET: get all recipes
+    '''
+    if request.method == 'GET':
+        recipes = [
+            {
+                'id': recipe.id,
+                'title': recipe.title,
+                'description': recipe.description,
+                'video_url': recipe.video_url,
+                'rating_average': -1 if recipe.rating_count == 0 else \
+                                recipe.rating_sum / recipe.rating_count
+            }
+            for recipe in Recipe.objects.all()]
+        return JsonResponse(recipes, safe=False)
+    else:
+        return HttpResponseNotAllowed(['GET'])
+
+def recipe_info(request, recipe_id=0):
+    '''
+    recipe_info:
+        GET: get specific recipe
+        PUT: add new rating to a recipe
+    '''
+    if request.method == 'GET':
+        # check if recipe exists
+        try:
+            recipe = Recipe.objects.get(id=recipe_id)
+        except Recipe.DoesNotExist as error:
+            print(error)
+            return HttpResponse(status=404)
+        return JsonResponse({
+                'id': recipe.id,
+                'title': recipe.title,
+                'description': recipe.description,
+                'video_url': recipe.video_url,
+                'rating_average': -1 if recipe.rating_count == 0 else \
+                                recipe.rating_sum / recipe.rating_count
+        })
+    elif request.method == 'PUT':
+        # check if logged in
+        if not request.user.is_authenticated:
+            return HttpResponse(status=401)
+        # check contents of request
+        try:
+            body = request.body.decode()
+            rating = json.loads(body)['rating']
+        except (KeyError, JSONDecodeError) as error:
+            print(error)
+            return HttpResponseBadRequest()
+        # check if recipe exists
+        try:
+            recipe = Recipe.objects.get(id=recipe_id)
+        except Recipe.DoesNotExist as error:
+            print(error)
+            return HttpResponse(status=404)
+
+        response_dict = {
+            'id': recipe.id,
+            'title': recipe.title,
+            'description': recipe.description,
+            'video_url': recipe.video_url,
+            'rating_average': -1,
+            'already_rated': True
+        }
+        rating_users_id = [user['id'] for user in recipe.rating_users.all().values()]
+        if request.user.id in rating_users_id:
+            # user already rated this recipe -> don't change the rating
+            response_dict['rating_average'] = recipe.rating_sum / recipe.rating_count
+            return JsonResponse(response_dict)
+        else:
+            recipe.rating_users.add(request.user)
+            recipe.rating_sum += rating
+            recipe.rating_count += 1
+            recipe.save()
+            response_dict['already_rated'] = False
+            response_dict['rating_average'] = recipe.rating_sum / recipe.rating_count
+            return JsonResponse(response_dict)
+    else:
+        return HttpResponseNotAllowed(['GET', 'PUT'])
+
+def comment_list(request, recipe_id=0):
+    '''
+    comment_list:
+        GET: get all comments of specific recipe
+        POST: create new comment
+    '''
+    if request.method == 'GET':
+        comments = [
+            {
+                'id': comm.id,
+                'content': comm.content,
+                'author': get_user_model().objects.get(id=comm.author_id).username,
+                'recipe_id': comm.recipe_id,
+                'date': comm.date
+            }
+            for comm in RecipeComment.objects.filter(recipe_id=recipe_id)
+        ]
+        return JsonResponse(comments, safe=False)
+    elif request.method == 'POST':
+        # check if logged in
+        if not request.user.is_authenticated:
+            return HttpResponse(status=404)
+        # check contents of request
+        try:
+            body = request.body.decode()
+            content = json.loads(body)['content']
+        except (KeyError, JSONDecodeError) as error:
+            print(error)
+            return HttpResponseBadRequest()
+        # check if recipe exists
+        try:
+            recipe = Recipe.objects.get(id=recipe_id)
+        except Recipe.DoesNotExist as error:
+            print(error)
+            return HttpResponse(status=404)
+        comm = RecipeComment(content=content, author=request.user, recipe=recipe)
+        comm.save()
+        response_dict = {
+            'id': comm.id,
+            'content': comm.content,
+            'author': request.user.username,
+            'recipe_id': comm.recipe_id,
+            'date': comm.date
+        }
+        return JsonResponse(response_dict)
+    else:
+        return HttpResponseNotAllowed(['GET', 'POST'])
+
+def comment_info(request, comment_id=0):
+    '''
+    comment_info:
+        GET: get specific comment
+        PUT: edit specific comment
+        DELETE: delete specific comment
+    '''
+    if request.method == 'GET':
+        # check if comment exists
+        try:
+            comm = RecipeComment.objects.get(id=comment_id)
+        except RecipeComment.DoesNotExist as error:
+            print(error)
+            return HttpResponse(status=404)
+        return JsonResponse({
+            'id': comm.id,
+            'content': comm.content,
+            'author': comm.author.username,
+            'recipe_id': comm.recipe_id,
+            'date': comm.date
+        })
+    elif request.method == 'PUT':
+        # check if logged in
+        if not request.user.is_authenticated:
+            return HttpResponse(status=404)
+        # check contents of request
+        try:
+            body = request.body.decode()
+            content = json.loads(body)['content']
+        except (KeyError, JSONDecodeError) as error:
+            print(error)
+            return HttpResponseBadRequest()
+        # check if comment exists
+        try:
+            comm = RecipeComment.objects.get(id=comment_id)
+        except RecipeComment.DoesNotExist as error:
+            print(error)
+            return HttpResponse(status=404)
+        # check if the user is the author
+        if comm.author_id != request.user.id:
+            return HttpResponse(status=403)
+
+        comm.content = content
+        comm.save()
+        return JsonResponse({
+            'id': comm.id,
+            'content': comm.content,
+            'author': comm.author.username,
+            'recipe_id': comm.recipe_id,
+            'date': comm.date
+        })
+    elif request.method == 'DELETE':
+        # check if logged in
+        if not request.user.is_authenticated:
+            return HttpResponse(status=404)
+        # check if comment exists
+        try:
+            comm = RecipeComment.objects.get(id=comment_id)
+        except RecipeComment.DoesNotExist as error:
+            print(error)
+            return HttpResponse(status=404)
+        # check if the user is the author
+        if comm.author_id != request.user.id:
+            return HttpResponse(status=403)
+        comm.delete()
+        return HttpResponse(status=200)
+    else:
+        return HttpResponseNotAllowed(['GET', 'PUT', 'DELETE'])
 def noti_list(request, user_id=0):
     '''
     [ GET ] return list of notifications (`expire` type)
