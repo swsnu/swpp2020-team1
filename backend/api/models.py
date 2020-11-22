@@ -85,7 +85,7 @@ class Notification(models.Model):
     '''
     noti_type = models.CharField(max_length=8)
     is_read = models.BooleanField(default=False)
-    expire_date = models.DateField(default=datetime.datetime.now())
+    expire_date = models.DateField(auto_now=False, auto_now_add=False)
 
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
