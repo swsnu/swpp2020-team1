@@ -17,4 +17,6 @@ urlpatterns = [
     path('category/<int:category_id>/', views.category_info, name='category_info'),
     path('category/', views.category_list, name='category_list'),
     path('token/', views.token, name='token'),
+    path('noti/user/<int:user_id>/', views.noti_list, name='noti_list'),
+    path('noti/<int:noti_id>/', views.noti_read, name='noti_read'),
 ]
