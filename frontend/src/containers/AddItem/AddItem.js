@@ -11,7 +11,8 @@ import Scanner from '../../components/AddItem/Scanner';
 import Result from '../../components/AddItem/Result';
 import dataURLtoFile from '../../components/AddItem/URLtoFile';
 import EditItem from '../../components/AddItem/EditItem';
-
+axios.defaults.xsrfCookieName = 'csrftoken';
+axios.defaults.xsrfHeaderName = 'X-CSRFToken';
 const BARCODE_TERM = 'Scanning Barcode...'
 const EXPIRATION_TERM = 'Scanning Expiration Date...'
 

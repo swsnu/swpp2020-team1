@@ -11,6 +11,8 @@ import Circle from '@material-ui/icons/Brightness1'
 import axios from 'axios';
 import NotiCard from '../../components/Notification/NotiCard';
 import './MainPage.css';
+axios.defaults.xsrfCookieName = 'csrftoken';
+axios.defaults.xsrfHeaderName = 'X-CSRFToken';
 
 class MainPage extends Component {
 
