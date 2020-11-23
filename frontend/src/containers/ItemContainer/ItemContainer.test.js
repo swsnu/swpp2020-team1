@@ -55,7 +55,7 @@ describe('<ItemContainer />', () => {
       'barcode_num': 101, 
       'name': 'egg', 
       'category_id': 2,
-      'itemcounts': []
+      'itemcounts': [{'id': 1, 'item_id': 1, 'expiration_date': '20201231', 'count': 2}]
       },
     ]
 
@@ -93,7 +93,7 @@ describe('<ItemContainer />', () => {
  
 
     const component = mount(itemContainer);
-    const removeItemButton = component.find('.btn_remove_item button');
+    const removeItemButton = component.find('.btn_remove_item button').at(0);
     removeItemButton.simulate('click');
     expect(spyEditItemCount).toHaveBeenCalled();
   });
