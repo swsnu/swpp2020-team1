@@ -10,6 +10,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.contrib.auth import get_user_model
 from .models import Category, Barcode, Item, ItemCount, Recipe, RecipeComment, Notification
+from .init_db import initialize_category, initialize_recipe
 
 
 # Create your views here.
@@ -38,6 +39,9 @@ def signin(request):
     signin:
         POST: sign in with given username and password
     '''
+    if Category.objects.all().count() == 0 or Recipe.objects.all().count() == 0:
+        initialize_category()
+        initialize_recipe()
     if request.method == 'POST':
         try:
             req_data = json.loads(request.body.decode())
@@ -451,11 +455,14 @@ def recipe_info(request, recipe_id=0):
         except Recipe.DoesNotExist as error:
             print(error)
             return HttpResponse(status=404)
+        ingredients_list = [ingredient.id for ingredient in recipe.ingredients.all()]
         return JsonResponse({
                 'id': recipe.id,
                 'title': recipe.title,
                 'description': recipe.description,
                 'video_url': recipe.video_url,
+                'cuisine_type': recipe.cuisine_type,
+                'ingredients': ingredients_list,
                 'rating_average': -1 if recipe.rating_count == 0 else \
                                 recipe.rating_sum / recipe.rating_count
         })
