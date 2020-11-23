@@ -80,7 +80,7 @@ describe('<ItemContainer />', () => {
     const component = mount(itemContainer);
     const itemContainerInstance = component.find(ItemContainer.WrappedComponent).instance();
 
-    const addItemButton = component.find('.btn_add_item button');
+    const addItemButton = component.find('.AddItemButton');
     addItemButton.simulate('click');
 
     // why this is not working? maybe because it's not a route defined in App.js
@@ -103,7 +103,7 @@ describe('<ItemContainer />', () => {
       <Provider store={mockStore}>
         <BrowserRouter>
         <Switch>
-          <ItemContainer type="freezer" items={null} history={mockHistory}/>
+          <ItemContainer type="freezer" items={[]} history={mockHistory}/>
         </Switch>
         </BrowserRouter>
       </Provider>
