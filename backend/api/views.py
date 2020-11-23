@@ -617,6 +617,7 @@ def comment_info(request, comment_id=0):
         return HttpResponse(status=200)
     else:
         return HttpResponseNotAllowed(['GET', 'PUT', 'DELETE'])
+
 def noti_list(request, user_id=0):
     '''
     [ GET ] return list of notifications (`expire` type)
