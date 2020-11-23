@@ -5,17 +5,35 @@ import Item from '../../components/Item/Item';
 import * as actionCreators from '../../store/actions/index';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
-import { Typography, Container, Button, Icon } from '@material-ui/core';
+import { Dialog, Typography, Container, Button, Icon } from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
 import AddIcon from '@material-ui/icons/Add';
+import RemoveIcon from '@material-ui/icons/Remove';
 import './ItemContainer.css';
 
-class ItemContainer extends Component{
+class ItemContainer extends Component {
+  state = {
+    seen: false,
+    itemcounts: []
+  }
   onClickAddItemButton = () => {
     this.props.history.push('/item/add', {container: this.props.type});
   }
 
-  onRemoveItem = (id, count) => {
+  onRemoveItem = (e, id, count) => {
+    if (!e) var e = window.event;
+    e.cancelBubble = true;
+    if (e.stopPropagation) e.stopPropagation();
+
+    if(this.state.seen) {
+      let tmpItemCounts = this.state.itemcounts;
+      tmpItemCounts = tmpItemCounts.map(i => {
+        if(i.id === id) return { ...i, count: i.count - 1 };
+        return i;
+      })
+      this.setState({ itemcounts: tmpItemCounts })
+    }
+
     this.props.onEditItemCount(id, count-1);
   }
 
@@ -35,6 +53,14 @@ class ItemContainer extends Component{
     }
   }
 
+  onClickCard = (itemcounts) => {
+    this.setState({seen: true, itemcounts});
+  } 
+
+  onClickCardOff = () => {
+    this.setState({seen: false, itemcounts: []});
+  }
+
   render() {
     let items = null;
     if (this.props.items) {
@@ -42,18 +68,32 @@ class ItemContainer extends Component{
         return (
           <div key={i.id} id="ItemGridTile" className="ItemGridTile">
             <Item
+              id={i.id}
               name={i.name}
               container={i.container}
               itemcounts={i.itemcounts}
               unit="temp-unit"
               className="Item"
-              onRemoveItem={(ic_id, count) => this.onRemoveItem(ic_id, count)}
+              onClickCard={(itemcounts) => this.onClickCard(itemcounts)}
+              onClickSelectItem={(id) => this.props.onClickSelectItem(id)}
+              onRemoveItem={(e, ic_id, count) => this.onRemoveItem(e, ic_id, count)}
+              mode={(this.props.selecedItemIds != null && this.props.selectedItemIds.filter(id => id === i.id).length > 0 ? "Selected" : this.props.mode)}
             />
           </div>
 
         );
       })
     }
+
+    const itemcounts = (this.state.itemcounts.length > 0 ? this.state.itemcounts.map(ic => {
+      return (
+        <div key={ic.id} className="itemListShape">
+          <div className="expiration_date">{ic.expiration_date}</div>
+          <div className="count">{ic.count}</div>
+          <IconButton className="btn_remove_item" onClick={(event) => this.onRemoveItem(event, ic.id, ic.count)}><RemoveIcon/></IconButton>
+        </div>
+      );
+    }) : null);
 
     return (
         <div className="ItemContainer">
@@ -64,11 +104,17 @@ class ItemContainer extends Component{
             </div>
             <div className={this.props.type === "fridge" ? "ItemGrid ItemGridFridge" : "ItemGrid"}>
               {items}
-              {(this.props.items.length < 1 ? <div className="NoItem">NO INGREDIENTS HERE! PLEASE ADD YOURS :)</div> : null)}
+              {(this.props.items.length < 1 ? <div className="NoItem">NO INGREDIENTS HERE! PLEASE ADD YOURS</div> : null)}
             </div>
           </Container>
+
+          <Dialog open={this.state.seen}>
+            <Button onClick={this.onClickCardOff}>X</Button>
+            {itemcounts}
+          </Dialog>
         </div>
 
+        
     );
   }
 }

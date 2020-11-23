@@ -2,20 +2,16 @@
     width: 100%;
     height: 100%;
     filter: drop-shadow(0px 3px 4px rgba(0,0,0,0.12));
-}
-
-.ItemContents {
     display: flex;
-    flex-direction: column;
+    align-items: center;
     justify-content: center;
-    vertical-align: middle;
 }
 
 .item-title {
     left: 1px;
     top: 10px;
 
-    font-family: "Noto Sans KR", Roboto;
+    font-family: "Noto Sans KR", sans-serif;
     font-style: normal;
     font-weight: 900;
     font-size: 14px;
@@ -33,7 +29,7 @@
     left: 38px;
     top: 22px;
 
-    font-family: "Noto Sans KR", Roboto;
+    font-family: "Noto Sans KR", sans-serif;
     font-style: normal;
     font-weight: bold;
     font-size: 10px;
@@ -51,7 +47,7 @@
     left: 63px;
     top: 41px;
 
-    font-family: "Noto Sans KR", Roboto;
+    font-family: "Noto Sans KR", sans-serif;
     font-style: normal;
     font-weight: normal;
     font-size: 18px;
@@ -70,4 +66,31 @@
     width: 20px;
     background-color: #E8A065;
     filter: drop-shadow(0px 3px 5px rgba(0,0,0,0.2));
+    transition: all 0.5s;
+}
+
+.Select:hover {
+    background-color: #E86565;
+}
+
+.Selected {
+    z-index: 5;
+    height: 100%;
+    width: 100%;
+    left: 0px;
+    top: 0px;
+    background-color: rgba(232, 160, 101, 0.4);
+}
+
+.item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.itemListShape {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
 }

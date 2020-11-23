@@ -26,6 +26,9 @@ class MainPage extends Component {
     currentHeight: 1280,
     currentWidth: 720,
     notifications: [],
+    selectedItemIds: [],
+    selectedCuisine: null,
+    mode: "normal"
   }
   async componentDidMount() { 
     // temporary user
@@ -49,6 +52,11 @@ class MainPage extends Component {
 
     window.addEventListener("resize", this.resize.bind(this));
     this.resize();
+  }
+
+  componentDidUpdate = () => {
+    if(this.state.mode === "preference")
+      document.getElementsByClassName("ItemSelectDiv")[0].style.height = JSON.stringify(105 + this.state.currentWidth * 0.05 + Math.min(this.state.currentWidth / 5, 100))+"px";
   }
 
   resize = () => {
@@ -106,230 +114,70 @@ class MainPage extends Component {
     })
   }
 
+  onClickItemSelectButton = () => {
+    if(this.state.mode === "normal") {
+      this.setState({ mode: "select" });
+      document.getElementsByClassName("ItemSelectButton")[0].style.background = "#C4C4C4";
+      let removeItemButtons = document.getElementsByClassName("btn_remove_item");
+      for(let i = 0; i < removeItemButtons.length; i++) {
+        removeItemButtons[i].style.visibility = "hidden";
+      }
+    } else if(this.state.mode === "select") {
+      if(this.state.selectedItemIds.length < 1) {
+        alert("please select one or more ingredients!");
+      } else {
+        this.setState({ mode: "preference" })
+        document.getElementsByClassName("ItemSelectDiv")[0].style.height = JSON.stringify(100 + this.state.currentWidth * 0.05 + Math.min(this.state.currentWidth / 5, 100))+"px";
+      }
+    }
+  }
+
+  onClickRecipeButton = () => {
+    if(this.state.selectedCuisine) document.getElementsByClassName(this.state.selectedCuisine)[0].style.background = "#F4F4F4";
+    this.setState({ mode: "normal", selectedCuisine: null, selectedItemIds: [] });
+    document.getElementsByClassName("ItemSelectButton")[0].style.background = "#E8A065";
+    document.getElementsByClassName("ItemSelectDiv")[0].style.height = "55px";
+    let removeItemButtons = document.getElementsByClassName("btn_remove_item");
+    for(let i = 0; i < removeItemButtons.length; i++) {
+      removeItemButtons[i].style.visibility = "visible";
+    }
+  }
+
+  onClickSelectItem = (id) => {
+    let tempSelectedItemIds = this.state.selectedItemIds;
+    if(tempSelectedItemIds.filter(i => i === id).length > 0) {
+      tempSelectedItemIds = tempSelectedItemIds.filter(i => i !== id);
+    } else {
+      if(tempSelectedItemIds.length >= 3) {
+        tempSelectedItemIds.shift();
+      }
+      tempSelectedItemIds.push(id);
+    }
+
+    if(tempSelectedItemIds.length > 0) {
+      document.getElementsByClassName("ItemSelectButton")[0].style.background = "#E8A065";
+    }
+    this.setState({ selectedItemIds: tempSelectedItemIds});
+  }
+
+  onClickSelectPreference = (cuisine) => {
+    if(this.state.selectedCuisine != null) {
+      document.getElementsByClassName(this.state.selectedCuisine)[0].style.backgroundColor = "#F4F4F4";
+    }
+    if(this.state.selectedCuisine !== cuisine) {
+      this.setState({selectedCuisine: cuisine});
+      document.getElementsByClassName(cuisine)[0].style.backgroundColor = "#989898";
+    } else {
+      this.setState({selectedCuisine: null});
+    }
+  }
+
   render() {
     let items = this.props.items.reduce((result, i) => {
       const ic = this.props.itemcounts.filter(ic => ic.item_id === i.id);
       if (ic.length > 0) result.push({...i, 'itemcounts': ic});
       return result; 
     }, []);
-
-    /*let items_tmp = [{
-      name: 'Seoul Milk 1.5L',
-      container: 'freezer',
-      itemcounts: [{
-        id: 1,
-        expiration_date: '2020/11/21',
-        count: 30
-      }]
-    }, {
-      name: 'Seoul Milk 1.5L',
-      container: 'freezer',
-      itemcounts: [{
-        id: 1,
-        expiration_date: '2020/11/21',
-        count: 30
-      }]
-    }, {
-      name: 'Seoul Milk 1.5L',
-      container: 'freezer',
-      itemcounts: [{
-        id: 1,
-        expiration_date: '2020/11/21',
-        count: 30
-      }]
-    }, {
-      name: 'Seoul Milk 1.5L',
-      container: 'freezer',
-      itemcounts: [{
-        id: 1,
-        expiration_date: '2020/11/21',
-        count: 30
-      }]
-    }, {
-      name: 'Seoul Milk 1.5L',
-      container: 'freezer',
-      itemcounts: [{
-        id: 1,
-        expiration_date: '2020/11/21',
-        count: 30
-      }]
-    }, {
-      name: 'Seoul Milk 1.5L',
-      container: 'freezer',
-      itemcounts: [{
-        id: 1,
-        expiration_date: '2020/11/21',
-        count: 30
-      }]
-    }, {
-      name: 'Seoul Milk 1.5L',
-      container: 'freezer',
-      itemcounts: [{
-        id: 1,
-        expiration_date: '2020/11/21',
-        count: 30
-      }]
-    }, {
-      name: 'Seoul Milk 1.5L',
-      container: 'freezer',
-      itemcounts: [{
-        id: 1,
-        expiration_date: '2020/11/21',
-        count: 30
-      }]
-    }, {
-      name: 'Seoul Milk 1.5L',
-      container: 'freezer',
-      itemcounts: [{
-        id: 1,
-        expiration_date: '2020/11/21',
-        count: 30
-      }]
-    }, {
-      name: 'Seoul Milk 1.5L',
-      container: 'freezer',
-      itemcounts: [{
-        id: 1,
-        expiration_date: '2020/11/21',
-        count: 30
-      }]
-    }, {
-      name: 'Seoul Milk 1.5L',
-      container: 'fridge',
-      itemcounts: [{
-        id: 1,
-        expiration_date: '2020/11/21',
-        count: 30
-      }]
-    }, {
-      name: 'Seoul Milk 1.5L',
-      container: 'fridge',
-      itemcounts: [{
-        id: 1,
-        expiration_date: '2020/11/21',
-        count: 30
-      }]
-    }, {
-      name: 'Seoul Milk 1.5L',
-      container: 'fridge',
-      itemcounts: [{
-        id: 1,
-        expiration_date: '2020/11/21',
-        count: 30
-      }]
-    }, {
-      name: 'Seoul Milk 1.5L',
-      container: 'fridge',
-      itemcounts: [{
-        id: 1,
-        expiration_date: '2020/11/21',
-        count: 30
-      }]
-    }, {
-      name: 'Seoul Milk 1.5L',
-      container: 'fridge',
-      itemcounts: [{
-        id: 1,
-        expiration_date: '2020/11/21',
-        count: 30
-      }]
-    }, {
-      name: 'Seoul Milk 1.5L',
-      container: 'fridge',
-      itemcounts: [{
-        id: 1,
-        expiration_date: '2020/11/21',
-        count: 30
-      }]
-    }, {
-      name: 'Seoul Milk 1.5L',
-      container: 'fridge',
-      itemcounts: [{
-        id: 1,
-        expiration_date: '2020/11/21',
-        count: 30
-      }]
-    }, {
-      name: 'Seoul Milk 1.5L',
-      container: 'fridge',
-      itemcounts: [{
-        id: 1,
-        expiration_date: '2020/11/21',
-        count: 30
-      }]
-    }, {
-      name: 'Seoul Milk 1.5L',
-      container: 'fridge',
-      itemcounts: [{
-        id: 1,
-        expiration_date: '2020/11/21',
-        count: 30
-      }]
-    }, {
-      name: 'Seoul Milk 1.5L',
-      container: 'fridge',
-      itemcounts: [{
-        id: 1,
-        expiration_date: '2020/11/21',
-        count: 30
-      }]
-    }, {
-      name: 'Seoul Milk 1.5L',
-      container: 'shelf',
-      itemcounts: [{
-        id: 1,
-        expiration_date: '2020/11/21',
-        count: 30
-      }]
-    }, {
-      name: 'Seoul Milk 1.5L',
-      container: 'shelf',
-      itemcounts: [{
-        id: 1,
-        expiration_date: '2020/11/21',
-        count: 30
-      }]
-    }, {
-      name: 'Seoul Milk 1.5L',
-      container: 'shelf',
-      itemcounts: [{
-        id: 1,
-        expiration_date: '2020/11/21',
-        count: 30
-      }]
-    }, {
-      name: 'Seoul Milk 1.5L',
-      container: 'shelf',
-      itemcounts: [{
-        id: 1,
-        expiration_date: '2020/11/21',
-        count: 30
-      }]
-    }, {
-      name: 'Seoul Milk 1.5L',
-      container: 'shelf',
-      itemcounts: [{
-        id: 1,
-        expiration_date: '2020/11/21',
-        count: 30
-      }]
-    }, {
-      name: 'Seoul Milk 1.5L',
-      container: 'shelf',
-      itemcounts: [{
-        id: 1,
-        expiration_date: '2020/11/21',
-        count: 30
-      }]
-    }, {
-      name: 'Seoul Milk 1.5L',
-      container: 'shelf',
-      itemcounts: [{
-        id: 1,
-        expiration_date: '2020/11/21',
-        count: 30
-      }]
-    }]*/
 
     const freezerItems =  items.filter(i => i.container === 'freezer') //should change items to items_tmp
     const fridgeItems =  items.filter(i => i.container === 'fridge')
@@ -347,12 +195,23 @@ class MainPage extends Component {
             </div>
           </div>
           {/*<Typography>{this.state.currentWidth} and {this.state.currentHeight}</Typography>*/}
-          <ItemContainer type="freezer" currentWidth={this.state.currentWidth} currentHeight={this.state.currentHeight} items={freezerItems}/>
-          <ItemContainer type="fridge" currentWidth={this.state.currentWidth} currentHeight={this.state.currentHeight} items={fridgeItems}/>
-          <ItemContainer type="shelf" currentWidth={this.state.currentWidth} currentHeight={this.state.currentHeight} items={shelfItems}/>
+          <ItemContainer type="freezer" selectedItemIds={this.state.selectedItemIds} onClickSelectItem={(id) => this.onClickSelectItem(id)} currentWidth={this.state.currentWidth} currentHeight={this.state.currentHeight} items={freezerItems} mode={this.state.mode}/>
+          <ItemContainer type="fridge" selectedItemIds={this.state.selectedItemIds} onClickSelectItem={(id) => this.onClickSelectItem(id)} currentWidth={this.state.currentWidth} currentHeight={this.state.currentHeight} items={fridgeItems} mode={this.state.mode}/>
+          <ItemContainer type="shelf" selectedItemIds={this.state.selectedItemIds} onClickSelectItem={(id) => this.onClickSelectItem(id)} currentWidth={this.state.currentWidth} currentHeight={this.state.currentHeight} items={shelfItems} mode={this.state.mode}/>
           {/* <Basket/> */}
-          <div className="ItemSelectDiv">
-            <div className="ItemSelectButton">SELECT Ingredients</div>
+          <div className="ItemSelectDiv" onClick={this.onClickItemSelectButton}>
+            <div className="ItemSelectButton">
+              <div className="ItemSelectButtonHeader">
+                {this.state.mode !== "normal" ? this.state.selectedItemIds.length + " Ingredients Selected" : "SELECT Ingredients"}
+              </div>
+              <div className="ItemSelectButtonMain">
+                <div className="btn_preference Korean" onClick={() => this.onClickSelectPreference("Korean")}>Korean</div>
+                <div className="btn_preference Japanese" onClick={() => this.onClickSelectPreference("Japanese")}>Japanese</div>
+                <div className="btn_preference Chinese" onClick={() => this.onClickSelectPreference("Chinese")}>Chinese</div>
+                <div className="btn_preference Italian" onClick={() => this.onClickSelectPreference("Italian")}>Italian</div>
+              </div>
+              <div className="ItemSelectButtonFooter" onClick={this.onClickRecipeButton}>Move</div>
+            </div>
           </div>
 
           <Dialog open={this.state.openDialog} fullScreen={true}>

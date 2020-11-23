@@ -3,8 +3,10 @@
     overflow-x: scroll;
     vertical-align: middle;
     display: inline-grid;
-    float: left;
+    /*float: left;*/
     width: 100%;
+    height: auto;
+    grid-auto-columns: min-content;
 }
 
 .ItemGrid::-webkit-scrollbar {
@@ -37,7 +39,7 @@
     text-align: left;
     margin-right: 10px;
 
-    font-family: "Source Code Pro", Roboto;
+    font-family: "Source Code Pro", sans-serif;
     font-style: normal;
     font-weight: bold;
     font-size: 24px;
@@ -69,7 +71,7 @@
 
 .AddItemLine {
     padding-left: 10px;
-    font-family: Roboto;
+    font-family: Roboto, sans-serif;
     font-style: normal;
     font-weight: bold;
     font-size: 9px;
@@ -93,16 +95,17 @@
 }
 
 .ItemContainer {
-    margin-top: 5px;
-    margin-bottom: 5px;
+    padding-top: 5px;
+    padding-bottom: 5px;
     height: fit-content;
 }
 
 .NoItem {
-    font-family: Roboto;
+    font-family: Roboto, sans-serif;
     font-style: normal;
     font-weight: bold;
     font-size: 13px;
     line-height: 24px;
     color: black;
+    width: max-content;
 }
