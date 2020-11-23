@@ -1,7 +1,10 @@
+''' init_db.py: initialize recipe and category '''
+
 import csv
 from .models import Category, Recipe
 
 def initialize_category():
+    ''' initialize_category: initialize category '''
     category_list = []
     with open('csvfiles/category.csv', 'r', encoding='utf-8') as categories:
         reader = csv.reader(categories)
@@ -12,6 +15,7 @@ def initialize_category():
         Category(name=category_name).save()
 
 def initialize_recipe():
+    ''' initialize_recipe: initialize recipe '''
     recipe_list = []
     with open('csvfiles/recipe.csv', 'r', encoding='utf-8') as recipes:
         reader = csv.reader(recipes)
