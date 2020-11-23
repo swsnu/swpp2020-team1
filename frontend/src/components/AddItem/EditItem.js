@@ -1,10 +1,17 @@
 import React, { Component} from "react";
+import { connect } from 'react-redux';
+import * as actionCreators from '../../store/actions/index';
 
 // material-ui components
 import { Button, TextField, DialogTitle, DialogContent, DialogActions, MenuItem, InputLabel, Select } from '@material-ui/core';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 
 class EditItem extends Component {
   containers = ['freezer', 'fridge', 'shelf'];
+  category = [
+    {name: '우유'},
+    {name: '과자'}
+  ]
 
   state = {
     name: '', 
@@ -36,6 +43,10 @@ class EditItem extends Component {
       count: updatedResult.count,
       container: updatedResult.container
     })
+
+    //if(this.props.categories.length < 1) {
+    //  this.props.onGetCategories();
+    //}
   }
 
   render() {
@@ -96,4 +107,24 @@ class EditItem extends Component {
   }
 }
 
-export default EditItem;
+            /*<Autocomplete
+              options={this.props.categories}
+              getOptionLabel={(option) => option.name}
+              id="auto-select"
+              autoSelect
+              renderInput={(params) => <TextField {...params} label="autoSelect" margin="normal" />}
+            />*/
+
+/*const mapStateToProps = state => {
+  return {
+    categories: state.category.categories
+  };
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    onGetCategories: () => dispatch(actionCreators.getCategories())
+  }
+}*/
+
+export default EditItem; //connect(mapStateToProps, mapDispatchToProps)(EditItem);

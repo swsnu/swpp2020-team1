@@ -63,7 +63,7 @@ describe('<ItemContainer />', () => {
       <Provider store={mockStore}>
         <BrowserRouter>
         <Switch>
-          <ItemContainer type="freezer" items={mockItems} history={mockHistory}/>
+          <ItemContainer type="freezer" items={mockItems} selectedItemIds={[]} history={mockHistory}/>
         </Switch>
         </BrowserRouter>
       </Provider>

@@ -354,7 +354,14 @@ def category_list(request):
     category_list:
         POST: add category info
     '''
-    if request.method == 'POST':
+    if request.method == 'GET':
+        try:
+            all_category_list = list(Category.objects.all().values())
+            return JsonResponse(all_category_list, safe=False)
+        except Category.DoesNotExist as error:
+            print(error)
+            return HttpResponse(status=404)
+    elif request.method == 'POST':
         try:
             body = request.body.decode()
             name = json.loads(body)['name']

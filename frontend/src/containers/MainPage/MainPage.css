@@ -33,9 +33,7 @@
 .ItemSelectButton {
     box-shadow: 0px -3px 4px rgba(0, 0, 0, 0.12);
     margin-top: 5px;
-
-
-    line-height: 24px;
+    line-height: 50px;
     
     height: auto;
     transition: background-color 0.5s;
@@ -43,7 +41,6 @@
     background: #E8A065;
     border-radius: 8px;
     resize: none;
-    line-height: 50px;
 }
 
 .ItemSelectButton:hover {

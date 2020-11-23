@@ -77,7 +77,7 @@ class ItemContainer extends Component {
               onClickCard={(itemcounts) => this.onClickCard(itemcounts)}
               onClickSelectItem={(id) => this.props.onClickSelectItem(id)}
               onRemoveItem={(e, ic_id, count) => this.onRemoveItem(e, ic_id, count)}
-              mode={(this.props.selecedItemIds != null && this.props.selectedItemIds.filter(id => id === i.id).length > 0 ? "Selected" : this.props.mode)}
+              mode={(this.props.selectedItemIds.filter(id => id === i.id).length > 0 ? "Selected" : this.props.mode)}
             />
           </div>
 
