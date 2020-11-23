@@ -16,3 +16,6 @@ export const ADD_ARTICLE = 'ADD_ARTICLE';
 // Notification
 export const GET_USER_NOTI = 'GET_USER_NOTI';
 export const SET_ISREAD = 'SET_ISREAD';
+
+// Category
+export const GET_CATEGORIES = 'GET_CATEGORIES';

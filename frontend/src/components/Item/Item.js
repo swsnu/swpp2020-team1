@@ -30,7 +30,7 @@ const Item = props => {
   }
 
   return (
-    <Card style={props.mode === "Selected" ? {backgroundColor: "rgba(232, 160, 101)"} : null} className={props.mode === "normal" ? 'Item' : (props.mode === "Selected" ? 'Item Select' : 'Item Select')} onClick={props.mode === "normal" ? () => onClickCard(props.itemcounts) : () => onClickSelectCard(props.id)}>
+    <Card style={props.mode === "Selected" ? {backgroundColor: "rgba(232, 160, 101)"} : null} className={props.mode === "normal" ? 'Item' : 'Item Select'} onClick={props.mode === "normal" ? () => onClickCard(props.itemcounts) : () => onClickSelectCard(props.id)}>
       <div className='ItemContents'>
         <div className="item-title">{props.name}</div>
         <div key={itemFastestExpDate.id} className="item">

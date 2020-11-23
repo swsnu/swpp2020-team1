@@ -3,6 +3,7 @@ import articleReducer from './reducers/article';
 import itemReducer from './reducers/item';
 import itemcountReducer from './reducers/itemcount';
 import notiReducer from './reducers/notification';
+import categoryReducer from './reducers/category';
 
 import thunk from 'redux-thunk';
 
@@ -11,6 +12,7 @@ const rootReducer = combineReducers({
   item: itemReducer,
   itemcount: itemcountReducer,
   notification: notiReducer,
+  category: categoryReducer
 })
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
