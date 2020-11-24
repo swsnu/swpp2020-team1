@@ -239,7 +239,7 @@ class ApiTestCase(TestCase):
                 'barcode_num': '2222',
             }), content_type='application/json', HTTP_X_CSRFTOKEN=csrftoken)
         self.assertEqual(response.status_code, 400)
-        response = client.get('/back/category/')
+        response = client.delete('/back/category/')
         self.assertEqual(response.status_code, 405)
 
     def test_put_item_count_info(self):
