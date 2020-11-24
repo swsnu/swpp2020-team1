@@ -286,9 +286,11 @@ class ApiTestCase(TestCase):
 
     def test_recipe_list(self):
         client = Client()
+        ### GET ###
         response = client.get('/back/recipe/')
         self.assertEqual(response.status_code, 200)
 
+        ### NOT ALLOWED ###
         response = client.put('/back/recipe/')
         self.assertEqual(response.status_code, 405)
 
@@ -302,6 +304,7 @@ class ApiTestCase(TestCase):
         recipe1.rating_users.add(user1)
         recipe1.ingredients.add(cat1)
         recipe1.save()
+        recipe2 = Recipe.objects.create(title='r2')
         client = Client()
 
         ### GET ###
@@ -320,7 +323,7 @@ class ApiTestCase(TestCase):
         # not logged in
         response = client.put('/back/recipe/1/')
         self.assertEqual(response.status_code, 401)
-        
+
         client.login(username='user1', password='pw1')
         # bad request body
         response = client.put('/back/recipe/1/')
@@ -338,4 +341,99 @@ class ApiTestCase(TestCase):
         response = client.put('/back/recipe/2/', json.dumps({'rating':3}), content_type='application/json')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()['already_rated'], False)
+
+        ### NOT ALLOWED ###
+        response = client.delete('/back/recipe/1/')
+        self.assertEqual(response.status_code, 405)
+
+    def test_comment_list(self):
+        User = get_user_model()
+        user1 = User.objects.create(username='user1')
+        user1.set_password('pw1')
+        user1.save()
+        Recipe.objects.create(title='r1')
+
+        client = Client()
+        ### GET ###
+        response = client.get('/back/recipe/1/comment/')
+        self.assertEqual(response.status_code, 200)
+
+        ### POST ###
+        # not logged in
+        response = client.post('/back/recipe/1/comment/')
+        self.assertEqual(response.status_code, 401)
+        
+        client.login(username='user1', password='pw1')
+        # bad request body
+        response = client.post('/back/recipe/1/comment/')
+        self.assertEqual(response.status_code, 400)
+        # recipe doesn't exist
+        response = client.post('/back/recipe/10/comment/', json.dumps({'content':'c1'}), content_type='application/json')
+        self.assertEqual(response.status_code, 404)
+
+        response = client.post('/back/recipe/1/comment/', json.dumps({'content':'c1'}), content_type='application/json')
+        self.assertEqual(response.status_code, 201)
+
+        ### NOT ALLOWED ###
+        response = client.delete('/back/recipe/1/comment/')
+        self.assertEqual(response.status_code, 405)
+
+    def test_comment_info(self):
+        User = get_user_model()
+        user1 = User.objects.create(username='user1')
+        user1.set_password('pw1')
+        user1.save()
+        user2 = User.objects.create(username='user2')
+        recipe1 = Recipe.objects.create(title='r1')
+        recipe2 = Recipe.objects.create(title='r2')
+        RecipeComment.objects.create(author=user1, recipe=recipe1)
+        RecipeComment.objects.create(author=user2, recipe=recipe1)
+        client = Client()
+
+        ### GET ###
+        # comment doesn't exist
+        response = client.get('/back/recipe/comment/10/')
+        self.assertEqual(response.status_code, 404)
+        # comment exist
+        response = client.get('/back/recipe/comment/1/')
+        self.assertEqual(response.status_code, 200)
+
+        ### PUT ###
+        # not logged in
+        response = client.put('/back/recipe/comment/1/')
+        self.assertEqual(response.status_code, 401) 
+        client.login(username='user1', password='pw1')
+        # bad request body    
+        response = client.put('/back/recipe/comment/1/')
+        self.assertEqual(response.status_code, 400)
+        # comment doesn't exist
+        response = client.put('/back/recipe/comment/10/', json.dumps({'content':'c1'}), content_type='application/json')
+        self.assertEqual(response.status_code, 404)
+        # not the author
+        response = client.put('/back/recipe/comment/2/', json.dumps({'content':'c1'}), content_type='application/json')
+        self.assertEqual(response.status_code, 403)   
+        # success
+        response = client.put('/back/recipe/comment/1/', json.dumps({'content':'c1'}), content_type='application/json')
+        self.assertEqual(response.status_code, 200)        
+
+        ### DELETE ###
+        # not logged in
+        client.logout()
+        response = client.delete('/back/recipe/comment/1/')
+        self.assertEqual(response.status_code, 401) 
+        client.login(username='user1', password='pw1')
+        # comment doesn't exist
+        response = client.delete('/back/recipe/comment/10/')
+        self.assertEqual(response.status_code, 404)
+        # not the author
+        response = client.delete('/back/recipe/comment/2/')
+        self.assertEqual(response.status_code, 403)   
+        # success
+        response = client.delete('/back/recipe/comment/1/')
+        self.assertEqual(response.status_code, 200)        
+
+        ### NOT ALLOWED ###
+        response = client.post('/back/recipe/comment/1/')
+        self.assertEqual(response.status_code, 405)
+
 
