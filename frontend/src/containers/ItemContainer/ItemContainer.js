@@ -34,7 +34,11 @@ class ItemContainer extends Component {
       this.setState({ itemcounts: tmpItemCounts })
     }
 
-    this.props.onEditItemCount(id, count-1);
+    this.props.onEditItemCount(id, count-1)
+    .then(() => {
+      this.props.buildNotification();
+    })
+
   }
 
   componentDidMount() {
@@ -121,13 +125,14 @@ class ItemContainer extends Component {
 
 const mapStateToProps = state => {
   return {
-
+    notifications: state.notification.notifications,
   };
 }
 
 const mapDispatchToProps = dispatch => {
   return {
     onEditItemCount: (id, count) => dispatch(actionCreators.editItemCount(id, count)),
+    onGetUserNotiList: (user_id) => dispatch(actionCreators.getUserNotiList(user_id)),
   }
 }
 
