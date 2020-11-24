@@ -3,7 +3,7 @@
 import json
 from django.test import TestCase, Client
 from django.contrib.auth import get_user_model
-from .models import Barcode, Category, Item, ItemCount, Notification
+from .models import Barcode, Category, Item, ItemCount, Notification, Recipe, RecipeComment
 
 class ApiTestCase(TestCase):
     def test_csrf(self):
@@ -283,3 +283,59 @@ class ApiTestCase(TestCase):
         self.assertEqual(response.status_code, 404)
         response = client.get('/back/item/count/1/')
         self.assertEqual(response.status_code, 405)
+
+    def test_recipe_list(self):
+        client = Client()
+        response = client.get('/back/recipe/')
+        self.assertEqual(response.status_code, 200)
+
+        response = client.put('/back/recipe/')
+        self.assertEqual(response.status_code, 405)
+
+    def test_recipe_info(self):
+        User = get_user_model()
+        user1 = User.objects.create(username='user1')
+        user1.set_password('pw1')
+        user1.save()
+        cat1 = Category.objects.create(name='cat1')
+        recipe1 = Recipe.objects.create(title='r1', rating_count=1, rating_sum=3)
+        recipe1.rating_users.add(user1)
+        recipe1.ingredients.add(cat1)
+        recipe1.save()
+        client = Client()
+
+        ### GET ###
+        response = client.get('/back/recipe/1/')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()['title'], 'r1')
+        # recipe with 0 rating count -> average -1
+        response = client.get('/back/recipe/2/')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()['rating_average'], -1)
+        # recipe doesn't exist
+        response = client.get('/back/recipe/10/')
+        self.assertEqual(response.status_code, 404)
+
+        ### PUT ###
+        # not logged in
+        response = client.put('/back/recipe/1/')
+        self.assertEqual(response.status_code, 401)
+        
+        client.login(username='user1', password='pw1')
+        # bad request body
+        response = client.put('/back/recipe/1/')
+        self.assertEqual(response.status_code, 400)
+        # recipe doesn't exist
+        response = client.put('/back/recipe/10/', json.dumps({'rating':3}), content_type='application/json')
+        self.assertEqual(response.status_code, 404)     
+
+        # already rated user
+        response = client.put('/back/recipe/1/', json.dumps({'rating':3}), content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()['already_rated'], True)
+
+        # new user
+        response = client.put('/back/recipe/2/', json.dumps({'rating':3}), content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()['already_rated'], False)
+
