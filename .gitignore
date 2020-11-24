@@ -1,6 +1,9 @@
 # db file
 *.sqlite3
 
+# coverage
+.coverage
+
 # python cache
 __pycache__/
 
