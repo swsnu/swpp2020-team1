@@ -356,8 +356,8 @@ def category_list(request):
         POST: add category info
     '''
     if request.method == 'GET':
-            all_category_list = list(Category.objects.all().values())
-            return JsonResponse(all_category_list, safe=False)
+        all_category_list = list(Category.objects.all().values())
+        return JsonResponse(all_category_list, safe=False)
     elif request.method == 'POST':
         try:
             body = request.body.decode()
@@ -533,7 +533,7 @@ def comment_list(request, recipe_id=0):
     elif request.method == 'POST':
         # check if logged in
         if not request.user.is_authenticated:
-            return HttpResponse(status=404)
+            return HttpResponse(status=401)
         # check contents of request
         try:
             body = request.body.decode()
@@ -556,7 +556,7 @@ def comment_list(request, recipe_id=0):
             'recipe_id': comm.recipe_id,
             'date': comm.date
         }
-        return JsonResponse(response_dict)
+        return JsonResponse(response_dict, status=201)
     else:
         return HttpResponseNotAllowed(['GET', 'POST'])
 
@@ -584,7 +584,7 @@ def comment_info(request, comment_id=0):
     elif request.method == 'PUT':
         # check if logged in
         if not request.user.is_authenticated:
-            return HttpResponse(status=404)
+            return HttpResponse(status=401)
         # check contents of request
         try:
             body = request.body.decode()
@@ -614,7 +614,7 @@ def comment_info(request, comment_id=0):
     elif request.method == 'DELETE':
         # check if logged in
         if not request.user.is_authenticated:
-            return HttpResponse(status=404)
+            return HttpResponse(status=401)
         # check if comment exists
         try:
             comm = RecipeComment.objects.get(id=comment_id)
