@@ -30,25 +30,25 @@ class MainPage extends Component {
     selectedCuisine: null,
     mode: "normal"
   }
-  async componentDidMount() { 
-    // temporary user
-    const user_id = 1;
 
+  // temporary user
+  user_id = 1;
+
+  async componentDidMount() { 
     // temporary login
-    await axios.post('/back/signin/', {'username': 'jaeseoklee', 'password': 'roborobo'})
+    await axios.post('/back/signin/', {'username': 'jaeseoklee', 'password': '0000'})
       .then(res => console.log(res))
       .catch(e => console.log(e))
 
-    await this.props.onGetUserItems(user_id);
+    await this.props.onGetUserItems(this.user_id);
     for (const item of this.props.items) {
       await this.props.onGetItemCounts(item.id)
     }
-    console.log("itemcounts: " + JSON.stringify(this.props.itemcounts))
-    console.log("items: " + JSON.stringify(this.props.items))
-    console.log("notifications: " + JSON.stringify(this.props.notifications))
+    // console.log("itemcounts: " + JSON.stringify(this.props.itemcounts))
+    // console.log("items: " + JSON.stringify(this.props.items))
+    // console.log("notifications: " + JSON.stringify(this.props.notifications))
 
-    await this.props.onGetUserNotiList(user_id)
-    this.buildNotificationInfo();
+    this.getAndBuildNotification(this.user_id)
 
     window.addEventListener("resize", this.resize.bind(this));
     this.resize();
@@ -71,7 +71,6 @@ class MainPage extends Component {
 
   isUnreadNotiExists = () => {
     if (this.state.notifications.filter(noti => !noti.isRead).length > 0) {
-      console.log(JSON.stringify("Unread: " + this.state.notifications))
       return true;
     }
     else return false;
@@ -101,6 +100,13 @@ class MainPage extends Component {
     console.log("notifications: " + JSON.stringify(this.state.notifications))
   }
 
+  getAndBuildNotification = (user_id) => {
+    this.props.onGetUserNotiList(user_id) 
+    .then(() => {
+      this.buildNotificationInfo()
+    })
+  }
+
   onClickNotiIcon = () => {
     this.setState({openDialog: true})
   }
@@ -127,13 +133,16 @@ class MainPage extends Component {
         alert("please select one or more ingredients!");
       } else {
         this.setState({ mode: "preference" })
-        document.getElementsByClassName("ItemSelectDiv")[0].style.height = JSON.stringify(100 + this.state.currentWidth * 0.05 + Math.min(this.state.currentWidth / 5, 100))+"px";
+        document.getElementsByClassName("ItemSelectDiv")[0].style.height =
+          JSON.stringify(100 + this.state.currentWidth * 0.05 + Math.min(this.state.currentWidth / 5, 100))+"px";
       }
     }
   }
 
   onClickRecipeButton = () => {
-    if(this.state.selectedCuisine) document.getElementsByClassName(this.state.selectedCuisine)[0].style.background = "#F4F4F4";
+    if (this.state.selectedCuisine) {
+      document.getElementsByClassName(this.state.selectedCuisine)[0].style.background = "#F4F4F4";
+    }
     this.setState({ mode: "normal", selectedCuisine: null, selectedItemIds: [] });
     document.getElementsByClassName("ItemSelectButton")[0].style.background = "#E8A065";
     document.getElementsByClassName("ItemSelectDiv")[0].style.height = "55px";
@@ -195,22 +204,53 @@ class MainPage extends Component {
             </div>
           </div>
           {/*<Typography>{this.state.currentWidth} and {this.state.currentHeight}</Typography>*/}
-          <ItemContainer type="freezer" selectedItemIds={this.state.selectedItemIds} onClickSelectItem={(id) => this.onClickSelectItem(id)} currentWidth={this.state.currentWidth} currentHeight={this.state.currentHeight} items={freezerItems} mode={this.state.mode}/>
-          <ItemContainer type="fridge" selectedItemIds={this.state.selectedItemIds} onClickSelectItem={(id) => this.onClickSelectItem(id)} currentWidth={this.state.currentWidth} currentHeight={this.state.currentHeight} items={fridgeItems} mode={this.state.mode}/>
-          <ItemContainer type="shelf" selectedItemIds={this.state.selectedItemIds} onClickSelectItem={(id) => this.onClickSelectItem(id)} currentWidth={this.state.currentWidth} currentHeight={this.state.currentHeight} items={shelfItems} mode={this.state.mode}/>
+          <ItemContainer 
+            type="freezer"
+            selectedItemIds={this.state.selectedItemIds}
+            onClickSelectItem={(id) => this.onClickSelectItem(id)}
+            currentWidth={this.state.currentWidth}
+            currentHeight={this.state.currentHeight}
+            items={freezerItems}
+            buildNotification={() => {this.getAndBuildNotification(this.user_id)}}
+            mode={this.state.mode}/>
+          <ItemContainer
+            type="fridge"
+            selectedItemIds={this.state.selectedItemIds}
+            onClickSelectItem={(id) => this.onClickSelectItem(id)}
+            currentWidth={this.state.currentWidth}
+            currentHeight={this.state.currentHeight}
+            items={fridgeItems}
+            buildNotification={() => {this.getAndBuildNotification(this.user_id)}}
+            mode={this.state.mode}/>
+          <ItemContainer
+            type="shelf"
+            selectedItemIds={this.state.selectedItemIds}
+            onClickSelectItem={(id) => this.onClickSelectItem(id)}
+            currentWidth={this.state.currentWidth}
+            currentHeight={this.state.currentHeight}
+            items={shelfItems}
+            buildNotification={() => {this.getAndBuildNotification(this.user_id)}}
+            mode={this.state.mode}/>
           {/* <Basket/> */}
           <div className="ItemSelectDiv" onClick={this.onClickItemSelectButton}>
             <div className="ItemSelectButton">
               <div className="ItemSelectButtonHeader">
-                {this.state.mode !== "normal" ? this.state.selectedItemIds.length + " Ingredients Selected" : "SELECT Ingredients"}
+                {this.state.mode !== "normal" ?
+                  this.state.selectedItemIds.length + " Ingredients Selected" :
+                  "SELECT Ingredients"}
               </div>
               <div className="ItemSelectButtonMain">
-                <div className="btn_preference Korean" onClick={() => this.onClickSelectPreference("Korean")}>Korean</div>
-                <div className="btn_preference Japanese" onClick={() => this.onClickSelectPreference("Japanese")}>Japanese</div>
-                <div className="btn_preference Chinese" onClick={() => this.onClickSelectPreference("Chinese")}>Chinese</div>
-                <div className="btn_preference Italian" onClick={() => this.onClickSelectPreference("Italian")}>Italian</div>
+                <div className="btn_preference Korean" 
+                  onClick={() => this.onClickSelectPreference("Korean")}>Korean</div>
+                <div className="btn_preference Japanese"
+                  onClick={() => this.onClickSelectPreference("Japanese")}>Japanese</div>
+                <div className="btn_preference Chinese"
+                  onClick={() => this.onClickSelectPreference("Chinese")}>Chinese</div>
+                <div className="btn_preference Italian"
+                  onClick={() => this.onClickSelectPreference("Italian")}>Italian</div>
               </div>
-              <div className="ItemSelectButtonFooter" onClick={this.onClickRecipeButton}>Move</div>
+              <div className="ItemSelectButtonFooter"
+                onClick={this.onClickRecipeButton}>Move</div>
             </div>
           </div>
 
