@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import MainPage from './containers/MainPage/MainPage';
 import AddItem from './containers/AddItem/AddItem';
 import ItemConfirm from './containers/ItemConfirm/ItemConfirm';
+import RecipeRecommend from './containers/RecipeRecommend/RecipeRecommend'
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
           <Route path = '/' exact component={MainPage}/>
           <Route path = '/item/add' exact component = {AddItem}/>
           <Route path = '/item/confirm' exact component={ItemConfirm}/>
+          <Route path = '/recipes' exact component={RecipeRecommend}/>
           {/* <Route render={() => <h1>Not Found</h1>} /> */}
         </Switch>
       </div>

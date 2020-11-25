@@ -28,6 +28,9 @@ const stubInitialState = {
   },
   notification: {
     notifications: []
+  },
+  recipe: {
+    recipes: []
   }
 };
 

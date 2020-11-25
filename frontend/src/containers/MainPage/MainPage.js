@@ -5,7 +5,7 @@ import Basket from '../../components/Basket/Basket';
 import * as actionCreators from '../../store/actions/index';
 import { IconButton, Dialog, List, Typography, Button } from '@material-ui/core';
 import InboxIcon from '@material-ui/icons/Inbox'
-import DeleteIcon from '@material-ui/icons/Notifications';
+import NotiIcon from '@material-ui/icons/Notifications';
 import ArrowBack from '@material-ui/icons/ArrowBack'
 import Circle from '@material-ui/icons/Brightness1'
 import axios from 'axios';
@@ -13,12 +13,6 @@ import NotiCard from '../../components/Notification/NotiCard';
 import './MainPage.css';
 
 class MainPage extends Component {
-
-  notiSample = [
-    {id: 1, notiType: 'expire', expirationDate: '2020/11/20', itemName: '서울우유', isRead: false},
-    {id: 2, notiType: 'expire', expirationDate: '2020/11/23', itemName: '홈런볼', isRead: false},
-    {id: 3, notiType: 'expire', expirationDate: '2020/11/23', itemName: '홈런볼', isRead: true},
-  ]
 
   state = {
     isUnreadNotiExists: false,
@@ -199,7 +193,7 @@ class MainPage extends Component {
             <div className="titleOrange">Food</div>
             <div className="titleBlack">ify</div>
             <div className="btn_notification" onClick={this.onClickNotiIcon}>
-              <DeleteIcon className="btn_bell" fontSize="large" />
+              <NotiIcon className="btn_bell" fontSize="large" />
               { this.state.isUnreadNotiExists ? <Circle style={styles.overlay} color="secondary"/> : null }
             </div>
           </div>

@@ -40,7 +40,10 @@ const stubInitialState = {
   },
   notification: {
     notifications: []
-  }
+  },
+  recipe: {
+    recipes: []
+  },
 }
 
 describe('store/actions/item', () => {

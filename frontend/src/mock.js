@@ -42,19 +42,30 @@ export const getMockStore = initial => {
     }
   );
 
+  const getMockRecipeReducer = jest.fn(
+    initialState => (state=initialState, action) => {
+      switch(action.type){
+        default:
+          return state;
+      }
+    }
+  );
+
   const mockArticleReducer = getMockArticleReducer(initial.article);
   const mockItemReducer = getMockItemReducer(initial.item);
   const mockItemCountReducer = getMockItemCountReducer(initial.itemcount);
   const mockNotiReducer = getMockNotiReducer(initial.notification);
+  const mockRecipeReducer = getMockRecipeReducer(initial.recipe);
   
   const rootReducer = combineReducers({
     article: mockArticleReducer,
     item: mockItemReducer,
     itemcount: mockItemCountReducer,
     notification: mockNotiReducer,
+    recipe: mockRecipeReducer,
     router: connectRouter(history)
   });
 
-  const mockStore = createStore(rootReducer,applyMiddleware(thunk));
+  const mockStore = createStore(rootReducer, applyMiddleware(thunk));
   return mockStore;
 }

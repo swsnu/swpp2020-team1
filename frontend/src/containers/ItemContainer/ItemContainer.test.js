@@ -27,7 +27,10 @@ const stubInitialState = {
   },
   notification: {
     notifications: []
-  }
+  },
+  recipe: {
+    recipes: []
+  },
 };
 
 const mockStore = getMockStore(stubInitialState);
