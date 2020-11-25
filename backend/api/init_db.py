@@ -10,7 +10,6 @@ def initialize_category():
         reader = csv.reader(categories)
         for line in reader:
             category_list.append(line[0])
-    print(category_list)
     for category_name in category_list:
         Category(name=category_name).save()
 
