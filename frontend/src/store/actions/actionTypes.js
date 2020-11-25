@@ -19,3 +19,6 @@ export const SET_ISREAD = 'SET_ISREAD';
 
 // Category
 export const GET_CATEGORIES = 'GET_CATEGORIES';
+
+// Recipe
+export const GET_RECIPES = 'GET_RECIPES'

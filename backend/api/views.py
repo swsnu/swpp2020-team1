@@ -438,6 +438,8 @@ def recipe_list(request):
                 'title': recipe.title,
                 'description': recipe.description,
                 'video_url': recipe.video_url,
+                'cuisine_type': recipe.cuisine_type,
+                'ingredients': [ingredient.id for ingredient in recipe.ingredients.all()],
                 'rating_average': -1 if recipe.rating_count == 0 else \
                                 recipe.rating_sum / recipe.rating_count
             }
@@ -493,6 +495,8 @@ def recipe_info(request, recipe_id=0):
             'title': recipe.title,
             'description': recipe.description,
             'video_url': recipe.video_url,
+            'cuisine_type': recipe.cuisine_type,
+            'ingredients': [ingredient.id for ingredient in recipe.ingredients.all()],
             'rating_average': -1,
             'already_rated': True
         }
