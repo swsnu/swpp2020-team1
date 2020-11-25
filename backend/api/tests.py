@@ -31,9 +31,6 @@ class ApiTestCase(TestCase):
         new_category.save()
         new_barcode = Barcode(barcode_num='8801234', item_name='seoul_milk', category=new_category)
         new_barcode.save()
-        # new_item = Item(name="Seoul milk 200ml", container="fridge",
-        #                 user=new_user, category=new_category, barcode=new_barcode)
-        # new_item_count = ItemCount(expiration_date="2020/11/30", count=3, item=new_item)
 
     def test_illegal_signup(self):
         client = Client()
@@ -436,4 +433,41 @@ class ApiTestCase(TestCase):
         response = client.post('/back/recipe/comment/1/')
         self.assertEqual(response.status_code, 405)
 
+    def test_noti_list(self):
+        client = Client()
+        response = client.get('/back/token/')
+        csrftoken = response.cookies['csrftoken'].value  # Get csrf token from cookie
+        response = client.get('/back/noti/user/1/')
+        self.assertEqual(response.status_code, 200)
+        response = client.delete('/back/noti/user/1/')
+        self.assertEqual(response.status_code, 405)
 
+    def test_noti_read(self):
+        client = Client()
+        response = client.get('/back/token/')
+        csrftoken = response.cookies['csrftoken'].value  # Get csrf token from cookie
+
+        User = get_user_model()
+        new_user = User.objects.get(id=1)  # Django default user model
+        new_category = Category.objects.get(id=1)
+        new_barcode = Barcode.objects.get(barcode_num='8801234')
+
+        item = Item(name='A', container='fridge', user=new_user,
+                    barcode=new_barcode, category=new_category)
+        itemcount = ItemCount(item=item, expiration_date='2020/12/12', count=2)
+        item.save()
+        itemcount.save()
+        response = client.put('/back/noti/1/', 
+                        content_type='application/json', HTTP_X_CSRFTOKEN=csrftoken)
+        self.assertEqual(response.status_code, 404)
+
+        noti = Notification(noti_type="expire", is_read=False, expire_date="2020-12-12",
+                            user=new_user, item_count=itemcount)
+        noti.save()
+        response = client.put('/back/noti/1/', 
+                        content_type='application/json', HTTP_X_CSRFTOKEN=csrftoken)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()['is_read'], True)
+
+        response = client.delete('/back/noti/1/')
+        self.assertEqual(response.status_code, 405)
