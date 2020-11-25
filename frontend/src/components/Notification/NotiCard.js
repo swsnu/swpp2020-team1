@@ -14,7 +14,7 @@ const NotiCard = props => {
   let notiContent = null
   if (notiType === 'expire') {
     notiContent =
-      <ListItem style={{backgroundColor: isRead ? '#ffffff' : 'rgba(232, 160, 101, 0.6)',
+      <ListItem className='NotiListItem' style={{backgroundColor: isRead ? '#ffffff' : 'rgba(232, 160, 101, 0.6)',
           justifyContent: 'space-between', width: window.innerWidth }}>
         <div style={{width: 50}}>
           <img src={CalendarImg} width={20} height={20} />
@@ -36,7 +36,7 @@ const NotiCard = props => {
     console.log(`Noti type ${notiType} is not supported.`)
   }
   return (
-    <Button style={{padding: 0}} onClick={() => props.onRead(id)}>
+    <Button className='NotiCardBtn' style={{padding: 0}} onClick={() => props.onRead(id)}>
       { notiContent }
     </Button>
   )
