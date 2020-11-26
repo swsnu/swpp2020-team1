@@ -293,9 +293,7 @@ class ApiTestCase(TestCase):
 
     def test_recipe_info(self):
         User = get_user_model()
-        user1 = User.objects.create(username='user1')
-        user1.set_password('pw1')
-        user1.save()
+        user1 = User.objects.create_user(username='user1', password='pw1')
         cat1 = Category.objects.create(name='cat1')
         recipe1 = Recipe.objects.create(title='r1', rating_count=1, rating_sum=3)
         recipe1.rating_users.add(user1)
@@ -345,9 +343,7 @@ class ApiTestCase(TestCase):
 
     def test_comment_list(self):
         User = get_user_model()
-        user1 = User.objects.create(username='user1')
-        user1.set_password('pw1')
-        user1.save()
+        user1 = User.objects.create_user(username='user1', password='pw1')
         Recipe.objects.create(title='r1')
 
         client = Client()
@@ -377,9 +373,7 @@ class ApiTestCase(TestCase):
 
     def test_comment_info(self):
         User = get_user_model()
-        user1 = User.objects.create(username='user1')
-        user1.set_password('pw1')
-        user1.save()
+        user1 = User.objects.create_user(username='user1', password='pw1')
         user2 = User.objects.create(username='user2')
         recipe1 = Recipe.objects.create(title='r1')
         recipe2 = Recipe.objects.create(title='r2')
