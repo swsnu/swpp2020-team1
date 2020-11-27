@@ -61,7 +61,7 @@ THEN the alert with the message "email or password is invalid." pops up.
 ```
 
 ## Sign up
-**Feature:** User wants to sign up 
+**Feature:** User wants to sign up
 **Actors:** User who is not a member of the service
 **Precondition:** User is in `SignUp Page('/signup')`
 
@@ -148,24 +148,6 @@ WHEN the date is 2020/12/22, 2020/12/24, 2020/12/25
 THEN the User gets alarm "Expiration 3 days left: 냉장서울우유 1L", "Expiration 1 day left: 냉장서울우유 1L", "Expiration date: 냉장서울우유 1L"
 ```
 
-### Meta specs
-|        Index                             |                                                                        Content                                                                       |
-|---------------------------------|:---------------------------------------------------------------------------------------------------------------|
-| FeatureName                        |User gets alarm when there is new comment on his/her article.|
-| Actors                                   |User|
-| Precondition                                   |User logged in, User who has written an article.|
-
-### Scenario
-- **GIVEN** logged-in User
-- **WHEN** the a new comment is generated in his/her article
-- **THEN** the user gets an alarm.
-
-### Acceptance test
-```
-GIVEN logged-in User who has written an article "article1"
-WHEN some user wrote a new comment in "article1"
-THEN the User gets alarm "There is a new comment on article 1."
-```
 ## Add ingredients to the fridge (automatic/manual)
 ### Meta specs
 |        Index                             |                                                                        Content                                                                       |
@@ -396,49 +378,34 @@ THEN the item "냉장서울우유1L" is deleted from the fridge
 ### Meta specs
 |        Index                             |                                                                        Content                                                                       |
 |---------------------------------|:---------------------------------------------------------------------------------------------------------------|
-| FeatureName                        |User can add ingredients to the basket for recipe recommendation|
+| FeatureName                        |User can select ingredients for recipe recommendation|
 | Actors                                   |User|
 | Precondition                                   |User logged in, User's fridge is not empty, User is on `main-page`|
 
 ### Scenario
 - **GIVEN** the User is on `Main Page ('/')`
-- **WHEN** the User drags and drops ingredients from the fridge to the basket
-- **THEN** the `btn_find_recipe` button is enabled
+- **WHEN** the User clicks `btn_select_ingredients` button
+- **THEN** the User can select up to 3 items for recipe recommendation
 
-- **GIVEN** the `btn_find_recipe` is enabled
-- **WHEN** the User clicks the `btn_find_recipe` button
-- **THEN** the User is directed to `Preference Page ('/preference')`.
+- **GIVEN** the User selected items for recipe recommendation.
+- **WHEN** the User clicks `btn_select_finished` button
+- **THEN** the User can select preferences["Korean", "Italian", "Japanese", "Chinese"]
+
+- **GIVEN** the User selected items and preference for recipe recommendation.
+- **WHEN** the User clicks `btn_recipe_submit` button
+- **THEN** the User is directed to `RecipeRecommendation page ('/recipes')` with selected items and preference.
 
 ### Acceptance Test
 ```
 GIVEN the User is on `Main Page ('/')`
-WHEN the User drags ingredients[For example, "tomato","cheese","olive"] from his/her fridge to the basket
-THEN `btn_find_recipe` is enabled
+WHEN the User clicks `btn_select_ingredients` button
+THEN the User can select items in his/her fridge
 
-GIVEN the `btn_find_recipe` is enabled
-WHEN the User clicks the `btn_find_recipe` button
-THEN the User is directed to `Preference Page ('/preference')`.
-```
-
-### Meta specs
-|        Index                             |                                                                        Content                                                                       |
-|---------------------------------|:---------------------------------------------------------------------------------------------------------------|
-| FeatureName                        |User can choose preference options for recipe recommendation|
-| Actors                                   |User|
-| Precondition                                   |User logged in, User's fridge is not empty, User's basket is not empty, User is on `Preference Page ('/preference')`|
-
-### Scenario
-- **GIVEN** the User is on `Preference Page ('/preference')`
-- **WHEN** the User chooses option
-  - **AND** the User clicks `btn_done`
-- **THEN** the User is directed to `RecipeRecommendation Page ('/recipes')`.
-
-### Acceptance Test
-```
-GIVEN the User is on `Preference Page ('/preference')`
-WHEN the User chooses option[For example, "Vegan", "Italian"]
-AND the User clicks `btn_done`
-THEN the User is directed to `RecipeRecommendation Page ('/recipes')`.
+GIVEN the User selected ["tomato", "cheese", "olive"] from his/her fridge.
+WHEN the User clicks `btn_select_finished` button 
+AND the User clicks "Italian" preference
+AND the User clicks `btn_recipe_submit` button
+THEN the User is directed to `RecipeRecommendation page ('/recipes')` with ["tomato", "cheese", "olive"] and "Italian" preference.
 ```
 
 ### Meta specs
@@ -471,10 +438,9 @@ THEN the video is played.
 ### Exception Test
 (1) There exists no recipe for selected ingredients & options
 ```
-GIVEN the User selects ingredients[For example, "Beef", "Egg"] and options[For example, "Vegan"]
-WHEN the User clicks `btn_done` button on `Preference Page ('/preference')`
-THEN message "No results for given ingredients & preference" is shown on top of `RecipeRecommendation Page ('/recipes')`
-AND popular recipes are shown on `RecipeRecommendation Page ('/recipes')`
+GIVEN the User selects ingredients[For example, "김치", "된장"] and preference[For example, "Italian"]
+WHEN the User clicks `btn_recipe_submit` button on `Preference Page ('/preference')`
+THEN popular recipes are shown on `RecipeRecommendation Page ('/recipes')`
 ```
 
 ### Meta specs
@@ -559,272 +525,23 @@ WHEN the User clicks "no"
 THEN the User stays on `RecipeDetail Page ('/recipes/:id')`
 ```
 
-## Community
-### Meta specs
-|        Index                             |                                                                        Content                                                                       |
-|---------------------------------|:---------------------------------------------------------------------------------------------------------------|
-| FeatureName                        |User can go to `Community Page ('/community')` from `Main Page('/')`|
-| Actors                                   |Logged-in user |
-| Precondition                                   |User should be a member of the service, User is on `Main Page('/')`|
-
-- **GIVEN** the User is on `Main Page('/')`
-- **WHEN** the User clicks `btn_community`
-- **THEN**the User is directed to `Community Page ('/community')`.
-
-### Acceptance Test
-```
-GIVEN the User is on `Main Page('/')`
-WHEN the User clicks `btn_community`
-THEN the User is directed to `Community Page ('/community')`.
-```
-
-### Meta specs 
-|        Index                             |                                                                        Content                                                                       |
-|---------------------------------|:---------------------------------------------------------------------------------------------------------------|
-| FeatureName                        |User can create article on community |
-| Actors                                   |Logged-in user |
-| Precondition                                   |User should be a member of the service, User is on `Community Page ('/community')`.|
-
-- **GIVEN** the User is on `Community Page ('/community')`
-- **WHEN** the User clicks `btn_create`
-- **THEN**the User is directed to `ArticleCreate Page ('/community/create')`.
-
-- **GIVEN** the User is on `ArticleCreate Page ('/community/create')`
-- **WHEN** the User types title and content field
-- **THEN**the User is directed to `ArticleDetail Page ('/community/:id')`.
-
-### Acceptance Test
-```
-GIVEN the User is on `Community Page ('/community')`
-WHEN the User clicks `btn_create` button
-THEN the User is directed to `ArticleCreate Page ('/community/create')`.
-
-GIVEN the User is on `ArticleCreate Page ('/community/create')`
-WHEN the User types "title1" in the title field and "content1" in the content field 
-AND the user clicks `btn_submit`
-THEN the User is directed to `ArticleDetail Page ('/community/:id')`
-```
-
-### Exception Test
-(1) When the text input is empty, `btn_submit` should be disabled.
-```
-GIVEN the User is on `ArticleCreate Page ('/community/create')`
-WHEN the User types "" in the title field and "" in the content field 
-THEN the `btn_submit` is disabled
-```
-
-### Meta specs
-|        Index                             |                                                                        Content                                                                       |
-|---------------------------------|:---------------------------------------------------------------------------------------------------------------|
-| FeatureName                        |User can edit his/her own article in the community|
-| Actors                                   |Logged-in user who has written some articles. |
-| Precondition                                   |User should be in his/her own `ArticleDetail Page ('/community/:id')`.|
-
-### Scenario
-- **GIVEN** the User is on `ArticleDetail Page ('/community/:id')` of his/her own page
-- **WHEN** the User clicks `btn_edit` button
-- **THEN** the User is directed to `ArticleEdit Page ('/community/:id/edit')`
-
-- **WHEN** the User modifies the content of the content input
-  - **AND** the User clicks `btn_submit`
-- **THEN** the article is edited.
-
-### Acceptance test
-```
-WHEN the User clicks `btn_edit`
-THEN `ArticleEdit Page ('/community/:id/edit')` opens.
-WHEN the User types "edited title" in the title field and "edited content" in the content field and clicks `btn_submit`
-THEN the article is updated with the given title and content.
-```
-### Exception test
-(1) User clicks back button with edited content
-```
-GIVEN the User is on `article-edit-page`
-WHEN the User types "edited content 2" and clicks `back-button`
-THEN the alert with message "Do you want to go back? Edited content will be lost" appears.
-WHEN the User clicks `OK-button`
-THEN `article-detail-page` opens.
-
-GIVEN the User is on `ArticleEdit Page ('/community/:id/edit')`
-WHEN the User types "edited content 2" and clicks `btn_back`
-THEN the alert with message "Do you want to go back? Edited content will be lost" appears.
-WHEN the User clicks "cancel"
-THEN the User stays in `ArticleEdit Page ('/community/:id/edit')`
-```
-(2) User clicks back button with empty content
-```
-GIVEN the User is on `ArticleEdit Page ('/community/:id/edit')`
-WHEN the User erase content and clicks `btn_submit`
-THEN the alert with message "The content of the article cannot be blank." appears.
-WHEN the User clicks "ok"
-THEN the User stays in `ArticleEdit Page ('/community/:id/edit')`
-```
-
-### Meta specs 
-|        Index                             |                                                                        Content                                                                       |
-|---------------------------------|:---------------------------------------------------------------------------------------------------------------|
-| FeatureName                        |User wants to delete his/her own article in the community |
-| Actors                                   |Logged-in user who has written some articles. |
-| Precondition                                   |User should be in his/her own `ArticleDetail Page ('/community/:id')`. |
-
-### Scenario
-- **GIVEN** the User is on `ArticleDetail Page ('/community/:id')` of his/her own article
-- **WHEN** the User clicks `btn_delete` button
-- **THEN** the alert with message "Are you sure? Deleting cannot be undone." appears.
-- **WHEN** the User clicks "ok"
-- **THEN** the article is deleted.
-- **WHEN** the User clicks "cancel"
-- **THEN** the User stays in `ArticleDetail Page ('/community/:id')`
-
-**Acceptance Test:**
-```
-GIVEN the User is on `ArticleDetail Page ('/community/:id')` of his/her own article
-WHEN the User clicks `btn_delete`
-THEN the alert with the message "Are you sure? Deleting cannot be undone." appears.
-WHEN the User clicks "ok" on the alert message
-THEN the article is deleted.
-WHEN the User clicks "cancel" on the alert message
-THEN the User stays in `ArticleDetail Page ('/community/:id')`
-```
-
-
-### Meta specs
-|        Index                             |                                                                        Content                                                                       |
-|---------------------------------|:---------------------------------------------------------------------------------------------------------------|
-| FeatureName                        |User wants to create a new comment to the article|
-| Actors                                   |User|
-| Precondition                                   |User logged in, User is in `ArticleDetail Page ('/community/:id')`|
-
-### Scenario
-- **GIVEN** the User is in `ArticleDetail Page ('/community/:id')`
-- **WHEN** the User enters comment in comment input field
-  - **AND** the User clicks `btn_add_comment`
-- **THEN** a new comment with the given content is created.
-
-### Acceptance test
-```
-GIVEN the User is in `ArticleDetail Page ('/community/:id')`
-WHEN the User enters "comment1" in comment input field
-AND the User clicks `btn_add_comment`
-THEN a new comment with content "comment1" is created.
-AND the User stays in the current page.
-```
-
-### Exception Test
-(1) Input field for comment is empty
-```
-GIVEN the User is in `ArticleDetail Page ('/community/:id')`
-WHEN user enters nothing in comment input field
-THEN the `btn_add_comment` is disabled.
-```
-
-
-### Meta specs 
-|        Index                             |                                                                        Content                                                                       |
-|---------------------------------|:---------------------------------------------------------------------------------------------------------------|
-| FeatureName                        |User wants to edit a comment he/she created |
-| Actors                                   |User |
-| Precondition                                   |User logged in, User is in `ArticleDetail Page ('/community/:id')`, User has created a comment in current page |
-
-### Scenario
-- **GIVEN** the User is in `ArticleDetail Page ('/community/:id')`
-  - **AND** there is a comment created by the User
-- **WHEN** the User clicks `btn_edit` on the comment
-- **THEN** `edit-comment-prompt` appears.
-
-- **GIVEN** `edit-comment-prompt` appeared
-- **WHEN** the User enters new comment content 
-  - **AND** the User clicks "ok"
-- **THEN** the comment is edited with the given content.
-
-- **GIVEN** `edit-comment-prompt` appeared
-- **WHEN** the User clicks "cancel"
-- **THEN** the prompt disappears.
-  - **AND** the content of the comment isn't edited.
-
-### Acceptance test
-```
-GIVEN the User is in `ArticleDetail Page ('/community/:id')`
-AND there is a comment with content "comment1" created by the User
-WHEN the User clicks `btn_edit` on the comment
-THEN `edit-comment-prompt` that takes new content as input appears.
-AND the initial value of the input field is "comment1".
-
-GIVEN `edit-comment-prompt` appeared
-WHEN the User edits the input to "edited comment1"
-AND the User clicks "ok"
-THEN the content of the comment is edited to "edited comment1"
-
-GIVEN `edit-comment-prompt` appeared
-WHEN the User edits the input to "edited comment1"
-AND the User clicks "cancel"
-THEN the prompt disappears
-AND the content of the comment remains "comment1"
-```
-
-### Exception Test
-(1) Input field for comment in `edit-comment-prompt` empty
-```
-GIVEN `edit-comment-prompt`appeared
-WHEN user enters nothing in comment input field
-THEN the "ok" button is disabled.
-```
-
-
-### Meta specs 
-|        Index                             |                                                                        Content                                                                       |
-|---------------------------------|:---------------------------------------------------------------------------------------------------------------|
-| FeatureName                        |User wants to delete a comment he/she created|
-| Actors                                   |User|
-| Precondition                                   |User logged in, User is in `ArticleDetail Page ('/community/:id')`, User has created a comment in current page|
-
-### Scenario
-- **GIVEN** the User is in `ArticleDetail Page ('/community/:id')`
-  - **AND** there is a comment created by the User
-- **WHEN** the User clicks `btn_delete` on the comment
-- **THEN** `delete-comment-alert` appears.
-
-- **GIVEN** `delete-comment-alert` appeared
-- **WHEN** the User clicks "ok"
-- **THEN** the comment is deleted.
-
-- **GIVEN** `delete-comment-alert` appeared
-- **WHEN** the User clicks "cancel"
-- **THEN** the alert disappears.
-
-### Acceptance test
-```
-GIVEN the User is in `ArticleDetail Page ('/community/:id')`
-AND there is a comment with content "comment1" created by the User
-WHEN the User clicks `btn_delete` on the comment
-THEN `delete-comment-alert` with the message "Are you sure you want to delete the comment?" appears.
-
-GIVEN `delete-comment-alert` appeared
-WHEN the User clicks "ok"
-THEN the comment is deleted.
-
-GIVEN `delete-comment-alert` appeared
-WHEN the User clicks "cancel"
-THEN the alert disappears.
-```
-
 ## Notification
 ### Meta specs
 |        Index                             |                                                                        Content                                                                       |
 |---------------------------------|:---------------------------------------------------------------------------------------------------------------|
-| FeatureName                        |User can go to `Notification Page ('/notification')` from `Main Page('/')`|
+| FeatureName                        |User can go to `Notification Tab` from `Main Page('/')`|
 | Actors                                   |Logged-in user |
 | Precondition                                   |User should be a member of the service, User is on `Main Page('/')`|
 
 - **GIVEN** the User is on `Main Page('/')`
 - **WHEN** the User clicks `btn_notification`
-- **THEN**the User is directed to `Notification Page ('/notification')`.
+- **THEN**the `Notification Tab` is shown.
 
 ### Acceptance Test
 ```
 GIVEN the User is on `Main Page('/')`
 WHEN the User clicks `btn_notification`
-THEN the User is directed to `Notification Page ('/notification')`.
+THEN the User is directed to `Notification Tab`.
 ```
 
 ### Meta specs 
@@ -832,33 +549,36 @@ THEN the User is directed to `Notification Page ('/notification')`.
 |---------------------------------|:---------------------------------------------------------------------------------------------------------------|
 | FeatureName                        |User can click each notification and be redirected to corresponding page|
 | Actors                                   |User|
-| Precondition                                   |User logged in, User is in `Notification Page ('/notification')`|
+| Precondition                                   |User logged in, User is in `Notification Tab`|
 
 ### Scenario
-- **GIVEN** the User is in `Notification Page ('/notification')`
-- **WHEN** the User clicks `comment` type notification
-- **THEN** the User should be redirected to `ArticleDetail page (/community/:article_id)`. 
+- **GIVEN** the User is in `Notification Tab`
+- **WHEN** the User clicks `go_to_mall_button` of `buy_item` type notification
+- **THEN** the User should be redirected to the shopping mall link where user can buy the item. 
 
-- **GIVEN** the User is in `Notification Page ('/notification')`
-- **WHEN** the User clicks `expiration` type notification
-- **THEN** the User should be redirected to `Main page('/')`
-  - **AND** the selected item is highlighted.
+- **GIVEN** the User is in `Notification Tab`
+- **WHEN** the User clicks `expire` type notification
+- **THEN** the User should be redirected to `RecipeRecommendation page('/recipes')` with results containing the item.
+
+- **GIVEN** the User is in `Notification Tab`
+- **WHEN** the User clicks `recipe` type notification with randomly selected item
+- **THEN** the User should be redirected to `RecipeRecommendation page('/recipes')` with results containing the item.
 
 ### Acceptance test
 ```
-GIVEN the User is in `Notification Page ('/notification')`
-WHEN the User clicks `comment` type notification "User @alphago added comment to your article <BBQ Gwanghi Chicken>"
-THEN the User should be redirected to `ArticleDetail page (/community/1)`. 
+GIVEN the User is in `Notification Tab`
+WHEN the User clicks `go_to_mall_button` of `buy_item` type notification "우유를 거의 다 먹었어요. 새로 주문할까요?"
+THEN the User should be redirected to the shopping mall link where user can be 우유. 
 
-GIVEN the User is in `Notification Page ('/notification')`
-WHEN the User clicks `expiration` type notification "Item @Tomato is about to expire in @3 days"
-THEN the User should be redirected to `Main page('/')`
-AND the selected item "tomato" is highlighted.
+GIVEN the User is in `Notification Tab`
+WHEN the User clicks `expire` type notification "우유의 유통기한이 12월 17일에 만료됩니다. 얼른 드세요!"
+THEN the User should be redirected to `RecipeRecommendation page('/recipes')` with results containing 우유. 
+
+GIVEN the User is in `Notification Tab`
+WHEN the User clicks `expire` type notification "우유를 활용한 레시피를 알아보세요!"
+THEN the User should be redirected to `RecipeRecommendation page('/recipes')` with results containing 우유. 
 ```
 
 ## User Interface Requirements
 ![UI Specification](https://github.com/swsnu/swpp2020-team1/blob/master/image/UI%20Specification.png)
 > For further information, please check the figma link: https://www.figma.com/file/nHGIzFuzR48pIXG319arD5/Foodify?node-id=0%3A1
-
-
-
