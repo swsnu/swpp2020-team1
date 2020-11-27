@@ -16,9 +16,7 @@ class Barcode(models.Model):
     category = models.ForeignKey(
         Category,
         on_delete=models.SET_NULL,
-        related_name='barcode_set',
-        blank=True,
-        null=True
+        related_name='barcode_set'
     )
 
 class Item(models.Model):
@@ -33,9 +31,7 @@ class Item(models.Model):
     category = models.ForeignKey(
         Category,
         on_delete=models.SET_NULL,
-        related_name='item_set',
-        blank=True,
-        null=True
+        related_name='item_set'
     )
     barcode = models.ForeignKey(
         Barcode,
@@ -69,9 +65,7 @@ class Notification(models.Model):
     item_count = models.ForeignKey(
         ItemCount,
         on_delete=models.CASCADE,
-        related_name='noti_set',
-        blank=True,
-        null=True
+        related_name='noti_set'
     )
 
 class Recipe(models.Model):
