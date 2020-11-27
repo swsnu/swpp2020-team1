@@ -38,14 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
-    # TEMPORARY (TESTING CORSHEADERS)
-    'corsheaders',
 ]
 
 MIDDLEWARE = [
-    # TEMPORARY (TESTING CORSHEADERS)#
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -54,10 +49,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-# TEMPORARY (TESTING CORSHEADERS)#
-CORS_ALLOW_CREDENTIALS = True
-CORS_ORIGIN_ALLOW_ALL = True
-# ALLOWED_HOSTS = ['*']
 
 ROOT_URLCONF = 'backend.urls'
 
