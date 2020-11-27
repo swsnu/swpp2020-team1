@@ -148,214 +148,6 @@ WHEN the date is 2020/12/22, 2020/12/24, 2020/12/25
 THEN the User gets alarm "Expiration 3 days left: 냉장서울우유 1L", "Expiration 1 day left: 냉장서울우유 1L", "Expiration date: 냉장서울우유 1L"
 ```
 
-## Add ingredients to the fridge (automatic/manual)
-### Meta specs
-|        Index                             |                                                                        Content                                                                       |
-|---------------------------------|:---------------------------------------------------------------------------------------------------------------|
-| FeatureName                        |User can add ingredients|
-| Actors                                   |User|
-| Precondition                                   |User logged in|
-
-### Scenario
-- **GIVEN** logged-in User
-- **WHEN** the User clicks `add-item-button`
-  - **AND** the User clicks 'OK' on camera access popup
-- **THEN** the User is directed to `AddItem Page ('/item/add')`
-
-### Acceptance test
-```
-GIVEN the User account[For example, id:"id_in_database", password:"valid_password"],
-WHEN the user clicks `add-item-button`
-AND the User clicks 'OK' on camera access popup
-THEN the User is directed to `AddItem Page('/item/add')`
-```
-### Exception Test
-(1) User did not allow camera access
-```
-GIVEN the User account[For example, id:"id_in_database", password:"valid_password"],
-WHEN the user clicks `add-item-button`
-AND the User clicks `Don't Allow` on camera access popup
-THEN the User is directed to the `barcode` tab of `ItemConfirm Page('/item/confirm')`.
-```
-
-### Meta specs
-|        Index                             |                                                                        Content                                                                       |
-|---------------------------------|:---------------------------------------------------------------------------------------------------------------|
-| FeatureName                        |User can scan barcode again|
-| Actors                                   |User|
-| Precondition                                   |User logged in, User allowed camera access, User is on `expiration` tab of `AddItem Page('/item/add')`|
-
-### Scenario
-- **GIVEN** the User is on `expiration` tab of `AddItem Page('/item/add')`
-- **WHEN** the User clicks `btn_retake_barcode` button
-- **THEN** the User is directed back to `barcode_retake` tab of `AddItem Page('/item/add')`
-
-### Acceptance test
-```
-GIVEN the User is on `expiration` tab of `AddItem Page('/item/add')`
-WHEN the User clicks `btn_retake_barcode` button
-THEN the User is directed back to `barcode_retake` tab of `AddItem Page('/item/add')`
-```
-
-### Meta specs
-|        Index                             |                                                                        Content                                                                       |
-|---------------------------------|:---------------------------------------------------------------------------------------------------------------|
-| FeatureName                        |User can manually edit item information (barcode number, item name) |
-| Actors                                   |User |
-| Precondition                                   |User logged in, User allowed camera access, User is on `expiration` tab of `AddItem Page('/item/add')`|
-
-### Scenario
-- **GIVEN** the User is on `expiration` tab of `AddItem Page('/item/add')`
-- **WHEN** the User clicks `btn_edit` button on top banner
-- **THEN** `edit-barcode-prompt` pops up
-
-- **GIVEN** the `edit-barcode-prompt` popped up on `expiration` tab of `AddItem Page('/item/add')`
-- **WHEN** the User fills in both barcode number and item name on input field
-  - **AND** the User clicks `btn_ok` button
-- **THEN** the `edit-barcode-prompt` disappears
-
-### Acceptance test
-```
-GIVEN the User is on `expiration` or `barcode` tab of `AddItem Page('/item/add')`
-WHEN the User clicks `btn_edit` on top banner
-THEN prompt[For example, Product name: _____, Barcode name: _____, Category: ____] pops up
-
-GIVEN the `edit-barcode-prompt` popped up on `expiration` or `barcode` tab of `AddItem Page('/item/add')`
-WHEN the User fills in the input field[For example, Product name: "냉장서울우유1L", Barcode name: "8801019306495", Category: "유제품"] 
-AND the User clicks `btn_ok`
-THEN the `edit-barcode-prompt` disappears
-```
-
-### Exception Test
-(1) Input field for `Product name` is empty
-```
-GIVEN the edit-barcode-prompt popped up on `expiration` tab of `AddItem Page('/item/add')`
-WHEN the User fills in the input field[For example, Product name: "", Barcode name: "", Category: ""] 
-THEN the `btn_ok` button is disabled
-AND the placeholder for `Product name` input field is set to "Product Name should be filled in"
-```
-
-### Meta specs
-|        Index                             |                                                                        Content                                                                       |
-|---------------------------------|:---------------------------------------------------------------------------------------------------------------|
-| FeatureName                        |User can scan item's expiration date|
-| Actors                                   |User|
-| Precondition                                   |User logged in, User allowed camera access, User is on  `expiration-date camera view` |
-
-### Scenario
-- **GIVEN** the User is on `expiration` tab of `AddItem Page('/item/add')`
-- **WHEN** the User scans the product's expiration date
-  - **AND** the expiration date is recognized correctly
-- **THEN** the User is directed to `barcode` tab of `AddItem Page('/item/add')`
-  - **AND** expiration date scan result is displayed on top
-
-### Acceptance test
-```
-GIVEN the User is on `expiration` tab of `AddItem Page('/item/add')`
-WHEN  the User scans the product's expiration date[For example, Expiration date: "2020/10/22"]
-AND the expiration date is recognized correctly
-THEN the User is directed to `barcode` tab of `AddItem Page('/item/add')`
-AND expiration date scan result[For example, Expiration date: "2020/10/22"] is displayed on top
-```
-
-### Meta specs
-|        Index                             |                                                                        Content                                                                       |
-|---------------------------------|:---------------------------------------------------------------------------------------------------------------|
-| FeatureName                        |User can scan expiration date again|
-| Actors                                   |User|
-| Precondition                                   |User logged in, User allowed camera access, User is on `expiration-date camera view`|
-
-### Scenario
-- **GIVEN** the User is on `expiration` tab of `AddItem Page('/item/add')`
-- **WHEN** the User clicks `btn_retake_expiration`
-- **THEN** the User is directed back to `expiration_retake` tab of `AddItem Page('/item/add')`
-
-### Acceptance test
-```
-GIVEN the User is on `expiration` tab of `AddItem Page('/item/add')`
-WHEN the User clicks `btn_retake_expiration`
-THEN the User is directed back to `expiration_retake` tab of `AddItem Page('/item/add')`
-```
-
-### Exception Test
-(1) Input field for `Expiration date` is empty & checkbox is not checked
-```
-GIVEN the `edit-expiration-prompt` popped up on `expiration` tab of `AddItem Page('/item/add')`
-WHEN the User does not fill in the input field[For example, Expiration date: "00/00/00"] 
-AND the User does not check on no-expiration-checkbox 
-THEN the `btn_ok` is disabled
-AND warning-prompt[For example, "If no expiration date, check on checkbox"] pops up 
-```
-
-### Meta specs
-|        Index                             |                                                                        Content                                                                       |
-|---------------------------------|:---------------------------------------------------------------------------------------------------------------|
-| FeatureName                        |User can stop scanning when clicking on `btn_done`|
-| Actors                                   |User|
-| Precondition                                   |User logged in, User allowed camera access, User is on `expiration` tab of `AddItem Page('/item/add')`|
-
-### Scenario
-- **GIVEN** the User is on `expiration` tab of `AddItem Page('/item/add')`
-- **WHEN** the User clicks `btn_done`
-- **THEN** the User is directed back to `ItemConfirm Page ('/item/confirm')`
-
-### Acceptance test
-```
-GIVEN the User is on `expiration` tab of `AddItem Page('/item/add')`
-WHEN the User clicks `btn_done`
-THEN the User is directed back to `ItemConfirm Page ('/item/confirm')`
-```
-
-### Meta specs 
-|        Index                             |                                                                        Content                                                                       |
-|---------------------------------|:---------------------------------------------------------------------------------------------------------------|
-| FeatureName                        |User can stop/continue scanning after checking scanned product list |
-| Actors                                   |User |
-| Precondition                                   |User logged in, User allowed camera access, User is on `ItemConfirm Page ('/item/confirm')`|
-
-### Scenario
-- **GIVEN** the User is on `ItemConfirm Page ('/item/confirm')`
-- **WHEN** the User clicks `btn_confirm` button
-- **THEN** the User is directed back to `Main Page ('/')`
-
-- **GIVEN** the User is on `ItemConfirm Page ('/item/confirm')`
-- **WHEN** the User clicks `btn_webcam_mode` button
-- **THEN** the User is directed back to `barcode` tab of `AddItem Page('/item/add')`
-
-### Acceptance test
-```
-GIVEN the User is on `ItemConfirm Page ('/item/confirm')`
-WHEN the User clicks `btn_confirm`
-THEN the User is directed back to `Main Page ('/')`
-
-GIVEN the User is on `ItemConfirm Page ('/item/confirm')`
-WHEN the User clicks `btn_webcam_mode` button
-THEN the User is directed back to `barcode` tab of `AddItem Page('/item/add')`
-```
-
-### Meta specs
-|        Index                             |                                                                        Content                                                                       |
-|---------------------------------|:---------------------------------------------------------------------------------------------------------------|
-| FeatureName                        |User can scan item's barcode number|
-| Actors                                   |User|
-| Precondition                                   |User logged in, User allowed camera access, User is on `barcode-scan camera view`|
-
-### Scenario
-- **GIVEN** User is on `barcode` tab of `AddItem Page('/item/add')`
-- **WHEN** the User scans the product's barcode
-  - **AND** the barcode is recognized correctly
-- **THEN** the User is directed to `expiration` tab of `AddItem Page('/item/add')`
-  - **AND** barcode scan result is displayed on top
-
-### Acceptance test
-```
-GIVEN the User is on `barcode` tab of `AddItem Page('/item/add')`
-WHEN the User scans the product's barcode[For example, barcode: "8801019306495"]
-AND the barcode is recognized correctly
-THEN the User is directed to `expiration` tab of `AddItem Page('/item/add')`
-AND barcode scan result[For example, barcode: "8801019306495", name: "냉장서울우유1L" category: "유제품"] is displayed on top
-```
-
 ### Meta specs 
 |        Index                             |                                                                        Content                                                                       |
 |---------------------------------|:---------------------------------------------------------------------------------------------------------------|
@@ -374,6 +166,400 @@ GIVEN the User is on `Main Page ('/')`
 WHEN the User clicks `btn_delete` of "냉장서울우유1L" in the fridge
 THEN the item "냉장서울우유1L" is deleted from the fridge
 ```
+
+## Add items to the fridge (automatic/manual)
+### Meta specs
+|        Index                             |                                                                        Content                                                                       |
+|---------------------------------|:---------------------------------------------------------------------------------------------------------------|
+| FeatureName                        |User can go to add item page|
+| Actors                                   |User|
+| Precondition                                   |User logged in|
+
+### Scenario
+- **GIVEN** logged-in User
+- **WHEN** the User clicks `AddItemButton`
+  - **AND** the User clicks 'OK' on camera access popup
+- **THEN** the User is directed to `AddItem Page ('/item/add')`
+
+### Acceptance test
+```
+GIVEN the User account[For example, id:"id_in_database", password:"valid_password"],
+WHEN the user clicks `add-item-button`
+AND the User clicks 'OK' on camera access popup
+THEN the User is directed to `AddItem Page('/item/add')`
+```
+### Exception Test
+(1) User did not allow camera access
+```
+GIVEN the User account[For example, id:"id_in_database", password:"valid_password"],
+WHEN the user clicks `add-item-button`
+AND the User clicks `Don't Allow` on camera access popup
+THEN the User is directed to the `ItemConfirm Page('/item/confirm')`.
+```
+
+### Meta specs
+|        Index                             |                                                                        Content                                                                       |
+|---------------------------------|:---------------------------------------------------------------------------------------------------------------|
+| FeatureName                        |User can scan item's expiration date|
+| Actors                                   |User|
+| Precondition                                   |User logged in, User allowed camera access, User is on  `expiration-date camera view` |
+
+### Scenario
+- **GIVEN** the User is on `expiration scanning view` of `AddItem Page('/item/add')`
+- **WHEN** the User scans the product's expiration date by clicking `capture_expiration_date` button
+- **THEN** the User is directed to `barcode scanning view` of `AddItem Page('/item/add')`
+
+### Acceptance test
+```
+GIVEN the User is on `expiration scanning view` of `AddItem Page('/item/add')`
+WHEN  the User scans the product's expiration date[Expiration date: "2020/10/22"]
+THEN the User is directed to `barcode scanning view` of `AddItem Page('/item/add')`
+```
+
+### Meta specs
+|        Index                             |                                                                        Content                                                                       |
+|---------------------------------|:---------------------------------------------------------------------------------------------------------------|
+| FeatureName                        |User can scan expiration date again|
+| Actors                                   |User|
+| Precondition                                   |User logged in, User allowed camera access, User completed scanning expiration date and barcode of an item |
+
+### Scenario
+- **GIVEN** the User has completed scanning expiration date and barcode of an item in `AddItem Page('/item/add')`
+- **WHEN** the User clicks `btn_retake_expiration`
+- **THEN** the User is directed to `expiration retake view` of `AddItem Page('/item/add')`
+
+### Acceptance test
+```
+GIVEN the User has completed scanning expiration date and barcode of an item in `AddItem Page('/item/add')`
+WHEN the User clicks `btn_retake_expiration`
+THEN the User is directed to `expiration retake view` of `AddItem Page('/item/add')`
+
+GIVEN the User is in `expiration retake view` of `AddItem Page('/item/add')`
+WHEN the User scans the product's expiration date by clicking `capture_expiration_date` button
+THEN the User is directed to `expiration scanning view` of `AddItem Page('/item/add')`
+AND scan result with new expiration date scanning result is displayed on top
+```
+
+### Meta specs
+|        Index                             |                                                                        Content                                                                       |
+|---------------------------------|:---------------------------------------------------------------------------------------------------------------|
+| FeatureName                        |User can scan item's barcode number|
+| Actors                                   |User|
+| Precondition                                   |User logged in, User allowed camera access, User is on `barcode-scan camera view`|
+
+### Scenario
+- **GIVEN** User is on `barcode scanning view` of `AddItem Page('/item/add')`
+- **WHEN** the User scans the product's barcode
+- **THEN** the User is directed to `expiration scanning view` tab of `AddItem Page('/item/add')`
+  - **AND** scan result (expiration date and barcode) is displayed on top
+
+### Acceptance test
+```
+GIVEN the User is on `barcode scanning view` of `AddItem Page('/item/add')`
+WHEN the User scans the product's barcode[barcode: "8801019306495"]
+THEN the User is directed to `expiration scanning view` of `AddItem Page('/item/add')`
+AND scan result[barcode: "8801019306495", expiration date: "2020/12/31" name: "냉장서울우유1L" category: "유제품"] is displayed on top
+```
+
+### Meta specs
+|        Index                             |                                                                        Content                                                                       |
+|---------------------------------|:---------------------------------------------------------------------------------------------------------------|
+| FeatureName                        |User can scan barcode again|
+| Actors                                   |User|
+| Precondition                                   |User logged in, User allowed camera access, User completed scanning expiration date and barcode of an item in `AddItem Page('/item/add')`|
+
+### Scenario
+- **GIVEN** the User has completed scanning expiration date and barcode of an item in `AddItem Page('/item/add')`
+- **WHEN** the User clicks `btn_retake_barcode` button
+- **THEN** the User is directed to `barcode retake view` of `AddItem Page('/item/add')`
+
+### Acceptance test
+```
+GIVEN the User has completed scanning expiration date and barcode of an item in `AddItem Page('/item/add')`
+WHEN the User clicks `btn_retake_barcode` button
+THEN the User is directed to `barcode retake view` of `AddItem Page('/item/add')`
+
+GIVEN the User is in `barcode retake view` of `AddItem Page('/item/add')`
+WHEN the User scans the product's barcode
+THEN the User is directed to `expiration scanning view` of `AddItem Page('/item/add')`
+AND scan result with new barcode scanning result is displayed on top
+```
+
+### Meta specs
+|        Index                             |                                                                        Content                                                                       |
+|---------------------------------|:---------------------------------------------------------------------------------------------------------------|
+| FeatureName                        |User can scan retake multiple times|
+| Actors                                   |User|
+| Precondition                                   |User logged in, User allowed camera access, User completed scanning expiration date and barcode of an item in `AddItem Page('/item/add')`|
+
+### Acceptance test
+```
+(expiration retake 1)
+GIVEN the User has completed scanning expiration date and barcode of an item[barcode: "8801019306495", expiration date: "2020/12/31" name: "냉장서울우유1L" category: "우유", count:1] in `AddItem Page('/item/add')`
+WHEN the User clicks `btn_retake_expiration` button
+THEN the User is directed to `expiration retake view` of `AddItem Page('/item/add')`
+
+WHEN the User scans the product's expiration date["2020/11/11"] by clicking `capture_expiration_date` button
+THEN the User is directed to `expiration scanning view` of `AddItem Page('/item/add')`
+AND scan result with new expiration date scanning result[barcode: "8801019306495", expiration date: "2020/11/11" name: "냉장서울우유1L" category: "우유", count:1] is displayed on top
+
+(expiration retake 2)
+WHEN the User clicks `btn_retake_expiration` button
+THEN the User is directed to `expiration retake view` of `AddItem Page('/item/add')`
+
+WHEN the User scans the product's expiration date["2020/10/10"] by clicking `capture_expiration_date` button
+THEN the User is directed to `expiration scanning view` of `AddItem Page('/item/add')`
+AND scan result with new expiration date scanning result[barcode: "8801019306495", expiration date: "2020/10/10" name: "냉장서울우유1L" category: "우유", count:1] is displayed on top
+
+(barcode retake 1)
+WHEN the User clicks `btn_retake_barcode` button
+THEN the User is directed to `barcode retake view` of `AddItem Page('/item/add')`
+
+WHEN the User scans the product's barcode[11111]
+THEN the User is directed to `expiration scanning view` of `AddItem Page('/item/add')`
+AND scan result with new expiration date scanning result[barcode: "11111", expiration date: "2020/11/11" name: "냉장서울우유1L" category: "우유", count:1] is displayed on top
+
+(barcode retake 2)
+WHEN the User clicks `btn_retake_barcode` button
+THEN the User is directed to `barcode retake view` of `AddItem Page('/item/add')`
+
+WHEN the User scans the product's barcode[22222]
+THEN the User is directed to `expiration scanning view` of `AddItem Page('/item/add')`
+AND scan result with new expiration date scanning result[barcode: "22222", expiration date: "2020/11/11" name: "냉장서울우유1L" category: "우유", count:1] is displayed on top
+
+(expiration retake 3)
+WHEN the User clicks `btn_retake_expiration` button
+THEN the User is directed to `expiration retake view` of `AddItem Page('/item/add')`
+
+WHEN the User scans the product's expiration date["2020/09/09"] by clicking `capture_expiration_date` button
+THEN the User is directed to `expiration scanning view` of `AddItem Page('/item/add')`
+AND scan result with new expiration date scanning result[barcode: "8801019306495", expiration date: "2020/09/09" name: "냉장서울우유1L" category: "우유", count:1] is displayed on top
+```
+
+### Meta specs
+|        Index                             |                                                                        Content                                                                       |
+|---------------------------------|:---------------------------------------------------------------------------------------------------------------|
+| FeatureName                        |User can scan multiple items |
+| Actors                                   |User|
+| Precondition                                   |User logged in, User allowed camera access, User completed scanning expiration date and barcode of an item in `AddItem Page('/item/add')`|
+
+### Acceptance test
+```
+GIVEN the User has completed scanning expiration date and barcode of an item[barcode: "1103102013", expiration date: "2020/11/11" name: "홈런볼" category: "과자", count:1] in `AddItem Page('/item/add')`
+WHEN the User clicks `capture_expiration_date` button and scans expiration date["2020/12/31]
+THEN the User is directed to `barcode scanning view` of `AddItem Page('/item/add')`
+
+WHEN the User scans the product's barcode[barcode: "8801019306495"]
+THEN the User is directed to `expiration scanning view` of `AddItem Page('/item/add')`
+AND scan result[barcode: "8801019306495", expiration date: "2020/12/31" name: "냉장서울우유1L" category: "우유", count:1] of the new item is displayed on top
+
+WHEN the User clicks`btn_done` button
+THEN the User is directed to `ItemConfirm Page ('/item/confirm')`
+AND scanned results of 2 items[{barcode: "1103102013", expiration date: "2020/11/11" name: "홈런볼" category: "과자", count:1}, {barcode: "8801019306495", expiration date: "2020/12/31" name: "냉장서울우유1L" category: "우유", count:1}] are displayed
+```
+
+### Meta specs
+|        Index                             |                                                                        Content                                                                       |
+|---------------------------------|:---------------------------------------------------------------------------------------------------------------|
+| FeatureName                        |User can skip expiration scanning |
+| Actors                                   |User|
+| Precondition                                   |User logged in, User allowed camera access, User is in `expiration scanning view` of `AddItem Page('/item/add')`|
+
+### Scenario
+- **GIVEN** the User is in `expiration scanning view` of `AddItem Page('/item/add')`
+- **WHEN** the User clicks `skip` button
+- **THEN** the User is directed to `barcode scanning view` of `AddItem Page('/item/add')`
+
+### Acceptance test
+```
+GIVEN the User is in `expiration scanning view` of `AddItem Page('/item/add')`
+WHEN the User clicks `skip` button
+THEN the User is directed to `barcode scanning view` of `AddItem Page('/item/add')`
+
+WHEN the User scans the product's barcode[barcode: "8801019306495"]
+THEN the User is directed to `expiration scanning view` of `AddItem Page('/item/add')`
+AND scan result[barcode: "8801019306495", expiration date: "{Today's date (default value for expiration date)}" name: "냉장서울우유1L" category: "우유", count:1] is displayed on top
+```
+
+### Meta specs
+|        Index                             |                                                                        Content                                                                       |
+|---------------------------------|:---------------------------------------------------------------------------------------------------------------|
+| FeatureName                        |User can skip barcode scanning |
+| Actors                                   |User|
+| Precondition                                   |User logged in, User allowed camera access, User is in `barcode scanning view` of `AddItem Page('/item/add')`|
+
+### Scenario
+- **GIVEN** the User is in `barcode scanning view` of `AddItem Page('/item/add')`
+- **WHEN** the User clicks `skip` button
+- **THEN** the User is directed to `expiration scanning view` of `AddItem Page('/item/add')`
+
+### Acceptance test
+```
+GIVEN the User has scanned expiration date["2020/12/31"] and currently in `barcode scanning view` of `AddItem Page('/item/add')`
+WHEN the User clicks `skip` button
+THEN the User is directed to `expiration scanning view` of `AddItem Page('/item/add')`
+AND scan result[barcode: "", expiration date: "2020/12/31" name: "냉장서울우유1L" category: "우유", count:1] is displayed on top
+```
+
+### Meta specs
+|        Index                             |                                                                        Content                                                                       |
+|---------------------------------|:---------------------------------------------------------------------------------------------------------------|
+| FeatureName                        |User can manually edit item information |
+| Actors                                   |User |
+| Precondition                                   |User logged in, User allowed camera access, User completed scanning expiration date and barcode of an item in `AddItem Page('/item/add')`|
+
+### Scenario
+- **GIVEN** the User completed scanning expiration date and barcode of an item in `AddItem Page('/item/add')`
+- **WHEN** the User clicks `btn_edit` button on top banner
+- **THEN** `edit-barcode-prompt` pops up
+  - **AND** initial values of the information are set to the scanned result
+
+- **GIVEN** the `edit-barcode-prompt` popped up on `expiration` tab of `AddItem Page('/item/add')`
+- **WHEN** the User fills in item name, barcode, expiration date, category, count
+  - **AND** the User clicks `btn_ok` button
+- **THEN** the `edit-barcode-prompt` disappears
+  - **AND** information of the item is set to given value
+
+### Acceptance test
+```
+GIVEN the User completed scanning expiration date and barcode of an item in `AddItem Page('/item/add')`
+WHEN the User clicks `btn_edit` on top banner
+THEN prompt[Name: _____, Barcode: _____, Expiration date: ____, Category: ____, Count: ____] pops up
+
+GIVEN the `edit-barcode-prompt` popped up on `AddItem Page('/item/add')`
+WHEN the User fills in the input field[Name: "냉장서울우유1L", Barcode: "8801019306495", Expiration date: 2020/12/31, Category: 우유, Count: 3] 
+AND the User clicks `btn_ok`
+THEN the `edit-barcode-prompt` disappears
+
+GIVEN the `edit-barcode-prompt` popped up on `AddItem Page('/item/add')`
+WHEN the User fills in the input field[Name: "냉장서울우유1L", Barcode: "8801019306495", Expiration date: 2020/12/31, Category: 우유, Count: 3] 
+AND the User unchecks `expiration_checkbox`
+THEN the expiration date input field is emptied
+
+GIVEN the `edit-barcode-prompt` popped up on `AddItem Page('/item/add')`
+WHEN the User fills in the input field[Name: "냉장서울우유1L", Barcode: "8801019306495", Expiration date: 2020/12/31, Category: 우유, Count: 1] 
+AND the User clicks `decrease_count` button
+THEN the count remains 1
+```
+
+### Exception Test
+(1) Input field for `Product name` is empty
+```
+GIVEN the edit-barcode-prompt popped up on `AddItem Page('/item/add')`
+WHEN the User fills in the input field[Name: "", Barcode: "8801019306495", Expiration date: 2020/12/31, Category: 우유, Count: 3] 
+THEN the `btn_ok` button is disabled
+AND the placeholder for `Name` input field is set to "Product Name should be filled in"
+```
+
+### Meta specs
+|        Index                             |                                                                        Content                                                                       |
+|---------------------------------|:---------------------------------------------------------------------------------------------------------------|
+| FeatureName                        |User can stop scanning when clicking on `btn_done`|
+| Actors                                   |User|
+| Precondition                                   |User logged in, User allowed camera access, User completed scanning expiration date and barcode of an item in `AddItem Page('/item/add')`|
+
+### Scenario
+- **GIVEN** the User completed scanning expiration date and barcode of an item in `AddItem Page('/item/add')`
+- **WHEN** the User clicks `btn_done`
+- **THEN** the User is directed to `ItemConfirm Page ('/item/confirm')`
+
+### Acceptance test
+```
+GIVEN the User completed scanning expiration date and barcode of an item in `AddItem Page('/item/add')`
+WHEN the User clicks `btn_done`
+THEN the User is directed to `ItemConfirm Page ('/item/confirm')`
+```
+
+## Item Confirm
+### Meta specs 
+|        Index                             |                                                                        Content                                                                       |
+|---------------------------------|:---------------------------------------------------------------------------------------------------------------|
+| FeatureName                        |User can go back to camera scanning mode |
+| Actors                                   |User |
+| Precondition                                   |User logged in, User allowed camera access, User is on `ItemConfirm Page ('/item/confirm')`|
+
+### Scenario
+- **GIVEN** the User is on `ItemConfirm Page ('/item/confirm')`
+- **WHEN** the User clicks `btn_webcam_mode` button
+- **THEN** the User is directed back `expiration scanning view` of `AddItem Page('/item/add')`
+
+### Acceptance test
+```
+GIVEN the User is on `ItemConfirm Page ('/item/confirm')`
+WHEN the User clicks `btn_webcam_mode` button
+THEN the User is directed back to `barcode` tab of `AddItem Page('/item/add')`
+```
+
+### Meta specs 
+|        Index                             |                                                                        Content                                                                       |
+|---------------------------------|:---------------------------------------------------------------------------------------------------------------|
+| FeatureName                        |User can confirm adding items |
+| Actors                                   |User |
+| Precondition                                   |User logged in, User allowed camera access, User is on `ItemConfirm Page ('/item/confirm')`|
+
+### Scenario
+- **GIVEN** the User is on `ItemConfirm Page ('/item/confirm')`
+- **WHEN** the User clicks `btn_confirm` button
+- **THEN** the User is directed back to `Main Page ('/')`
+  **AND** the items are added to DB
+
+### Acceptance test
+```
+GIVEN the User is on `ItemConfirm Page ('/item/confirm')`
+WHEN the User clicks `btn_confirm`
+THEN the User is directed back to `Main Page ('/')`
+```
+
+### Meta specs
+|        Index                             |                                                                        Content                                                                       |
+|---------------------------------|:---------------------------------------------------------------------------------------------------------------|
+| FeatureName                        |User can manually edit item information |
+| Actors                                   |User |
+| Precondition                                   |User logged in, User is on `ItemConfirm Page ('/item/confirm')` |
+
+### Scenario
+- **GIVEN** the User is on `ItemConfirm Page ('/item/confirm')`
+- **WHEN** the User clicks `btn_edit` button on one of the item
+- **THEN** `edit-barcode-prompt` pops up
+  - **AND** initial values of the input field are set to the original value
+
+- **GIVEN** the `edit-barcode-prompt` popped up on on `ItemConfirm Page ('/item/confirm')`
+- **WHEN** the User fills in item name, barcode, expiration date, category, count
+  - **AND** the User clicks `btn_ok` button
+- **THEN** the `edit-barcode-prompt` disappears
+  - **AND** information of the item is set to given value
+
+### Acceptance test
+```
+GIVEN the User is on `ItemConfirm Page ('/item/confirm')`
+WHEN the User clicks `btn_edit` on top banner
+THEN prompt[Name: _____, Barcode: _____, Expiration date: ____, Category: ____, Count: ____] pops up
+
+GIVEN the `edit-barcode-prompt` popped up on `ItemConfirm Page ('/item/confirm')`
+WHEN the User fills in the input field[Name: "냉장서울우유1L", Barcode: "8801019306495", Expiration date: 2020/12/31, Category: 우유, Count: 3] 
+AND the User clicks `btn_ok`
+THEN the `edit-barcode-prompt` disappears
+
+GIVEN the `edit-barcode-prompt` popped up on `ItemConfirm Page ('/item/confirm')`
+WHEN the User fills in the input field[Name: "냉장서울우유1L", Barcode: "8801019306495", Expiration date: 2020/12/31, Category: 우유, Count: 3] 
+AND the User unchecks `expiration_checkbox`
+THEN the expiration date input field is emptied
+
+GIVEN the `edit-barcode-prompt` popped up on `ItemConfirm Page ('/item/confirm')`
+WHEN the User fills in the input field[Name: "냉장서울우유1L", Barcode: "8801019306495", Expiration date: 2020/12/31, Category: 우유, Count: 1] 
+AND the User clicks `decrease_count` button
+THEN the count remains 1
+```
+
+### Exception Test
+(1) Input field for `Product name` is empty
+```
+GIVEN the edit-barcode-prompt popped up on `ItemConfirm Page ('/item/confirm')`
+WHEN the User fills in the input field[Name: "", Barcode: "8801019306495", Expiration date: 2020/12/31, Category: 우유, Count: 3] 
+THEN the `btn_ok` button is disabled
+AND the placeholder for `Name` input field is set to "Product Name should be filled in"
+```
+
 ## Personal Recipe Recommendation
 ### Meta specs
 |        Index                             |                                                                        Content                                                                       |
