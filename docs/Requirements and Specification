@@ -378,29 +378,48 @@ THEN the item "냉장서울우유1L" is deleted from the fridge
 ### Meta specs
 |        Index                             |                                                                        Content                                                                       |
 |---------------------------------|:---------------------------------------------------------------------------------------------------------------|
-| FeatureName                        |User can select ingredients for recipe recommendation|
+| FeatureName                        |User can move to `select mode` to select ingredients|
 | Actors                                   |User|
-| Precondition                                   |User logged in, User's fridge is not empty, User is on `main-page`|
+| Precondition                                   |User logged in, User's fridge is not empty, User is on `normal mode` of `main-page`|
 
 ### Scenario
 - **GIVEN** the User is on `Main Page ('/')`
 - **WHEN** the User clicks `btn_select_ingredients` button
-- **THEN** the User can select up to 3 items for recipe recommendation
+- **THEN** the User is moved to `select mode` and able to select up to 3 items for recipe recommendation
 
-- **GIVEN** the User selected items for recipe recommendation.
-- **WHEN** the User clicks `btn_select_finished` button
-- **THEN** the User can select preferences["Korean", "Italian", "Japanese", "Chinese"]
-
-- **GIVEN** the User selected items and preference for recipe recommendation.
-- **WHEN** the User clicks `btn_recipe_submit` button
-- **THEN** the User is directed to `RecipeRecommendation page ('/recipes')` with selected items and preference.
+- **GIVEN** the User is on `select mode` without any selected item
+- **WHEN** the User clicks `btn_select_ingredients` button
+- **THEN** the User is moved from `select mode` to `normal mode`
 
 ### Acceptance Test
 ```
-GIVEN the User is on `Main Page ('/')`
+GIVEN the User is on `normal mode` of `Main Page ('/')`
 WHEN the User clicks `btn_select_ingredients` button
-THEN the User can select items in his/her fridge
+THEN the User is moved to `select mode` and can select up to 3 items in his/her fridge
 
+GIVEN the User is on `select mode` without any selected item
+WHEN the User clicks `btn_select_ingredients` button
+THEN the User is moved from `select mode` to `normal mode`
+```
+
+### Meta specs
+|        Index                             |                                                                        Content                                                                       |
+|---------------------------------|:---------------------------------------------------------------------------------------------------------------|
+| FeatureName                        |User can submit ingredients and the preference for recipe recommendation|
+| Actors                                   |User|
+| Precondition                                   |User logged in, User's fridge is not empty, User is on `select mode` of `main-page`|
+
+### Scenario
+- **GIVEN** the User selected items for recipe recommendation.
+- **WHEN** the User clicks `btn_select_finished` button
+- **THEN** the User can select one preference from ["Korean", "Italian", "Japanese", "Chinese"]
+
+- **GIVEN** the User selected items and the preference for recipe recommendation.
+- **WHEN** the User clicks `btn_recipe_submit` button
+- **THEN** the User is directed to `RecipeRecommendation page ('/recipes')` with selected items and the preference.
+
+### Acceptance Test
+```
 GIVEN the User selected ["tomato", "cheese", "olive"] from his/her fridge.
 WHEN the User clicks `btn_select_finished` button 
 AND the User clicks "Italian" preference
@@ -439,7 +458,7 @@ THEN the video is played.
 (1) There exists no recipe for selected ingredients & options
 ```
 GIVEN the User selects ingredients[For example, "김치", "된장"] and preference[For example, "Italian"]
-WHEN the User clicks `btn_recipe_submit` button on `Preference Page ('/preference')`
+WHEN the User clicks `btn_recipe_submit` button on `Main Page('/')`
 THEN popular recipes are shown on `RecipeRecommendation Page ('/recipes')`
 ```
 
@@ -453,7 +472,7 @@ THEN popular recipes are shown on `RecipeRecommendation Page ('/recipes')`
 ### Scenario
 - **GIVEN** the User is on `RecipeDetail Page ('/recipes/:id')`
 - **WHEN** the User types comment in comment-input field
-- ** AND ** the User clicks `btn_add_comment`
+- **AND** the User clicks `btn_add_comment`
 - **THEN** a new comment is created
   - **AND** the comment-input field is cleared. 
 
@@ -471,27 +490,23 @@ AND the comment-input field is cleared.
 |---------------------------------|:---------------------------------------------------------------------------------------------------------------|
 | FeatureName                        |User can go to `Main Page ('/')` by clicking `back-button` |
 | Actors                                   |User |
-| Precondition                                   |User logged in, User is on `RecipeDetail Page ('/recipes/:id')`, User is on either one of `Preference Page ('/preference')` / `RecipeRecommendation Page ('/recipes')` / `RecipeDetail Page ('/recipes/:id')` |
+| Precondition                                   |User logged in, User is on `RecipeDetail Page ('/recipes/:id')`, User is on either one of `RecipeRecommendation Page ('/recipes')` / `RecipeDetail Page ('/recipes/:id')` |
 
 ### Scenario
-- **GIVEN** the User is on either one of `Preference Page ('/preference')` / `RecipeRecommendation Page ('/recipes')` / `RecipeDetail Page ('/recipes/:id')`
+- **GIVEN** the User is on either one of `RecipeRecommendation Page ('/recipes')` / `RecipeDetail Page ('/recipes/:id')`
 - **WHEN** the User clicks `btn_back` button
 - **THEN** alert appears
 
-- **GIVEN** alert is shown on either one of `Preference Page ('/preference')` / `RecipeRecommendation Page ('/recipes')` / `RecipeDetail Page ('/recipes/:id')`
+- **GIVEN** alert is shown on either one of `RecipeRecommendation Page ('/recipes')` / `RecipeDetail Page ('/recipes/:id')`
 - **WHEN** the User clicks "yes"
 - **THEN** the User is directed to the `Main Page('/')`
 
-- **GIVEN** alert is shown on either one of `Preference Page ('/preference')` / `RecipeRecommendation Page ('/recipes')` / `RecipeDetail Page ('/recipes/:id')`
+- **GIVEN** alert is shown on either one of `RecipeRecommendation Page ('/recipes')` / `RecipeDetail Page ('/recipes/:id')`
 - **WHEN** the User clicks "no"
 - **THEN** the User stays on the original page
 
 ### Acceptance Test
 ```
-GIVEN the User is on `Preference Page ('/preference')`
-WHEN the User clicks `btn_back`
-THEN alert with message[For example, "Do you want to go back to main page? all your choices will be lost"] appears.
-
 GIVEN the User is on `RecipeRecommendation Page ('/recipes')`
 WHEN the User clicks `btn_back`
 THEN alert with message[For example, "Do you want to go back to main page? all your choices will be lost"] appears.
@@ -499,14 +514,6 @@ THEN alert with message[For example, "Do you want to go back to main page? all y
 GIVEN the User is on `RecipeDetail Page ('/recipes/:id')`
 WHEN the User clicks `btn_back`
 THEN alert with message[For example, "Do you want to go back to main page? all your choices will be lost"] appears.
-
-GIVEN alert is shown on `Preference Page ('/preference')`
-WHEN the User clicks "yes"
-THEN the User is directed to the `Main Page('/')`
-
-GIVEN alert is shown on `Preference Page ('/preference')`
-WHEN the User clicks "no"
-THEN the User stays on `Preference Page ('/preference')`
 
 GIVEN alert is shown on `RecipeRecommendation Page ('/recipes')`
 WHEN the User clicks "yes"
