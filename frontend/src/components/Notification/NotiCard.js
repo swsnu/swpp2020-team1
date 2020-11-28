@@ -5,33 +5,94 @@ import { Typography, Container, ListItem, Button } from '@material-ui/core';
 import CalendarImg from '../../icons/calendar.png'
 
 const NotiCard = props => {
-  const { id, notiType, itemName, expirationDate, isRead } = props.noti
+  const { id, notiType, itemName, expirationDate, isRead, elapsedDays } = props.noti
   const expirationDateType = new Date(expirationDate)
-  let creationTimestamp = expirationDateType.getTime() - 3 * 24 * 60 * 60 * 1000
-  const currentTimestamp = new Date()
-  const elapsedDays = Math.floor((currentTimestamp - creationTimestamp) / (24 * 60 * 60 * 1000))
-  const noti = props.noti
   let notiContent = null
   if (notiType === 'expire') {
+    let elapsedDaysString = null
+    if (elapsedDays >= 2) elapsedDaysString = `${elapsedDays}일 전`
+    else if (elapsedDays === 1) elapsedDaysString = '어제'
+    else if (elapsedDays === 0) elapsedDaysString = '오늘'
+    else elapsedDaysString = '방금'
     notiContent =
-      <ListItem className='NotiListItem' style={{backgroundColor: isRead ? '#ffffff' : 'rgba(232, 160, 101, 0.6)',
-          justifyContent: 'space-between', width: window.innerWidth }}>
-        <div style={{width: 50}}>
-          <img src={CalendarImg} width={20} height={20} />
+      <div style={{flexDirecion: 'row', justifyContent: 'center'}}>
+        <ListItem className='NotiListItem' style={{backgroundColor: isRead ? '#ffffff' :  'rgba(125, 191, 26, 0.6)',
+            justifyContent: 'space-between', width: window.innerWidth }}>
+          <div style={{width: 50}}>
+            <img src={CalendarImg} width={20} height={20} />
+          </div>
+          <div style={{flex: 1}}>
+            <Typography style={{fontSize: 14}}>
+              {`[${itemName}]의 유통기한이 ${expirationDateType.getMonth() + 1}월 ${expirationDateType.getDate()}일에
+                  만료됩니다. 얼른 드세요!`}
+            </Typography>
+            <Typography style={{fontSize: 12, fontWeight: 'bold', color: '#818181'}}>
+              {`레시피를 확인해보세요.`}
+            </Typography>
+            <Typography style={{fontSize: 12, color: '#818181'}}>
+              {elapsedDaysString}
+            </Typography>
+          </div>
+        </ListItem>
+      </div>
+  } else if (notiType === 'buy_item') {
+    let purchaseLink = `https://www.coupang.com/np/search?component=&q=${itemName}&channel=user`
+
+    let elapsedDaysString = null
+    if (elapsedDays > 2) elapsedDaysString = `${elapsedDays}일 전`
+    else if (elapsedDays === 1) elapsedDaysString = '어제'
+    else if (elapsedDays === 0) elapsedDaysString = '오늘'
+    else elapsedDaysString = '방금'
+
+    notiContent =
+      <div>
+        <ListItem className='NotiListItem' style={{backgroundColor: isRead ? '#ffffff' : 'rgba(125, 191, 26, 0.6)',
+            justifyContent: 'space-between', width: window.innerWidth }}>
+          <div style={{width: 50}}>
+            <img src={CalendarImg} width={20} height={20} />
+          </div>
+          <div style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
+            <div>
+            <Typography style={{fontSize: 14}}>
+              {`[${itemName}](이)가 얼마 남지 않았네요.`}
+            </Typography>
+            <Typography style={{fontSize: 12, fontWeight: 'bold', color: '#818181'}}>
+              {`버튼을 클릭하여 최저가를 확인해보세요!`}
+            </Typography>
+            <Typography style={{fontSize: 12, color: '#818181'}}>
+              {elapsedDaysString}
+            </Typography>
+            </div>
+          </div>
+        <div onClick={() => {window.open(purchaseLink, '_blank').focus();}}
+            style={{height: 20, width: 90, textAlign: 'center', backgroundColor: '#7DBF1A', borderRadius: 10}}>
+          <Typography style={{fontSize: 13, color: '#ffffff', alignSelf: 'center'}}>
+            {"구매하러 가기"}
+          </Typography>
         </div>
-        <div style={{flex: 1}}>
-          <Typography style={{fontSize: 14}}>
-            {`[${itemName}]의 유통기한이 ${expirationDateType.getMonth() + 1}월 ${expirationDateType.getDate()}일에
-                만료됩니다. 얼른 드세요!`}
-          </Typography>
-          <Typography style={{fontSize: 12, fontWeight: 'bold', color: '#818181'}}>
-            {`레시피를 확인해보세요.`}
-          </Typography>
-          <Typography style={{fontSize: 12, color: '#818181'}}>
-            {elapsedDays > 0 ? `${elapsedDays}일 전` : `방금`}
-          </Typography>
-        </div>
-      </ListItem>
+        </ListItem>
+      </div>
+  } else if (notiType === 'recipe') {
+    notiContent =
+      <div style={{flexDirecion: 'row', justifyContent: 'center'}}>
+        <ListItem className='NotiListItem' style={{backgroundColor: '#f9ff80',
+            justifyContent: 'space-between', width: window.innerWidth }}>
+          <div style={{width: 50}}>
+            <img src={CalendarImg} width={20} height={20} />
+          </div>
+          <div style={{flex: 1}}>
+            <Typography style={{fontSize: 14}}>
+              {`[${itemName}](을)를 활용한 레시피를 확인해보세요!`}
+            </Typography>
+            <Typography style={{fontSize: 12, fontWeight: 'bold', color: '#818181'}}>
+              {`다양한 레시피가 준비되어 있습니다.`}
+            </Typography>
+            <Typography style={{fontSize: 12, color: '#818181'}}>
+              {"오늘"}
+            </Typography>
+          </div>
+        </ListItem>
+      </div>
   } else {
     console.log(`Noti type ${notiType} is not supported.`)
   }

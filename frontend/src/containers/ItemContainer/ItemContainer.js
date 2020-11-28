@@ -31,6 +31,7 @@ class ItemContainer extends Component {
         if(i.id === id) return { ...i, count: i.count - 1 };
         return i;
       })
+      tmpItemCounts = tmpItemCounts.filter(i => i.count != 0)
       this.setState({ itemcounts: tmpItemCounts })
     }
 
