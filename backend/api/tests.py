@@ -246,7 +246,9 @@ class ApiTestCase(TestCase):
         new_category = Category(name='milk')
         new_category.save()
         response = client.get('/back/token/')
-        csrftoken = response.cookies['csrftoken'].value 
+        csrftoken = response.cookies['csrftoken'].value
+        response = client.post('/back/signin/', json.dumps({'username': 'swpp', 'password': 'iluvswpp'}),
+                                content_type='application/json', HTTP_X_CSRFTOKEN=csrftoken)
         new_barcode = Barcode(barcode_num='8801234', item_name='seoul_milk', category=new_category)
         new_barcode.save()
         item = Item(name='A', container='fridge', user=new_user,
