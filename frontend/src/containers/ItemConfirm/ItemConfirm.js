@@ -4,6 +4,7 @@ import { Typography, Container, Button, TextField, Select, InputLabel, MenuItem,
 import * as actionCreators from '../../store/actions/index';
 import EditItem from '../../components/AddItem/EditItem';
 import './ItemConfirm.css';
+import moment from 'moment'
 
 class ItemConfirm extends Component {
   containers = ['freezer', 'fridge', 'shelf'];
@@ -26,10 +27,6 @@ class ItemConfirm extends Component {
     this.setState({items: this.props.location.state ? this.props.location.state.items : []});
   }
 
-  // validateInputs() {
-  //   return true;
-  // }
-
   onClickEditItemButton = (item, idx) => {
     this.setState({
       editingItemIdx: idx,
@@ -43,17 +40,16 @@ class ItemConfirm extends Component {
   }
 
   onConfirmEditButton = (edit) => {
-    // if (!this.validateInputs()) {
-    //   // set error message below input field
-    //   return;
-    // }
+    if (!edit.valid) {
+      return;
+    }
     this.setState({
       items: this.state.items.map((item, idx) => {
         if (idx === this.state.editingItemIdx) {
           return {
             'name': edit.name, 
             'barcode_num': edit.barcode_num, 
-            'expiration_date': edit.expiration_date,
+            'expiration_date': moment(edit.expiration_date).format("YYYY/MM/DD"),
             'category_id': edit.category_id, 
             'category_name': edit.category_name,
             'container': edit.container, 
@@ -143,7 +139,7 @@ class ItemConfirm extends Component {
     return (
       <div className="ItemConfirm">
         <Dialog open={this.state.editDialogOpen} onClose={() => this.setState({editDialogOpen: false})}>
-          <EditItem result={this.state.item_edit} onCancelEdit={this.onCancelEditButton} onConfirmEdit={this.onConfirmEditButton}></EditItem>
+          <EditItem itemInfo={this.state.item_edit} onCancelEdit={this.onCancelEditButton} onConfirmEdit={this.onConfirmEditButton}></EditItem>
         </Dialog>
 
         <Typography variant="h5">New Items</Typography>
