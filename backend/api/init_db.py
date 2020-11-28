@@ -12,6 +12,7 @@ def initialize_category():
             category_list.append(line[0])
     for category_name in category_list:
         Category(name=category_name).save()
+    Category(id=200, name='기타').save()
 
 def initialize_recipe():
     ''' initialize_recipe: initialize recipe '''

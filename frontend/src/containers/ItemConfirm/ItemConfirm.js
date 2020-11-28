@@ -91,6 +91,10 @@ class ItemConfirm extends Component {
 
   onClickConfirmButton = () => {
     for (let item of this.state.items) {
+      if (item.category_id === 0) {
+        item.category_name = "기타";
+        item.category_id = 200; // category_id of '기타'
+      }
       this.props.onAddItem(item);
     }
     this.props.history.push('/');

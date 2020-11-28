@@ -1,4 +1,4 @@
-import React, { Component} from "react";
+import React, { Component, Fragment } from "react";
 import { connect } from 'react-redux';
 import * as actionCreators from '../../store/actions/index';
 
@@ -44,14 +44,37 @@ class EditItem extends Component {
       container: updatedResult.container
     })
 
-    //if(this.props.categories.length < 1) {
-    //  this.props.onGetCategories();
-    //}
+    if(this.props.categories.length < 1) {
+     this.props.onGetCategories();
+    }
+  }
+
+  onCategoryChange = (event, value) => {
+    if (value.name) { // value is object {id, name}
+      console.log("value: " + JSON.stringify(value))
+      this.setState({
+        category_id: value.id,
+        category_name: value.name,
+      })
+    } else {
+      const found = this.props.categories.find(elem => elem.name === value)
+      if (found) {
+        this.setState({
+          category_id: found.id,
+          category_name: found.name // value is string (custom category)
+        })
+      } else {
+        this.setState({
+          category_id: 0,
+          category_name: value
+        })
+      }
+    }
   }
 
   render() {
     return (
-      <React.Fragment>
+      <Fragment>
         <DialogTitle id="edit_dialog_title">Edit your item</DialogTitle>
         <DialogContent>
           <form>
@@ -79,12 +102,16 @@ class EditItem extends Component {
               className="item_count_edit margin" 
               label="Count"
               margin="dense" />
-            <TextField 
-              value={this.state.category_name}
-              onChange={e => this.setState({ category_name: e.target.value })}               
-              className="item_category_name_edit margin" 
-              label="Category"
-              margin="dense" />
+            <Autocomplete
+              options={this.props.categories}
+              getOptionLabel={(option) => {return (option.name ? option.name : option)}}
+              id="auto-select"
+              autoSelect
+              freeSolo={true}
+              onChange={this.onCategoryChange}
+              renderInput={(params) =>
+                <TextField {...params}
+                  label="Category" margin="normal" />}/>
             <InputLabel id="select_container_label">Container</InputLabel>
             <Select 
               labelId="select_container_label"
@@ -102,20 +129,12 @@ class EditItem extends Component {
           <Button className="btn_cancel_edit" onClick={this.props.onCancelEdit}>Cancel</Button>
           <Button className="btn_confirm_edit" onClick={() => this.props.onConfirmEdit(this.state)}>Ok</Button>
         </DialogActions>
-      </React.Fragment>
+      </Fragment>
     )
   }
 }
 
-            /*<Autocomplete
-              options={this.props.categories}
-              getOptionLabel={(option) => option.name}
-              id="auto-select"
-              autoSelect
-              renderInput={(params) => <TextField {...params} label="autoSelect" margin="normal" />}
-            />*/
-
-/*const mapStateToProps = state => {
+const mapStateToProps = state => {
   return {
     categories: state.category.categories
   };
@@ -125,6 +144,6 @@ const mapDispatchToProps = dispatch => {
   return {
     onGetCategories: () => dispatch(actionCreators.getCategories())
   }
-}*/
+}
 
-export default EditItem; //connect(mapStateToProps, mapDispatchToProps)(EditItem);
+export default connect(mapStateToProps, mapDispatchToProps)(EditItem);
