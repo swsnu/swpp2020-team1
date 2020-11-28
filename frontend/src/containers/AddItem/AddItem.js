@@ -43,12 +43,6 @@ class AddItem extends Component {
     resultList: []
   }
 
-  onClickWebcamOnOff = () => {
-    this.setState({
-      webcam: !this.state.webcam
-    })
-  }
-
   // Used to activate webcam
   setWebcamRef = (webcam) => {
     this.webcam = webcam;
@@ -69,17 +63,15 @@ class AddItem extends Component {
 
   getExpirationDateFromImage = (e, callback) => {
     e.preventDefault();
-    // https://app.nanonets.com/api/v2/ObjectDetection/Model/8d757818-7d43-4d65-bcd6-3e5b0e23bcbf/LabelFile/
-    let myImage = this.state.screenShot;
     let file =this.state.imageFile;
     var text = "";
     
-    const modelId = '04e7198a-8507-4543-a1a1-18d9f35c3fd1';
-    const apiKey = 'RnrIBDQiOkkHu5EkaeZ3EAQtQMcJmSOv';
+    const modelId = 'eeed51f3-682e-450b-95c9-d4f23e6c7792';
+    const apiKey = 'cRceuIjMuF9DAvHuC7lTOLnJxnhB0hs1';
     let url = `/api/v2/OCR/Model/${modelId}/LabelFile/`; 
 
     var data = new FormData();
-    data.append('file', file); // file object
+    data.append('file', file);
 
     var xhr = new XMLHttpRequest();
     xhr.addEventListener("readystatechange", function () {
@@ -94,7 +86,6 @@ class AddItem extends Component {
         }
       }
     });
-
     xhr.open("POST", url);
     xhr.setRequestHeader("authorization", "Basic " + btoa(`${apiKey}:`));
     xhr.send(data);
@@ -109,10 +100,15 @@ class AddItem extends Component {
         currentResult: this.default_result
       }))
     }
-    const imageSrc = await this.webcam.getScreenshot();
-    console.log(imageSrc);
+    var canvas = document.getElementById('canvas');     
+    var video = document.getElementById('video');
+    canvas.style.display="none";
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    canvas.getContext('2d').drawImage(video, 0, 0, video.videoWidth, video.videoHeight);  
+    const imageSrc = canvas.toDataURL("image/jpeg");
     const imageFile = await dataURLtoFile(imageSrc,'captured.jpeg');
-    console.log(imageFile);
+
     this.setState((prevState, props) => ({
       screenShot: imageSrc,
       imageFile: imageFile,
@@ -120,7 +116,6 @@ class AddItem extends Component {
       is_confirmed: (this.state.is_retaking ? false : true),
       is_retaking: false
     }))
-    console.log('handleOCR clicked updated')
     this.getExpirationDateFromImage(e, data => this.handleDetect(data));
     console.log("After exp date", this.state.currentResult)
   }
@@ -129,7 +124,7 @@ class AddItem extends Component {
     if(!this.state.is_barcode_scanning) return;
     
     let barcode_num = result.codeResult.code;
-    let user_id = 1; // <TEMPORARY> 나중에 map어쩌고props로 user정보가져오셈
+    let user_id = 1;
     let item_name = (this.state.is_retaking ? "" : this.state.currentResult.name);
     let category_id = (this.state.is_retaking ? "" : this.state.currentResult.category_id);
     let category_name = (this.state.is_retaking ? "" : this.state.currentResult.category_name);
@@ -148,10 +143,6 @@ class AddItem extends Component {
     axios.get(`/back/item/user/${user_id}/`)
       .then(res => 
         {
-          // console.log(`res.data[1].barcode_id: ${res.data[1].barcode_id}`);
-          // console.log(`res.data[1].user_id: ${res.data[1].user_id}`);
-          // console.log(`new item's barcode\n${barcode_num}`);
-          // console.log(`new item's user_id: ${user_id}`);
           console.log(res)
           custom_item = res.data.filter(item => 
             (item.barcode_id == barcode_num && item.user_id == user_id)
@@ -204,7 +195,6 @@ class AddItem extends Component {
         })
         .catch(err => {
           // Item not found in Barcode DB
-          // console.log(err);
           this.setState((prevState, props) => ({
             currentResult: { ...this.state.currentResult,  
               name: item_name, 
@@ -320,44 +310,13 @@ class AddItem extends Component {
               <div style={{backgroundColor: '#FFFFFF'}/*{position: 'absolute', zIndex : '1'}*/}>
                 <Button id="AddManuallyButton" onClick={this.onClickManualAddButton}>Add Manually</Button>
                 <Typography>{ this.state.is_retaking ? "(Retaking)" : (this.state.is_barcode_scanning ? BARCODE_TERM : EXPIRATION_TERM) }</Typography>
-                <div>{this.state.webcam ? (this.state.is_barcode_scanning ? 
-                      <Scanner id="Scanner" onDetected={this._onDetected} ref="Scanner"/> : 
-                      <Webcam
-                      audio={false}
-                      height={350}
-                      ref={this.setWebcamRef}
-                      screenshotFormat="image/jpeg"
-                      width={350}
-                      videoConstraints={{videoConstraintsfacingMode: 'user'}}
-                      />) : null
-                      }
+                <div>
+                      <Scanner id="Scanner" onDetected={this._onDetected} onCapture={this.handleOCR} barcode={this.state.is_barcode_scanning} ref="Scanner"/> 
                 </div>
               </div>
             </div>
           </Grid>
-          <Grid item xs={12}><Button id="handleOCR" onClick={this.handleOCR}>Capture photo</Button></Grid>
-          
-          {/*<Grid item xs={12}>
-            {this.state.screenShot 
-            ? 
-            <div>
-              <p><img src={this.state.screenShot} alt="imageForOcr"/> </p>
-              <span><button onClick={this.onClickRetake}>Retake?</button></span>
-            </div>
-            :
-            null}
-            </Grid>*/}
-          <Grid item xs={12}><Button id='onClickWebcamOnOffButton' onClick={this.onClickWebcamOnOff}>Webcam On/Off</Button></Grid> 
-          {/*<Grid item xs={12}><Button onClick={this.handleOCR}>Use Ocr</Button></Grid> */}
           <Grid item xs={12}>
-            <TextField
-              multiline
-              rows={4}
-              id="ExpirationDateTextField"
-              variant="outlined"
-              onChange={this.setExpirationDate}
-              label={this.state.OCRResult}
-            />
           </Grid>
           <div>
             {(this.state.currentResult != null) ? 
