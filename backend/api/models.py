@@ -17,7 +17,7 @@ class Barcode(models.Model):
         Category,
         on_delete=models.SET_NULL,
         blank=True,
-        null=True
+        null=True,
         related_name='barcode_set'
     )
 
@@ -34,15 +34,15 @@ class Item(models.Model):
         Category,
         on_delete=models.SET_NULL,
         blank=True,
-        null=True
+        null=True,
         related_name='item_set'
     )
     barcode = models.ForeignKey(
         Barcode,
         on_delete=models.SET_NULL,
-        related_name='item_set',
         blank=True,
-        null=True
+        null=True,
+        related_name='item_set'
     )
 
 class ItemCount(models.Model):
@@ -70,7 +70,7 @@ class Notification(models.Model):
         ItemCount,
         on_delete=models.CASCADE,
         blank=True,
-        null=True
+        null=True,
         related_name='noti_set'
     )
 
