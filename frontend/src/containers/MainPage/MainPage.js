@@ -73,21 +73,42 @@ class MainPage extends Component {
   buildNotificationInfo = () => {
     let notiList = []
     for (let noti of this.props.notifications) {
-      if (noti.noti_type === 'expire') {
+      if (noti.noti_type === 'expire' || noti.noti_type === 'buy_item') {
         let { id, noti_type, is_read, expire_date, item_count_id } = noti;
         let itemId = this.props.itemcounts.find(ic => ic.id === item_count_id).item_id
         let itemName = this.props.items.find(item => item.id === itemId).name
+
+        const expirationDateType = new Date(expire_date)
+        let creationTimestamp = noti.noti_type === 'expire' ? 
+          expirationDateType.getTime() - 3 * 24 * 60 * 60 * 1000 : expirationDateType.getTime()
+          // set expirationDay - 3d as creation time if 'expire', set itself as creation time if 'buy_item'
+        const currentTimestamp = new Date()
+        const elapsedDays = Math.floor((currentTimestamp - creationTimestamp) / (24 * 60 * 60 * 1000))
         notiList.push({
           id: id,
           notiType: noti_type,
           isRead: is_read,
           expirationDate: expire_date,
           itemName: itemName,
+          elapsedDays: elapsedDays,
         })
       }
     }
     
-    notiList.sort((a, b) => new Date(b.expirationDate) -  new Date(a.expirationDate))
+    notiList.sort((a, b) => new Date(a.elapsedDays) - new Date(b.elapsedDays))
+
+    if (this.props.itemcounts.length !== 0) {
+      const itemId = this.props.itemcounts[[Math.floor(Math.random() * this.props.itemcounts.length)]].item_id
+      const itemName = this.props.items.find(item => item.id === itemId).name
+      notiList.unshift({
+        id: 0,
+        notiType: 'recipe',
+        isRead: true,
+        expirationDate: '',
+        itemName: itemName,
+        elapsedDays: 0,
+      })
+    }
 
     this.setState({ notifications: notiList })
     this.setState({ isUnreadNotiExists: this.isUnreadNotiExists() })
@@ -106,8 +127,10 @@ class MainPage extends Component {
   }
 
   onReadNotification = async (notiId) => {
-    await this.props.onSetIsRead(notiId);
-    console.log("onSetIsRead! + notifications: " + JSON.stringify(this.props.notifications))
+    if (notiId !== 0) { // notiId === 0 means 'recipe' noti type
+      await this.props.onSetIsRead(notiId);
+      console.log("onSetIsRead! + notifications: " + JSON.stringify(this.props.notifications))
+    }
     this.buildNotificationInfo();
     this.setState({
       openDialog: false,
@@ -179,12 +202,12 @@ class MainPage extends Component {
     let items = this.props.items.reduce((result, i) => {
       const ic = this.props.itemcounts.filter(ic => ic.item_id === i.id);
       if (ic.length > 0) result.push({...i, 'itemcounts': ic});
-      return result; 
+      return result;
     }, []);
 
-    const freezerItems =  items.filter(i => i.container === 'freezer') //should change items to items_tmp
-    const fridgeItems =  items.filter(i => i.container === 'fridge')
-    const shelfItems =  items.filter(i => i.container === 'shelf')
+    const freezerItems = items.filter(i => i.container === 'freezer') //should change items to items_tmp
+    const fridgeItems = items.filter(i => i.container === 'fridge')
+    const shelfItems = items.filter(i => i.container === 'shelf')
 
     
     return (

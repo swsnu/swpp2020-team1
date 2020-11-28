@@ -3,6 +3,7 @@
 
 import json
 from json import JSONDecodeError
+from itertools import chain
 import datetime
 from datetime import timedelta
 from django.http import HttpResponse, JsonResponse, HttpResponseNotAllowed, HttpResponseBadRequest
@@ -384,7 +385,11 @@ def item_count_info(request, item_count_id=0):
         is_deleted = False
         try:
             item_count = ItemCount.objects.get(id=item_count_id)
-            item_noti = Notification.objects.get(item_count_id=item_count_id)
+            item_expire_noti = Notification.objects.get(
+                item_count_id=item_count_id, noti_type='expire')
+            item_buy_noti = Notification.objects.filter(
+                item_count_id=item_count_id, noti_type='buy_item').first()
+            user = request.user
         except ItemCount.DoesNotExist as error:
             print(error)
             return HttpResponse(status=404)
@@ -400,9 +405,16 @@ def item_count_info(request, item_count_id=0):
         if count > 0:
             item_count.count = count
             item_count.save()
+            if count == 1 and ItemCount.objects.filter(item_id=item_count.item_id).count() == 1:
+                current_date = datetime.datetime.now() # this is not expire date, but current date.
+                new_buy_noti = Notification(user=user, noti_type='buy_item',
+                    expire_date=current_date, item_count=item_count, is_read=False)
+                new_buy_noti.save()
         elif count == 0:
             item_count.delete()
-            item_noti.delete()
+            item_expire_noti.delete()
+            if item_buy_noti:
+                item_buy_noti.delete()
             is_deleted = True
         else:
             print("ERROR: illegal count {}".format(count))
@@ -643,11 +655,16 @@ def noti_list(request, user_id=0):
         end_date = datetime.datetime.now() + timedelta(days=3)
         print(end_date.date())
         about_to_expire = Notification.objects.filter(
-            user_id=user_id
+            user_id=user_id,
+            noti_type='expire'
         ).filter(
             expire_date__lt=end_date.date()
         )
-        return JsonResponse(list(about_to_expire.values()), safe=False)
+        buy_item = Notification.objects.filter(
+            user_id=user_id,
+            noti_type='buy_item'
+        )
+        return JsonResponse(list(chain(about_to_expire.values(), buy_item.values())), safe=False)
     else:
         return HttpResponseNotAllowed(['GET'])
 
