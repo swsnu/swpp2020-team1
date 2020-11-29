@@ -5,6 +5,9 @@ import * as actionCreators from '../../store/actions/index';
 // material-ui components
 import { Button, TextField, DialogTitle, DialogContent, DialogActions, MenuItem, InputLabel, Select } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
+import {DatePicker, KeyboardDatePicker, MuiPickersUtilsProvider} from '@material-ui/pickers';
+import DateFnsUtils from '@date-io/date-fns';
+
 
 class EditItem extends Component {
   containers = ['freezer', 'fridge', 'shelf'];
@@ -20,28 +23,32 @@ class EditItem extends Component {
     category_name: '',
     category_id: 0,
     count: '',
-    container: '' 
+    container: '' ,
+    valid: true
   }
 
   componentDidMount() {
-    const result = this.props.result
+    const info = this.props.itemInfo
 
-    let updatedResult = {
-      name: (result.name ? result.name : '') ,
-      barcode_num: (result.barcode_num ? result.barcode_num : ''),
-      expiration_date: (result.expiration_date ? result.expiration_date : ''),
-      category_name: (result.category_name ? result.category_name : ''),
-      count: (result.count ? result.count : 1),
-      container: (result.container ? result.container : this.containers[0])
-    }
+    // let updatedResult = {
+    //   name: (info.name ? info.name : '') ,
+    //   barcode_num: (info.barcode_num ? info.barcode_num : ''),
+    //   expiration_date: (info.expiration_date ? info.expiration_date : ''),
+    //   category_name: (info.category_name ? info.category_name : ''),
+    //   count: (info.count ? info.count : 1),
+    //   container: (info.container ? info.container : this.containers[0])
+    // }
     
+    let expiration_date = new Date(info.expiration_date);
+    if (expiration_date.toString() === "Invalid Date") expiration_date = Date.now();
     this.setState({
-      name: updatedResult.name,
-      barcode_num: updatedResult.barcode_num,
-      expiration_date: updatedResult.expiration_date,
-      category_name: updatedResult.category_name,
-      count: updatedResult.count,
-      container: updatedResult.container
+      name: info.name ? info.name : '',
+      barcode_num: info.barcode_num ? info.barcode_num : '',
+      expiration_date: expiration_date,
+      category_name: info.category_name ? info.category_name : '',
+      count: info.count ? info.count : 1,
+      container: info.container ? info.container : this.containers[0],
+      valid: info.name !== ''
     })
 
     if(this.props.categories.length < 1) {
@@ -72,15 +79,27 @@ class EditItem extends Component {
     }
   }
 
+  checkValidity = (name, expiration_date) => {
+    if (name === '' || expiration_date.toString() === 'Invalid Date') {
+      this.setState({valid: false})
+      console.log("invalid")
+    } else {
+      this.setState({valid: true})
+      console.log("valid")
+    }
+  }
+
   render() {
     return (
       <Fragment>
         <DialogTitle id="edit_dialog_title">Edit your item</DialogTitle>
         <DialogContent>
           <form>
-            <TextField 
+            <TextField
+              error={this.state.name === "" ? true : false}
               value={this.state.name}
-              onChange={e => this.setState({ name: e.target.value })}
+              helperText={this.state.name === "" ? "이름을 입력해주세요" : ""}
+              onChange={e => {this.setState({ name: e.target.value }); this.checkValidity(e.target.value, this.state.expiration_date)}}
               className="item_name_edit margin" 
               label="Name"
               margin="dense" />
@@ -90,15 +109,20 @@ class EditItem extends Component {
               className="item_barcode_edit margin" 
               label="Barcode number"
               margin="dense" />
-            <TextField
-              value={this.state.expiration_date}
-              onChange={e => this.setState({ expiration_date: e.target.value })} 
-              className="item_expiration_date_edit margin" 
-              label="Expiration date"
-              margin="dense" />
+            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+              <KeyboardDatePicker
+                openTo="year"
+                format="yyyy/MM/dd"
+                label="Expiration date"
+                views={["year", "month", "date"]}
+                value={this.state.expiration_date === '' ? Date.now() : this.state.expiration_date}
+                onChange={(date) => {this.setState({expiration_date: date}); this.checkValidity(this.state.name, date)}}
+              />           
+            </MuiPickersUtilsProvider>
             <TextField 
+              type="number"
               value={this.state.count}
-              onChange={e => this.setState({ count: e.target.value })}
+              onChange={e => e.target.value >= 1 ? this.setState({ count: e.target.value }) : null}
               className="item_count_edit margin" 
               label="Count"
               margin="dense" />
@@ -127,7 +151,7 @@ class EditItem extends Component {
         </DialogContent>
         <DialogActions>
           <Button className="btn_cancel_edit" onClick={this.props.onCancelEdit}>Cancel</Button>
-          <Button className="btn_confirm_edit" onClick={() => this.props.onConfirmEdit(this.state)}>Ok</Button>
+          <Button className="btn_confirm_edit" onClick={() => this.props.onConfirmEdit({...this.state})}>Ok</Button>
         </DialogActions>
       </Fragment>
     )

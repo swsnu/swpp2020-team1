@@ -11,6 +11,7 @@ import Scanner from '../../components/AddItem/Scanner';
 import Result from '../../components/AddItem/Result';
 import dataURLtoFile from '../../components/AddItem/URLtoFile';
 import EditItem from '../../components/AddItem/EditItem';
+import moment from 'moment';
 
 const BARCODE_TERM = 'Scanning Barcode...'
 const EXPIRATION_TERM = 'Scanning Expiration Date...'
@@ -282,12 +283,16 @@ class AddItem extends Component {
 
   //function for EditItem component
   onConfirmEditButton = (edit) => {
+    if (!edit.valid) {
+      return;
+    }
+
     let confirm_item = {
       ...this.state.currentResult,
       name: edit.name,
       category_name: edit.category_name,
       barcode_num: edit.barcode_num,
-      expiration_date: edit.expiration_date,
+      expiration_date: moment(edit.expiration_date).format("YYYY/MM/DD"),
       count: edit.count,
       container: edit.container
     }
@@ -306,7 +311,7 @@ class AddItem extends Component {
         >
           <Grid item xs={12}>
             <Dialog open={this.state.is_editing}>
-              <EditItem result={this.state.currentResult} onCancelEdit={this.onCancelEditButton} onConfirmEdit={this.onConfirmEditButton}></EditItem>
+              <EditItem itemInfo={this.state.currentResult} onCancelEdit={this.onCancelEditButton} onConfirmEdit={this.onConfirmEditButton}></EditItem>
             </Dialog>
             <div>
               <div className="results" style={{backgroundColor: '#EEEEEE'}/*{backgroundColor: '#EEEEEE', position: 'absolute', zIndex: '2'}*/}>
