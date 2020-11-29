@@ -7,14 +7,11 @@ import { Button, TextField, DialogTitle, DialogContent, DialogActions, MenuItem,
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import {DatePicker, KeyboardDatePicker, MuiPickersUtilsProvider} from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
-
+import axios from 'axios';
 
 class EditItem extends Component {
   containers = ['freezer', 'fridge', 'shelf'];
-  category = [
-    {name: '우유'},
-    {name: '과자'}
-  ]
+  categories = []
 
   state = {
     name: '', 
@@ -43,20 +40,23 @@ class EditItem extends Component {
       valid: info.name !== ''
     })
 
-    if(this.props.categories.length < 1) {
-     this.props.onGetCategories();
+    if(this.categories.length < 1) {
+      axios.get(`/back/category/`)
+      .then(res => {
+        if (res) this.categories = res.data
+      })
     }
   }
 
   onCategoryChange = (event, value) => {
-    if (value.name) { // value is object {id, name}
+    if (value && value.name) { // value is object {id, name}
       console.log("value: " + JSON.stringify(value))
       this.setState({
         category_id: value.id,
         category_name: value.name,
       })
     } else {
-      const found = this.props.categories.find(elem => elem.name === value)
+      const found = this.categories.find(elem => elem.name === value)
       if (found) {
         this.setState({
           category_id: found.id,
@@ -120,7 +120,7 @@ class EditItem extends Component {
               margin="dense" />
             <Autocomplete
               value={this.state.category_name}
-              options={this.props.categories}
+              options={this.categories}
               getOptionLabel={(option) => {return (option.name ? option.name : option)}}
               id="auto-select"
               autoSelect
@@ -151,16 +151,4 @@ class EditItem extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    categories: state.category.categories
-  };
-}
-
-const mapDispatchToProps = dispatch => {
-  return {
-    onGetCategories: () => dispatch(actionCreators.getCategories())
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(EditItem);
+export default EditItem;
