@@ -30,21 +30,13 @@ class EditItem extends Component {
   componentDidMount() {
     const info = this.props.itemInfo
 
-    // let updatedResult = {
-    //   name: (info.name ? info.name : '') ,
-    //   barcode_num: (info.barcode_num ? info.barcode_num : ''),
-    //   expiration_date: (info.expiration_date ? info.expiration_date : ''),
-    //   category_name: (info.category_name ? info.category_name : ''),
-    //   count: (info.count ? info.count : 1),
-    //   container: (info.container ? info.container : this.containers[0])
-    // }
-    
     let expiration_date = new Date(info.expiration_date);
     if (expiration_date.toString() === "Invalid Date") expiration_date = Date.now();
     this.setState({
       name: info.name ? info.name : '',
       barcode_num: info.barcode_num ? info.barcode_num : '',
       expiration_date: expiration_date,
+      category_id: info.category_id ? info.category_id : 0,
       category_name: info.category_name ? info.category_name : '',
       count: info.count ? info.count : 1,
       container: info.container ? info.container : this.containers[0],
@@ -127,6 +119,7 @@ class EditItem extends Component {
               label="Count"
               margin="dense" />
             <Autocomplete
+              value={this.state.category_name}
               options={this.props.categories}
               getOptionLabel={(option) => {return (option.name ? option.name : option)}}
               id="auto-select"

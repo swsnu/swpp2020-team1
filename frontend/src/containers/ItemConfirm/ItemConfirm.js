@@ -9,17 +9,22 @@ import moment from 'moment'
 class ItemConfirm extends Component {
   containers = ['freezer', 'fridge', 'shelf'];
   state = {
-    name_create: '',
-    barcode_create: '',
-    expiration_date_create: '',
-    category_name_create: '',
-    container_create: this.containers[0],
-    count_create: 0,
-
     items: [],
+
+    item_add: {
+      name: '', 
+      barcode_num: '', 
+      expiration_date: '', 
+      category_id: 0, 
+      category_name: '',
+      container: this.containers[0],
+      count: 0
+    },
+    addDialogOpen: false,
+
+    item_edit: {},
     editDialogOpen: false,
     editingItemIdx: 0,
-    
   }
 
   componentDidMount() {
@@ -39,21 +44,21 @@ class ItemConfirm extends Component {
     this.setState({editDialogOpen: false});
   }
 
-  onConfirmEditButton = (edit) => {
-    if (!edit.valid) {
+  onConfirmEditButton = (info) => {
+    if (!info.valid) {
       return;
     }
     this.setState({
       items: this.state.items.map((item, idx) => {
         if (idx === this.state.editingItemIdx) {
           return {
-            'name': edit.name, 
-            'barcode_num': edit.barcode_num, 
-            'expiration_date': moment(edit.expiration_date).format("YYYY/MM/DD"),
-            'category_id': edit.category_id, 
-            'category_name': edit.category_name,
-            'container': edit.container, 
-            'count': parseInt(edit.count)
+            'name': info.name, 
+            'barcode_num': info.barcode_num, 
+            'expiration_date': moment(info.expiration_date).format("YYYY/MM/DD"),
+            'category_id': info.category_id, 
+            'category_name': info.category_name,
+            'container': info.container, 
+            'count': parseInt(info.count)
           };
         } else {
           return item;
@@ -63,26 +68,29 @@ class ItemConfirm extends Component {
   }
   
   onClickAddItemButton = () => {
-    // if (!this.validateInputs()) {
-    //   // set error message below input field 
-    //   return;
-    // }
+    this.setState({addDialogOpen: true})
+  }
+
+  onCancelAddButton = () => {
+    this.setState({addDialogOpen: false})
+  }
+
+  onConfirmAddButton = (info) => {
+    if (!info.valid) {
+      return;
+    }
     this.setState({
       items: this.state.items.concat({
-        'name': this.state.name_create, 
-        'barcode_num': this.state.barcode_create, 
-        'expiration_date': this.state.expiration_date_create,
-        'category_id': 1,
-        'category_name': this.state.category_name_create, 
-        'container': this.state.container_create, 
-        'count': parseInt(this.state.count_create)}),
-      name_create: '',
-      barcode_create: '',
-      expiration_date_create: '',
-      category_create: 0,
-      container_create: this.containers[0],
-      count_create: 0,
-    });
+        'name': info.name, 
+        'barcode_num': info.barcode_num, 
+        'expiration_date': moment(info.expiration_date).format("YYYY/MM/DD"),
+        'category_id': info.category_id, 
+        'category_name': info.category_name,
+        'container': info.container, 
+        'count': parseInt(info.count)
+      }),
+      addDialogOpen: false
+    })
   }
 
   onClickConfirmButton = () => {
@@ -141,58 +149,15 @@ class ItemConfirm extends Component {
         <Dialog open={this.state.editDialogOpen} onClose={() => this.setState({editDialogOpen: false})}>
           <EditItem itemInfo={this.state.item_edit} onCancelEdit={this.onCancelEditButton} onConfirmEdit={this.onConfirmEditButton}></EditItem>
         </Dialog>
+        <Dialog open={this.state.addDialogOpen} onClose={() => this.setState({addDialogOpen: false})}>
+          <EditItem itemInfo={this.state.item_add} onCancelEdit={this.onCancelAddButton} onConfirmEdit={this.onConfirmAddButton}></EditItem>
+        </Dialog>
 
         <Typography variant="h5">New Items</Typography>
         {newItems}
-        <Container>
-          <form>
-            <TextField 
-              value={this.state.name_create}
-              onChange={e => this.setState({name_create: e.target.value})}
-              className="item_name_create margin" 
-              label="Name"
-              margin="dense" />
-            <TextField 
-              value={this.state.barcode_create}
-              onChange={e => this.setState({barcode_create: e.target.value})}              
-              className="item_barcode_create margin" 
-              label="Barcode number"
-              margin="dense" />
-            <TextField 
-              value={this.state.expiration_date_create}
-              onChange={e => this.setState({expiration_date_create: e.target.value})}               
-              className="item_expiration_date_create margin" 
-              label="Expiration date"
-              margin="dense" />
-            <TextField 
-              value={this.state.count_create}
-              onChange={e => this.setState({count_create: e.target.value})}               
-              className="item_count_create margin" 
-              label="Count"
-              margin="dense" />
-            <InputLabel id="select_category_create_label">Category</InputLabel>
-            <TextField 
-              labelid="select_category_name_create_label"
-              value={this.state.category_name_create} 
-              onChange={e => this.setState({category_name_create: e.target.value})} 
-              className="item_category_name_create margin" 
-              label="Category">
-            </TextField>
-            <InputLabel id="select_container_label">Container</InputLabel>
-            <Select 
-              
-              labelid="select_container_label"
-              value={this.state.container_create} 
-              onChange={e => {this.setState({container_create: e.target.value}); console.log("set container")}} 
-              className="item_container_create margin" 
-              label="Container">
-              {this.containers.map(c => (
-                <MenuItem key={c} value={c}>{c}</MenuItem>
-              ))}
-            </Select>
-          </form>
-          <Button className="btn_add_item" onClick={this.onClickAddItemButton}>Add</Button>
-        </Container>
+
+        <Button className="btn_add_item" onClick={this.onClickAddItemButton}>Add New Item</Button>
+
         <Button className="btn_confirm" onClick={this.onClickConfirmButton}>Confirm</Button>
         <Button className="btn_webcam_mode" onClick={this.onClickWebcamModeButton}>Go to automatic mode</Button>
       </div>
