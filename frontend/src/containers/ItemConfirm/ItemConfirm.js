@@ -25,8 +25,6 @@ class ItemConfirm extends Component {
     item_edit: {},
     editDialogOpen: false,
     editingItemIdx: 0,
-    
-    
   }
 
   componentDidMount() {
