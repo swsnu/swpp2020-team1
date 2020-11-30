@@ -14,7 +14,6 @@ from django.contrib.auth import get_user_model
 from .models import Category, Barcode, Item, ItemCount, Recipe, RecipeComment, Notification
 from .init_db import initialize_category, initialize_recipe
 
-
 # Create your views here.
 
 def signup(request):
@@ -25,13 +24,14 @@ def signup(request):
     if request.method == 'POST':
         try:
             req_data = json.loads(request.body.decode())
-            username = req_data['username']
+            email = req_data['email']
             password = req_data['password']
+            nickname = req_data['nickname']
         except (KeyError, JSONDecodeError) as error:
             print(error)
             return HttpResponseBadRequest()
         user = get_user_model()
-        user.objects.create_user(username=username, password=password)
+        user.objects.create_user(username=email, password=password, first_name=nickname)
         return HttpResponse(status=201)
     else:
         return HttpResponseNotAllowed(['POST'])
@@ -72,6 +72,16 @@ def signout(request):
             return HttpResponse(status=204)
         else:
             return HttpResponse(status=401)
+    else:
+        return HttpResponseNotAllowed(['GET'])
+
+def user_info(request):
+    if request.method == 'GET':
+        if request.user.is_authenticated:
+            username_dic = { 'username' : request.user.username, 'user_id': request.user.id}
+            return JsonResponse(username_dic,status = 200)
+        else:
+            return HttpResponse(status = 401)
     else:
         return HttpResponseNotAllowed(['GET'])
 

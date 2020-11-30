@@ -7,6 +7,7 @@ import categoryReducer from './reducers/category';
 import recipeReducer from './reducers/recipe';
 
 import thunk from 'redux-thunk';
+import userReducer from './reducers/userReducer';
 
 const rootReducer = combineReducers({
   article: articleReducer,
@@ -15,6 +16,7 @@ const rootReducer = combineReducers({
   notification: notiReducer,
   category: categoryReducer,
   recipe: recipeReducer,
+  user: userReducer
 })
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
