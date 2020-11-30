@@ -2,6 +2,7 @@ import * as actionTypes from '../actions/actionTypes';
 
 const initialState = {
   recipes: [],
+  selectedRecipe: null,
   ratedRecipes: [],
 }
 
@@ -10,10 +11,7 @@ const recipeReducer = (state = initialState, action) => {
     case actionTypes.GET_RECIPES:
       return {...state, recipes: action.recipes};
     case actionTypes.GET_RECIPE:
-      return {...state, recipes: state.recipes.map(r => {
-        if (r.id === action.recipe.id) return action.recipe
-        else return r
-      })};
+      return {...state, selectedRecipe: action.recipe };
     case actionTypes.PUT_RECIPE:
       return {...state, recipes: state.recipes.map(r => {
         if (r.id === action.recipe.id) return action.recipe

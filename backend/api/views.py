@@ -452,7 +452,7 @@ def recipe_list(request):
                 'video_url': recipe.video_url,
                 'cuisine_type': recipe.cuisine_type,
                 'ingredients': [ingredient.id for ingredient in recipe.ingredients.all()],
-                'rating_average': -1 if recipe.rating_count == 0 else \
+                'rating_average': 0 if recipe.rating_count == 0 else \
                                 recipe.rating_sum / recipe.rating_count
             }
             for recipe in Recipe.objects.all()]
@@ -481,7 +481,7 @@ def recipe_info(request, recipe_id=0):
                 'video_url': recipe.video_url,
                 'cuisine_type': recipe.cuisine_type,
                 'ingredients': ingredients_list,
-                'rating_average': -1 if recipe.rating_count == 0 else \
+                'rating_average': 0 if recipe.rating_count == 0 else \
                                 recipe.rating_sum / recipe.rating_count
         })
     elif request.method == 'PUT':
@@ -545,6 +545,7 @@ def comment_list(request, recipe_id=0):
             {
                 'id': comm.id,
                 'content': comm.content,
+                'author_id': comm.author_id,
                 'author': get_user_model().objects.get(id=comm.author_id).username,
                 'recipe_id': comm.recipe_id,
                 'date': comm.date
@@ -574,6 +575,7 @@ def comment_list(request, recipe_id=0):
         response_dict = {
             'id': comm.id,
             'content': comm.content,
+            'author_id': request.user.id,
             'author': request.user.username,
             'recipe_id': comm.recipe_id,
             'date': comm.date
@@ -599,6 +601,7 @@ def comment_info(request, comment_id=0):
         return JsonResponse({
             'id': comm.id,
             'content': comm.content,
+            'author_id': comm.author.id,
             'author': comm.author.username,
             'recipe_id': comm.recipe_id,
             'date': comm.date
@@ -629,6 +632,7 @@ def comment_info(request, comment_id=0):
         return JsonResponse({
             'id': comm.id,
             'content': comm.content,
+            'author_id': comm.author.id,
             'author': comm.author.username,
             'recipe_id': comm.recipe_id,
             'date': comm.date
