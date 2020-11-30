@@ -21,4 +21,7 @@ export const SET_ISREAD = 'SET_ISREAD';
 export const GET_CATEGORIES = 'GET_CATEGORIES';
 
 // Recipe
-export const GET_RECIPES = 'GET_RECIPES'
+export const GET_RECIPES = 'GET_RECIPES';
+export const GET_RECIPE = 'GET_RECIPE';
+export const PUT_RECIPE = 'PUT_RECIPE';
+export const GET_RATED_RECIPES = 'GET_RATED_RECIPES';
