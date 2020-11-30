@@ -5,6 +5,7 @@ import json
 from json import JSONDecodeError
 from itertools import chain
 import datetime
+import random
 from datetime import timedelta
 from django.http import HttpResponse, JsonResponse, HttpResponseNotAllowed, HttpResponseBadRequest
 from django.contrib.auth import authenticate, login, logout
@@ -457,6 +458,50 @@ def recipe_list(request):
             }
             for recipe in Recipe.objects.all()]
         return JsonResponse(recipes, safe=False)
+    else:
+        return HttpResponseNotAllowed(['GET'])
+
+def recipe_search(request):
+    '''
+    recipe_search:
+        GET: get recipes by ingredients and preference
+    '''
+    if request.method == 'GET':
+        try:
+            body = request.body.decode()
+            ingredients_set = set(json.loads(body)['ingredients'])
+            preference = json.loads(body)['preference']
+        except (KeyError, JSONDecodeError) as error:
+            print(error)
+            return HttpResponseBadRequest()
+        recipe_queryset = None
+        if preference == 'all':
+            recipe_queryset = Recipe.objects.all()
+        else:
+            recipe_queryset = Recipe.objects.filter(cuisine_type=preference)
+        recipes = [
+            {
+                'id': recipe.id,
+                'title': recipe.title,
+                'description': recipe.description,
+                'video_url': recipe.video_url,
+                'cuisine_type': recipe.cuisine_type,
+                'ingredients': [ingredient.id for ingredient in recipe.ingredients.all()],
+                'rating_average': -1 if recipe.rating_count == 0 else \
+                                recipe.rating_sum / recipe.rating_count
+            }
+            for recipe in recipe_queryset]
+        for recipe in recipes:
+            recipe['num_ingredients'] = len(set(recipe['ingredients'])
+                .intersection(ingredients_set))
+        recipes_sorted = sorted(recipes, key=lambda recipe: -recipe['num_ingredients'])
+        recipes_with_ingredients = [recipe for recipe
+            in recipes_sorted if recipe['num_ingredients'] > 0]
+        if len(recipes_with_ingredients) > 0:
+            return JsonResponse(recipes_with_ingredients, safe=False)
+        else:
+            random.shuffle(recipes_sorted)
+            return JsonResponse(recipes_sorted[:10], safe=False)
     else:
         return HttpResponseNotAllowed(['GET'])
 
