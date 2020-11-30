@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import ItemContainer from '../ItemContainer/ItemContainer';
 import Basket from '../../components/Basket/Basket';
 import * as actionCreators from '../../store/actions/index';
+import * as userActionCreators from '../../store/actions/userAction';
 import { IconButton, Dialog, List, Typography, Button } from '@material-ui/core';
 import InboxIcon from '@material-ui/icons/Inbox'
 import NotiIcon from '@material-ui/icons/Notifications';
@@ -11,6 +12,7 @@ import Circle from '@material-ui/icons/Brightness1'
 import axios from 'axios';
 import NotiCard from '../../components/Notification/NotiCard';
 import './MainPage.css';
+import { Redirect } from 'react-router';
 
 class MainPage extends Component {
 
@@ -25,14 +27,26 @@ class MainPage extends Component {
     mode: "normal"
   }
 
-  // temporary user
+  // temporary
   user_id = 1;
 
   async componentDidMount() { 
+    if(this.props.currentUser !== 'SUCCESS') {
+      this.props.loginCheck()
+      // return  <Redirect to = "/signin" />
+    }
+
+    await axios.get('/back/user/')
+      .then(res => 
+        // this.user_id = res.data.user_id
+        this.user_id = 1
+       )
+      .catch(e => console.log(e)) 
+      
     // temporary login
-    await axios.post('/back/signin/', {'username': 'jaeseoklee', 'password': '0000'})
-      .then(res => console.log(res))
-      .catch(e => console.log(e))
+    // await axios.post('/back/signin/', {'username': 'jaeseoklee', 'password': '0000'})
+    //   .then(res => console.log(res))
+    //   .catch(e => console.log(e))
 
     await this.props.onGetUserItems(this.user_id);
     for (const item of this.props.items) {
@@ -298,6 +312,7 @@ const mapStateToProps = state => {
     items: state.item.items,
     itemcounts: state.itemcount.itemcounts,
     notifications: state.notification.notifications,
+    currentUser : state.user.login.status
   };
 }
 
@@ -307,6 +322,7 @@ const mapDispatchToProps = dispatch => {
     onGetItemCounts: (item_id) => dispatch(actionCreators.getItemCounts(item_id)),
     onGetUserNotiList: (user_id) => dispatch(actionCreators.getUserNotiList(user_id)),
     onSetIsRead: (noti_id) => dispatch(actionCreators.setIsRead(noti_id)),
+    loginCheck : (user) => dispatch (userActionCreators.loginCheckRequest())
   }
 }
 

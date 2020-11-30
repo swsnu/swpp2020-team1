@@ -8,6 +8,7 @@ import recipeReducer from './reducers/recipe';
 import commentReducer from './reducers/comment';
 
 import thunk from 'redux-thunk';
+import userReducer from './reducers/userReducer';
 
 const rootReducer = combineReducers({
   article: articleReducer,
@@ -17,6 +18,7 @@ const rootReducer = combineReducers({
   category: categoryReducer,
   recipe: recipeReducer,
   comment: commentReducer,
+  user: userReducer
 })
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
