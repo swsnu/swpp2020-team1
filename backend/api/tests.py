@@ -308,10 +308,10 @@ class ApiTestCase(TestCase):
         response = client.get('/back/recipe/1/')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()['title'], 'r1')
-        # recipe with 0 rating count -> average -1
+        # recipe with 0 rating count -> average 0
         response = client.get('/back/recipe/2/')
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json()['rating_average'], -1)
+        self.assertEqual(response.json()['rating_average'], 0)
         # recipe doesn't exist
         response = client.get('/back/recipe/10/')
         self.assertEqual(response.status_code, 404)
@@ -329,15 +329,9 @@ class ApiTestCase(TestCase):
         response = client.put('/back/recipe/10/', json.dumps({'rating':3}), content_type='application/json')
         self.assertEqual(response.status_code, 404)     
 
-        # already rated user
-        response = client.put('/back/recipe/1/', json.dumps({'rating':3}), content_type='application/json')
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json()['already_rated'], True)
-
-        # new user
+        # give rating
         response = client.put('/back/recipe/2/', json.dumps({'rating':3}), content_type='application/json')
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json()['already_rated'], False)
 
         ### NOT ALLOWED ###
         response = client.delete('/back/recipe/1/')

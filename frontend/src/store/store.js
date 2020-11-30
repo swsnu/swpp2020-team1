@@ -5,6 +5,7 @@ import itemcountReducer from './reducers/itemcount';
 import notiReducer from './reducers/notification';
 import categoryReducer from './reducers/category';
 import recipeReducer from './reducers/recipe';
+import commentReducer from './reducers/comment';
 
 import thunk from 'redux-thunk';
 import userReducer from './reducers/userReducer';
@@ -16,6 +17,7 @@ const rootReducer = combineReducers({
   notification: notiReducer,
   category: categoryReducer,
   recipe: recipeReducer,
+  comment: commentReducer,
   user: userReducer
 })
 

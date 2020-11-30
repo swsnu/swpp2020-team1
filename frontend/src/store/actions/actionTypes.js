@@ -21,7 +21,18 @@ export const SET_ISREAD = 'SET_ISREAD';
 export const GET_CATEGORIES = 'GET_CATEGORIES';
 
 // Recipe
-export const GET_RECIPES = 'GET_RECIPES'
+export const GET_RECIPES = 'GET_RECIPES';
+export const GET_RECIPE = 'GET_RECIPE';
+export const PUT_RECIPE = 'PUT_RECIPE';
+export const GET_RATED_RECIPES = 'GET_RATED_RECIPES';
+
+// Comments
+export const GET_COMMENTS = 'GET_COMMENTS';
+export const GET_COMMENT = 'GET_COMMENT';
+export const CREATE_COMMENT = 'CREATE_COMMENT';
+export const EDIT_COMMENT = 'EDIT_COMMENT';
+export const DELETE_COMMENT = 'DELETE_COMMENT';
+
 
 // User
 export const SIGN_UP = 'SIGN_UP';

@@ -463,7 +463,7 @@ def recipe_list(request):
                 'video_url': recipe.video_url,
                 'cuisine_type': recipe.cuisine_type,
                 'ingredients': [ingredient.id for ingredient in recipe.ingredients.all()],
-                'rating_average': -1 if recipe.rating_count == 0 else \
+                'rating_average': 0 if recipe.rating_count == 0 else \
                                 recipe.rating_sum / recipe.rating_count
             }
             for recipe in Recipe.objects.all()]
@@ -536,7 +536,7 @@ def recipe_info(request, recipe_id=0):
                 'video_url': recipe.video_url,
                 'cuisine_type': recipe.cuisine_type,
                 'ingredients': ingredients_list,
-                'rating_average': -1 if recipe.rating_count == 0 else \
+                'rating_average': 0 if recipe.rating_count == 0 else \
                                 recipe.rating_sum / recipe.rating_count
         })
     elif request.method == 'PUT':
@@ -557,6 +557,11 @@ def recipe_info(request, recipe_id=0):
             print(error)
             return HttpResponse(status=404)
 
+
+        recipe.rating_users.add(request.user)
+        recipe.rating_sum += rating
+        recipe.rating_count += 1
+        recipe.save()
         response_dict = {
             'id': recipe.id,
             'title': recipe.title,
@@ -564,24 +569,25 @@ def recipe_info(request, recipe_id=0):
             'video_url': recipe.video_url,
             'cuisine_type': recipe.cuisine_type,
             'ingredients': [ingredient.id for ingredient in recipe.ingredients.all()],
-            'rating_average': -1,
-            'already_rated': True
-        }
-        rating_users_id = [user['id'] for user in recipe.rating_users.all().values()]
-        if request.user.id in rating_users_id:
-            # user already rated this recipe -> don't change the rating
-            response_dict['rating_average'] = recipe.rating_sum / recipe.rating_count
-            return JsonResponse(response_dict)
-        else:
-            recipe.rating_users.add(request.user)
-            recipe.rating_sum += rating
-            recipe.rating_count += 1
-            recipe.save()
-            response_dict['already_rated'] = False
-            response_dict['rating_average'] = recipe.rating_sum / recipe.rating_count
-            return JsonResponse(response_dict)
+            'rating_average': recipe.rating_sum / recipe.rating_count,
+        }        
+        return JsonResponse(response_dict)
     else:
         return HttpResponseNotAllowed(['GET', 'PUT'])
+
+def recipe_rating(request):
+    '''
+    recipe_list:
+        GET: get recipe list that the user has given rating
+    '''
+    if request.method == 'GET':
+        # check if logged in
+        if not request.user.is_authenticated:
+            return HttpResponse(status=401)
+        recipe_ids = [recipe.id for recipe in request.user.rated_recipe_set.all()]
+        return JsonResponse(recipe_ids, safe=False)
+    else:
+        return HttpResponseNotAllowed(['GET'])
 
 def comment_list(request, recipe_id=0):
     '''
@@ -594,6 +600,7 @@ def comment_list(request, recipe_id=0):
             {
                 'id': comm.id,
                 'content': comm.content,
+                'author_id': comm.author_id,
                 'author': get_user_model().objects.get(id=comm.author_id).username,
                 'recipe_id': comm.recipe_id,
                 'date': comm.date
@@ -623,6 +630,7 @@ def comment_list(request, recipe_id=0):
         response_dict = {
             'id': comm.id,
             'content': comm.content,
+            'author_id': request.user.id,
             'author': request.user.username,
             'recipe_id': comm.recipe_id,
             'date': comm.date
@@ -648,6 +656,7 @@ def comment_info(request, comment_id=0):
         return JsonResponse({
             'id': comm.id,
             'content': comm.content,
+            'author_id': comm.author.id,
             'author': comm.author.username,
             'recipe_id': comm.recipe_id,
             'date': comm.date
@@ -678,6 +687,7 @@ def comment_info(request, comment_id=0):
         return JsonResponse({
             'id': comm.id,
             'content': comm.content,
+            'author_id': comm.author.id,
             'author': comm.author.username,
             'recipe_id': comm.recipe_id,
             'date': comm.date
