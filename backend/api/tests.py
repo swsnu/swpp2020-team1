@@ -329,15 +329,9 @@ class ApiTestCase(TestCase):
         response = client.put('/back/recipe/10/', json.dumps({'rating':3}), content_type='application/json')
         self.assertEqual(response.status_code, 404)     
 
-        # already rated user
-        response = client.put('/back/recipe/1/', json.dumps({'rating':3}), content_type='application/json')
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json()['already_rated'], True)
-
-        # new user
+        # give rating
         response = client.put('/back/recipe/2/', json.dumps({'rating':3}), content_type='application/json')
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json()['already_rated'], False)
 
         ### NOT ALLOWED ###
         response = client.delete('/back/recipe/1/')

@@ -502,6 +502,11 @@ def recipe_info(request, recipe_id=0):
             print(error)
             return HttpResponse(status=404)
 
+
+        recipe.rating_users.add(request.user)
+        recipe.rating_sum += rating
+        recipe.rating_count += 1
+        recipe.save()
         response_dict = {
             'id': recipe.id,
             'title': recipe.title,
@@ -509,24 +514,25 @@ def recipe_info(request, recipe_id=0):
             'video_url': recipe.video_url,
             'cuisine_type': recipe.cuisine_type,
             'ingredients': [ingredient.id for ingredient in recipe.ingredients.all()],
-            'rating_average': -1,
-            'already_rated': True
-        }
-        rating_users_id = [user['id'] for user in recipe.rating_users.all().values()]
-        if request.user.id in rating_users_id:
-            # user already rated this recipe -> don't change the rating
-            response_dict['rating_average'] = recipe.rating_sum / recipe.rating_count
-            return JsonResponse(response_dict)
-        else:
-            recipe.rating_users.add(request.user)
-            recipe.rating_sum += rating
-            recipe.rating_count += 1
-            recipe.save()
-            response_dict['already_rated'] = False
-            response_dict['rating_average'] = recipe.rating_sum / recipe.rating_count
-            return JsonResponse(response_dict)
+            'rating_average': recipe.rating_sum / recipe.rating_count,
+        }        
+        return JsonResponse(response_dict)
     else:
         return HttpResponseNotAllowed(['GET', 'PUT'])
+
+def recipe_rating(request):
+    '''
+    recipe_list:
+        GET: get recipe list that the user has given rating
+    '''
+    if request.method == 'GET':
+        # check if logged in
+        if not request.user.is_authenticated:
+            return HttpResponse(status=401)
+        recipe_ids = [recipe.id for recipe in request.user.rated_recipe_set.all()]
+        return JsonResponse(recipe_ids, safe=False)
+    else:
+        return HttpResponseNotAllowed(['GET'])
 
 def comment_list(request, recipe_id=0):
     '''
