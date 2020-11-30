@@ -3,3 +3,4 @@ export { getItemCounts, editItemCount } from './itemcount';
 export { getUserNotiList, setIsRead } from './notification';
 export { getCategories } from './category';
 export { getRecipes, getRecipe, putRecipe, getRatedRecipes } from './recipe';
+export { getComments, getComment, createComment, editComment, deleteComment } from './comment';
