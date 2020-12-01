@@ -132,6 +132,7 @@ class RecipeDetail extends Component {
           <DialogContent>
             <Rating
               value={this.state.newRating}
+              precision={0.5}
               onChange={(event, value) => this.setState({newRating: value})}
               onChangeActive={(event, hoverValue) => this.setState({hoverRating: hoverValue})}
               name="newRating"/>
