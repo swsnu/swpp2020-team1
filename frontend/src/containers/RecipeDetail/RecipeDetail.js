@@ -119,7 +119,7 @@ class RecipeDetail extends Component {
               precision={0.1}
               readOnly
               name="ratingAverage"/>
-            <Typography>{this.props.selectedRecipe.rating_average || "아직 별점이 없어요!"}</Typography>
+            <Typography>{this.props.selectedRecipe.rating_average.toFixed(2) || "아직 별점이 없어요!"}</Typography>
           </div>
           <Button onClick={this.onClickRatingButton} disabled={alreadyRated}>{alreadyRated ? "평가 완료" : "별점 주기"}</Button>
           {/* Rating Dialog */}
