@@ -4,12 +4,15 @@ const initialState = {
   recipes: [],
   selectedRecipe: null,
   ratedRecipes: [],
+  searchResults: [],
 }
 
 const recipeReducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.GET_RECIPES:
       return {...state, recipes: action.recipes};
+    case actionTypes.SEARCH_RECIPES:
+      return {...state, searchResults: action.searchResults}
     case actionTypes.GET_RECIPE:
       return {...state, selectedRecipe: action.recipe };
     case actionTypes.PUT_RECIPE:

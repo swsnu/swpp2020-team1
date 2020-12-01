@@ -170,10 +170,21 @@ class MainPage extends Component {
     }
   }
 
+  getCategoryList = (itemIds) => {
+    let categories = []
+    for (let id of itemIds) {
+      let item = this.props.items.find(elem => elem.id === id)
+      categories.push(item.category_id)
+    } 
+    return Array.from(new Set(categories)); // make unique
+  }
+
   onClickRecipeButton = () => {
     if (this.state.selectedCuisine) {
       document.getElementsByClassName(this.state.selectedCuisine)[0].style.background = "#F4F4F4";
     }
+    let categoryList = this.getCategoryList(this.state.selectedItemIds);
+    this.props.onSearchRecipes(categoryList, this.state.selectedCuisine.toLowerCase());
     this.setState({ mode: "normal", selectedCuisine: null, selectedItemIds: [] });
     document.getElementsByClassName("ItemSelectButton")[0].style.background = "#E8A065";
     document.getElementsByClassName("ItemSelectDiv")[0].style.height = "55px";
@@ -181,6 +192,7 @@ class MainPage extends Component {
     for(let i = 0; i < removeItemButtons.length; i++) {
       removeItemButtons[i].style.visibility = "visible";
     }
+    this.props.history.push('/recipes')
   }
 
   onClickSelectItem = (id) => {
@@ -322,6 +334,7 @@ const mapDispatchToProps = dispatch => {
     onGetItemCounts: (item_id) => dispatch(actionCreators.getItemCounts(item_id)),
     onGetUserNotiList: (user_id) => dispatch(actionCreators.getUserNotiList(user_id)),
     onSetIsRead: (noti_id) => dispatch(actionCreators.setIsRead(noti_id)),
+    onSearchRecipes: (ingredients, preference) => dispatch(actionCreators.searchRecipes(ingredients, preference)),
     loginCheck : (user) => dispatch (userActionCreators.loginCheckRequest())
   }
 }

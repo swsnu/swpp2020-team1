@@ -3,6 +3,7 @@ import axios from 'axios';
 axios.defaults.xsrfCookieName = 'csrftoken';
 axios.defaults.xsrfHeaderName = 'X-CSRFToken';
 
+// jaeseok: no need?
 export const getRecipes_ = (recipes) => {
     return { type: actionTypes.GET_RECIPES, recipes };
 };
@@ -11,6 +12,18 @@ export const getRecipes = () => {
     return dispatch => {
         return axios.get(`/back/recipe/`)
                     .then(res => dispatch(getRecipes_(res.data)))
+                    .catch(e => {});
+    }; 
+};
+
+export const searchRecipes_ = (searchResults) => {
+    return { type: actionTypes.SEARCH_RECIPES, searchResults };
+};
+
+export const searchRecipes = (ingredients, preference) => {  
+    return dispatch => {
+        return axios.post(`/back/recipe/search/`, {ingredients: ingredients, preference: preference})
+                    .then(res => dispatch(searchRecipes_(res.data)))
                     .catch(e => {});
     }; 
 };

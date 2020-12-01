@@ -7,6 +7,30 @@
     height: 100%;
 }
 
+.RecipeInfo {
+    margin-left: 10px;
+}
+
+.RecipeTitle {
+    color: #343434;
+    font-size: 15px;
+    font-family: Roboto, sans-serif;
+    margin-bottom: 5px;
+}
+
+.RecipeScore {
+    color: #818181;
+    font-size: 14px;
+    font-family: Roboto, sans-serif;
+}
+
+.NoSearchResults {
+    color: #343434;
+    margin-top: 15px;
+    font-size: 15px;
+    font-family: Roboto, sans-serif;
+}
+
 .title {
     left: 0px;
     top: 8px;
@@ -28,111 +52,4 @@
 .title .titleBlack {
     color: #000000;
     display: inline-block;
-}
-
-.ItemSelectButton {
-    box-shadow: 0px -3px 4px rgba(0, 0, 0, 0.12);
-    margin-top: 5px;
-    line-height: 50px;
-    
-    height: auto;
-    transition: background-color 0.5s;
-
-    background: #E8A065;
-    border-radius: 8px;
-    resize: none;
-}
-
-.ItemSelectButton:hover {
-    cursor: pointer;
-}
-
-.ItemSelectDiv {
-    position: absolute;
-    width: 100%;
-    height: 55px;
-    left: 0px;
-    bottom: 0px;
-    overflow: hidden;
-    z-index: 50;
-    transition: all 0.5s;
-}
-
-.btn_notification {
-    position: absolute;
-    right: 10px;
-    top: 0px;
-}
-
-.btn_notification:hover {
-    cursor: pointer;
-}
-
-.btn_bell {
-    vertical-align: middle;
-}
-
-.btn_bell:hover {
-    border-radius: 50%;
-    background-color: rgba(60, 60, 60, 0.30);
-}
-
-.ItemSelectButtonHeader {
-    font-family: Roboto, sans-serif;
-    font-style: normal;
-    font-weight: 900;
-    font-size: 18px;
-
-    text-align: center;
-    letter-spacing: 0.25px;
-    color: #FFFFFF;
-}
-
-.ItemSelectButtonMain {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-}
-
-.btn_preference {
-    width: 20%;
-    max-width: 100px;
-    text-align: center;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-
-    border-radius: 50%;
-    background-color: #f4f4f4;
-    box-shadow: 0px -3px 4px rgba(0, 0, 0, 0.12);
-
-    font-family: Roboto, sans-serif;
-    font-style: normal;
-    font-weight: 900;
-    font-size: 12px;
-    line-height: 24px;
-
-    margin: 2.5%;
-}
-
-.btn_preference:after {
-  content: '';
-  padding-top: 100%;
-}
-
-.ItemSelectButtonFooter {
-    z-index: 15;
-    width: 100%;
-    height: 50px;
-    bottom: 50px; 
-    background-color: #373645;
-
-    font-family: Roboto, sans-serif;
-    font-style: normal;
-    font-weight: 500;
-    font-size: 20px;
-    color: #FFFFFF;
-
-    align-content: center;
-    vertical-align: middle;
 }
