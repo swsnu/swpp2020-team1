@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as actionCreators from '../../store/actions/index';
-import axios from 'axios';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import './RecipeRecommend.css';
-import { List, ListItem } from '@material-ui/core';
+import { List, ListItem, IconButton } from '@material-ui/core';
 
 class RecipeRecommend extends Component {
 
@@ -28,6 +28,10 @@ class RecipeRecommend extends Component {
 
   goToRecipeDetail = (id) => {
     this.props.history.push(`/recipes/${id}`)
+  }
+
+  onClickBackButton = () => {
+    this.props.history.goBack()
   }
 
   componentWillUnmount() {
@@ -55,6 +59,9 @@ class RecipeRecommend extends Component {
     return (
         <div className="RecipeRecommend">
           <div className="title">
+            <div className="btn_back" onClick={this.onClickBackButton}>
+              <IconButton className="btn_arrow"><ArrowBackIcon/></IconButton>
+            </div>
             <div className="titleOrange">Food</div>
             <div className="titleBlack">ify</div>
           </div>
