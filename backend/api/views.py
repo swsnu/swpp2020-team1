@@ -476,14 +476,16 @@ def recipe_search(request):
     recipe_search:
         GET: get recipes by ingredients and preference
     '''
-    if request.method == 'GET':
+    print(request)
+    if request.method == 'POST':
         try:
             body = request.body.decode()
-            ingredients_set = set(json.loads(body)['ingredients'])
+            ingredients = json.loads(body)['ingredients']
             preference = json.loads(body)['preference']
         except (KeyError, JSONDecodeError) as error:
             print(error)
             return HttpResponseBadRequest()
+        ingredients_set = set(ingredients)
         recipe_queryset = None
         if preference == 'all':
             recipe_queryset = Recipe.objects.all()
@@ -513,7 +515,7 @@ def recipe_search(request):
             random.shuffle(recipes_sorted)
             return JsonResponse(recipes_sorted[:10], safe=False)
     else:
-        return HttpResponseNotAllowed(['GET'])
+        return HttpResponseNotAllowed(['POST'])
 
 def recipe_info(request, recipe_id=0):
     '''
