@@ -295,8 +295,8 @@ class MainPage extends Component {
                   onClick={() => this.onClickSelectPreference("Japanese")}>Japanese</div>
                 <div className="btn_preference Chinese"
                   onClick={() => this.onClickSelectPreference("Chinese")}>Chinese</div>
-                <div className="btn_preference Italian"
-                  onClick={() => this.onClickSelectPreference("Italian")}>Italian</div>
+                <div className="btn_preference Western"
+                  onClick={() => this.onClickSelectPreference("Western")}>Western</div>
               </div>
               <div className="ItemSelectButtonFooter"
                 onClick={this.onClickRecipeButton}>Move</div>
