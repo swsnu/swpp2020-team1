@@ -80,7 +80,7 @@ class Recipe(models.Model):
     description = models.TextField()
     video_url = models.CharField(max_length=256)
     cuisine_type = models.CharField(max_length=32, default='')
-    rating_sum = models.PositiveIntegerField(default=0)
+    rating_sum = models.FloatField(default=0)
     rating_count = models.PositiveIntegerField(default=0)
     rating_users = models.ManyToManyField(
         settings.AUTH_USER_MODEL,

@@ -4,7 +4,7 @@ import { withRouter } from 'react-router-dom';
 import * as actionCreators from '../../store/actions/index';
 import Comment from '../../components/Comment/Comment';
 import './RecipeDetail.css';
-import { TextField, Button, IconButton, Typography } from '@material-ui/core';
+import { TextField, Button, IconButton, Typography, Box } from '@material-ui/core';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import CreateIcon from '@material-ui/icons/Create';
 import Dialog from '@material-ui/core/Dialog';
@@ -23,7 +23,9 @@ class RecipeDetail extends Component {
     editCommentId: 0,
     editCommentContent: '',
     editCommentDialogOpen: false,
-    newRating: 0,
+    newRating: 5,
+    hoverRating: -1,
+    ratingWarning: false,
     ratingDialogOpen: false,
   }
 
@@ -42,12 +44,16 @@ class RecipeDetail extends Component {
   }
 
   onCloseRatingDialog = () => {
-    this.setState({ratingDialogOpen: false, newRating: 0})
+    this.setState({ratingDialogOpen: false, newRating: 5, ratingWarning: false})
   }
 
   onConfirmRating = () => {
+    if (this.state.newRating === null) {
+      this.setState({ratingWarning: true})
+      return;
+    }
     this.props.giveRating(this.props.match.params.id, this.state.newRating)
-    this.setState({ratingDialogOpen: false, newRating: 0})
+    this.setState({ratingDialogOpen: false, newRating: 5, ratingWarning: false})
   }
 
   onClickCreateButton = () => {
@@ -113,7 +119,7 @@ class RecipeDetail extends Component {
               precision={0.1}
               readOnly
               name="ratingAverage"/>
-            <Typography>{this.props.selectedRecipe.rating_average || "아직 별점이 없어요!"}</Typography>
+            <Typography>{this.props.selectedRecipe.rating_average.toFixed(2) || "아직 별점이 없어요!"}</Typography>
           </div>
           <Button onClick={this.onClickRatingButton} disabled={alreadyRated}>{alreadyRated ? "평가 완료" : "별점 주기"}</Button>
           {/* Rating Dialog */}
@@ -126,9 +132,12 @@ class RecipeDetail extends Component {
           <DialogContent>
             <Rating
               value={this.state.newRating}
-              onChange={(event, value) => {this.setState({newRating: value})}}
-              name="newRating"
-              />
+              precision={0.5}
+              onChange={(event, value) => this.setState({newRating: value})}
+              onChangeActive={(event, hoverValue) => this.setState({hoverRating: hoverValue})}
+              name="newRating"/>
+            {this.state.hoverRating === -1 ? this.state.newRating : this.state.hoverRating}
+            <Box display={this.state.ratingWarning ? "" : "none"}><Typography color="error">별점을 입력해주세요!</Typography></Box>
           </DialogContent>
           <DialogActions>
             <Button onClick={this.onCloseRatingDialog} color="primary">취소</Button>
