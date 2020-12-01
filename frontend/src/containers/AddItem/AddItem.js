@@ -252,20 +252,6 @@ class AddItem extends Component {
     })
   }
 
-  onClickCountMinusButton = () => {
-    if(this.state.currentResult != null && this.state.currentResult.count > 1) {
-      let updated_num = parseInt(this.state.currentResult.count) - 1
-      this.setState({ currentResult: { ...this.state.currentResult, count: updated_num }})
-    } else {
-      this.setState({ currentResult: { ...this.state.currentResult, count: 1 }})
-    }
-  }
-
-  onClickCountPlusButton = () => {
-    let updated_num = this.state.currentResult.count ? parseInt(this.state.currentResult.count) + 1 : 1;
-    this.setState({ ...this.state, currentResult: { ...this.state.currentResult, count: updated_num }})
-  }
-
   //function for EditItem component
   onCancelEditButton = () => {
     this.setState({is_editing: false});
@@ -293,42 +279,22 @@ class AddItem extends Component {
   render() {
     return (
       <React.Fragment>
-        <Grid
-        container
-        direction="column"
-        justify="flex-end"
-        alignItems="center"
-        >
-          <Grid item xs={12}>
-            <Dialog open={this.state.is_editing}>
-              <EditItem itemInfo={this.state.currentResult} onCancelEdit={this.onCancelEditButton} onConfirmEdit={this.onConfirmEditButton}></EditItem>
-            </Dialog>
-            <div>
-              <div className="results" style={{backgroundColor: '#EEEEEE'}/*{backgroundColor: '#EEEEEE', position: 'absolute', zIndex: '2'}*/}>
-                {!this.state.is_confirmed ? <Result result={this.state.currentResult}
-                    onClickCountMinus={this.onClickCountMinusButton}
-                    onClickCountPlus={this.onClickCountPlusButton}
-                    onClickRetakeBarcode={this.onClickRetakeBarcodeButton}
-                    onClickRetakeExpirationDate={this.onClickRetakeExpirationDateButton} 
-                    onClickEdit={this.onClickEditButton} /> : null }
-              </div>
-              <div style={{backgroundColor: '#FFFFFF'}/*{position: 'absolute', zIndex : '1'}*/}>
-                <Button id="AddManuallyButton" onClick={this.onClickManualAddButton}>Add Manually</Button>
-                <Typography>{ this.state.is_retaking ? "(Retaking)" : (this.state.is_barcode_scanning ? BARCODE_TERM : EXPIRATION_TERM) }</Typography>
-                <div>
-                      <Scanner id="Scanner" onDetected={this._onDetected} onCapture={this.handleOCR} barcode={this.state.is_barcode_scanning} ref="Scanner"/> 
-                </div>
-              </div>
-            </div>
-          </Grid>
-          <Grid item xs={12}>
-          </Grid>
-          <div>
+        <div>
+          <Scanner id="Scanner" onDetected={this._onDetected} onCapture={this.handleOCR} barcode={this.state.is_barcode_scanning} ref="Scanner"/> 
+        </div>
+        <div>
+          <div className="results">
+            {!this.state.is_confirmed ? <Result result={this.state.currentResult}
+                onClickRetakeBarcode={this.onClickRetakeBarcodeButton}
+                onClickRetakeExpirationDate={this.onClickRetakeExpirationDateButton} /> : null }
+          </div>
+          <div style={{backgroundColor: '#FFFFFF'}/*{position: 'absolute', zIndex : '1'}*/}>
+            <Button id="AddManuallyButton" onClick={this.onClickManualAddButton}>Add Manually</Button>
+            <Typography>{ this.state.is_retaking ? "(Retaking)" : (this.state.is_barcode_scanning ? BARCODE_TERM : EXPIRATION_TERM) }</Typography>
             {(this.state.currentResult != null) ? 
-              <Button id='onClickMoveToConfirmButton' onClick={this.onClickMoveToConfirmButton}>Move to ConfirmItem</Button> : 
-              null}
-          </div> 
-        </Grid>
+              <Button id='onClickMoveToConfirmButton' onClick={this.onClickMoveToConfirmButton}>Move to ConfirmItem</Button> : null}
+          </div>
+        </div>
       </React.Fragment>
     );
   }

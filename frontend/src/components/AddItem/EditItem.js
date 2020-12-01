@@ -9,6 +9,8 @@ import {DatePicker, KeyboardDatePicker, MuiPickersUtilsProvider} from '@material
 import DateFnsUtils from '@date-io/date-fns';
 import axios from 'axios';
 
+import './EditItem.css';
+
 class EditItem extends Component {
   containers = ['freezer', 'fridge', 'shelf'];
   categories = []
@@ -84,33 +86,61 @@ class EditItem extends Component {
   render() {
     return (
       <Fragment>
-        <DialogTitle id="edit_dialog_title">Edit your item</DialogTitle>
-        <DialogContent>
-          <form>
-            <TextField
+        <div className="EditItem">
+          <table>
+            <tr>
+              <td className="tableContentName"><p>Name</p></td>
+              <td>
+                <TextField inputProps={{style: {fontSize: 13}}}
               error={this.state.name === "" ? true : false}
               value={this.state.name}
-              helperText={this.state.name === "" ? "이름을 입력해주세요" : ""}
+              helperText={/*this.state.name === "" ? "이름을 입력해주세요" : ""*/""}
               onChange={e => {this.setState({ name: e.target.value }); this.checkValidity(e.target.value, this.state.expiration_date)}}
               className="item_name_edit margin" 
-              label="Name"
               margin="dense" />
-            <TextField 
-              value={this.state.barcode_num}
-              onChange={e => this.setState({ barcode_num: e.target.value })}
-              className="item_barcode_edit margin" 
-              label="Barcode number"
-              margin="dense" />
-            <MuiPickersUtilsProvider utils={DateFnsUtils}>
-              <KeyboardDatePicker
-                openTo="year"
-                format="yyyy/MM/dd"
-                label="Expiration date"
-                views={["year", "month", "date"]}
-                value={this.state.expiration_date === '' ? Date.now() : this.state.expiration_date}
-                onChange={(date) => {this.setState({expiration_date: date}); this.checkValidity(this.state.name, date)}}
-              />           
-            </MuiPickersUtilsProvider>
+              </td>
+            </tr>
+            <tr>
+              <td className="tableContentName"><p>Barcode Number</p></td>
+              <td>
+                <TextField inputProps={{style: {fontSize: 13}}}
+                  value={this.state.barcode_num}
+                  onChange={e => this.setState({ barcode_num: e.target.value })}
+                  className="item_barcode_edit margin" 
+                  margin="dense" />
+              </td>
+            </tr>
+            <tr>
+              <td className="tableContentName"><p>Expiration Date</p></td>
+              <td>
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                  <KeyboardDatePicker inputProps={{style: {fontSize: 13}}}
+                    openTo="year"
+                    format="yyyy/MM/dd"
+                    views={["year", "month", "date"]}
+                    value={this.state.expiration_date === '' ? Date.now() : this.state.expiration_date}
+                    onChange={(date) => {this.setState({expiration_date: date}); this.checkValidity(this.state.name, date)}}
+                  />           
+                </MuiPickersUtilsProvider>
+              </td>
+            </tr>
+            <tr>
+              <td className="tableContentName"><p>Category</p></td>
+              <td>
+                <Autocomplete 
+                  value={this.state.category_name}
+                  options={this.categories}
+                  getOptionLabel={(option) => {return (option.name ? option.name : option)}}
+                  id="auto-select"
+                  autoSelect
+                  freeSolo={true}
+                  onChange={this.onCategoryChange}
+                  renderInput={(params) =>
+                    <TextField {...params} />}/>
+              </td>
+            </tr>
+          </table>
+          <div className="EditItemContent">
             <TextField 
               type="number"
               value={this.state.count}
@@ -118,17 +148,7 @@ class EditItem extends Component {
               className="item_count_edit margin" 
               label="Count"
               margin="dense" />
-            <Autocomplete
-              value={this.state.category_name}
-              options={this.categories}
-              getOptionLabel={(option) => {return (option.name ? option.name : option)}}
-              id="auto-select"
-              autoSelect
-              freeSolo={true}
-              onChange={this.onCategoryChange}
-              renderInput={(params) =>
-                <TextField {...params}
-                  label="Category" margin="normal" />}/>
+            
             <InputLabel id="select_container_label">Container</InputLabel>
             <Select 
               labelId="select_container_label"
@@ -140,12 +160,12 @@ class EditItem extends Component {
                 <MenuItem key={c} value={c}>{c}</MenuItem>
               ))}
             </Select>
-          </form>
-        </DialogContent>
-        <DialogActions>
+          </div>
+        </div>
+        {/*<DialogActions>
           <Button className="btn_cancel_edit" onClick={this.props.onCancelEdit}>Cancel</Button>
           <Button className="btn_confirm_edit" onClick={() => this.props.onConfirmEdit({...this.state})}>Ok</Button>
-        </DialogActions>
+        </DialogActions>*/}
       </Fragment>
     )
   }

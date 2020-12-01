@@ -8,8 +8,14 @@
   margin: 0 auto;
 }
 
-.Scanner .drawingBuffer {
+.drawingBuffer {
+  z-index: 0;
   position: absolute;
   top: 0;
   left: 0;
+}
+
+.videoCamera {
+  height: 100%;
+  width: 100%;
 }

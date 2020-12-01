@@ -1,4 +1,26 @@
 .Result {
-  border: 2px solid #000000;
+  position: absolute;
+  z-index: 2;
+  left: 0px;
+  top: 0px;
+  width: 100%;
 
+  filter: drop-shadow(0px -3px 4px rgba(0, 0, 0, 0.2));
+  border-radius: 18px;
+
+  background: #F4F4F4;
+}
+
+.Result .Name {
+  font-family: Source Code Pro;
+  font-style: normal;
+  font-weight: 900;
+  font-size: 18px;
+  line-height: 24px;
+  /* identical to box height, or 133% */
+
+  text-align: center;
+  letter-spacing: 0.25px;
+
+  color: #7DBF1A;
 }
