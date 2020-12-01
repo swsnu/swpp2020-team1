@@ -151,6 +151,16 @@ class MainPage extends Component {
     })
   }
 
+  switchToNormalMode = () => {
+    this.setState({ mode: "normal", selectedCuisine: null, selectedItemIds: [] });
+    document.getElementsByClassName("ItemSelectButton")[0].style.background = "#E8A065";
+    document.getElementsByClassName("ItemSelectDiv")[0].style.height = "55px";
+    let removeItemButtons = document.getElementsByClassName("btn_remove_item");
+    for(let i = 0; i < removeItemButtons.length; i++) {
+      removeItemButtons[i].style.visibility = "visible";
+    }
+  }
+
   onClickItemSelectButton = () => {
     if(this.state.mode === "normal") {
       this.setState({ mode: "select" });
@@ -161,7 +171,7 @@ class MainPage extends Component {
       }
     } else if(this.state.mode === "select") {
       if(this.state.selectedItemIds.length < 1) {
-        alert("please select one or more ingredients!");
+        this.switchToNormalMode();
       } else {
         this.setState({ mode: "preference" })
         document.getElementsByClassName("ItemSelectDiv")[0].style.height =
@@ -180,18 +190,14 @@ class MainPage extends Component {
   }
 
   onClickRecipeButton = () => {
+    let selectedCuisine = 'all'
     if (this.state.selectedCuisine) {
+      selectedCuisine = this.state.selectedCuisine.toLowerCase()
       document.getElementsByClassName(this.state.selectedCuisine)[0].style.background = "#F4F4F4";
     }
     let categoryList = this.getCategoryList(this.state.selectedItemIds);
-    this.props.onSearchRecipes(categoryList, this.state.selectedCuisine.toLowerCase());
-    this.setState({ mode: "normal", selectedCuisine: null, selectedItemIds: [] });
-    document.getElementsByClassName("ItemSelectButton")[0].style.background = "#E8A065";
-    document.getElementsByClassName("ItemSelectDiv")[0].style.height = "55px";
-    let removeItemButtons = document.getElementsByClassName("btn_remove_item");
-    for(let i = 0; i < removeItemButtons.length; i++) {
-      removeItemButtons[i].style.visibility = "visible";
-    }
+    this.props.onSearchRecipes(categoryList, selectedCuisine);
+    this.switchToNormalMode();
     this.props.history.push('/recipes')
   }
 

@@ -36,7 +36,7 @@ class RecipeDetail extends Component {
   }
 
   onClickBackButton = () => {
-    this.props.history.push('/recipes')
+    this.props.history.goBack()
   }
 
   onClickRatingButton = () => {

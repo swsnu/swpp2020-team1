@@ -35,13 +35,13 @@
     left: 0px;
     top: 8px;
     width: 100%;
-
     font-family: "Source Code Pro", sans-serif;
     font-style: normal;
     font-weight: 900;
     font-size: 36px;
     line-height: 45px;
     text-align: center;
+    padding-bottom: 10px;
 }
 
 .title .titleOrange {
@@ -52,4 +52,14 @@
 .title .titleBlack {
     color: #000000;
     display: inline-block;
+}
+
+.btn_back {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+}
+
+.btn_arrow {
+    vertical-align: middle;
 }
