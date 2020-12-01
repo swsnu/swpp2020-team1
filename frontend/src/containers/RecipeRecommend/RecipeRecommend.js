@@ -39,7 +39,6 @@ class RecipeRecommend extends Component {
   }
 
   render() {
-    console.log("searchResults: " + JSON.stringify(this.props.searchResults))
     let results = this.props.searchResults.map(recipe => {
       const videoUrl = recipe.video_url
       const videoKey = videoUrl.substring(videoUrl.lastIndexOf('=') + 1)
