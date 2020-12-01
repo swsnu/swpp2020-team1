@@ -206,7 +206,7 @@ class MainPage extends Component {
     if(tempSelectedItemIds.filter(i => i === id).length > 0) {
       tempSelectedItemIds = tempSelectedItemIds.filter(i => i !== id);
     } else {
-      if(tempSelectedItemIds.length >= 3) {
+      if(tempSelectedItemIds.length >= 5) {
         tempSelectedItemIds.shift();
       }
       tempSelectedItemIds.push(id);
