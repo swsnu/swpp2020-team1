@@ -12,9 +12,12 @@ import Result from '../../components/AddItem/Result';
 import dataURLtoFile from '../../components/AddItem/URLtoFile';
 import EditItem from '../../components/AddItem/EditItem';
 import moment from 'moment';
+import './AddItem.css';
 
-const BARCODE_TERM = 'Scanning Barcode...'
-const EXPIRATION_TERM = 'Scanning Expiration Date...'
+const BARCODE_TERM = 'SCAN the barcode'
+const EXPIRATION_TERM = 'MOVE to expiration date and TOUCH the screen'
+
+
 
 class AddItem extends Component {
   containers = ['freezer', 'fridge', 'shelf'];
@@ -277,25 +280,29 @@ class AddItem extends Component {
   }
 
   render() {
+    if(document.getElementsByClassName("Result").length > 0) {
+      if(this.state.is_confirmed) {
+        document.getElementsByClassName("Result")[0].style.top = "-300px";
+      } else {
+        document.getElementsByClassName("Result")[0].style.top = "0px";
+      }
+    }
+
     return (
-      <React.Fragment>
-        <div>
-          <Scanner id="Scanner" onDetected={this._onDetected} onCapture={this.handleOCR} barcode={this.state.is_barcode_scanning} ref="Scanner"/> 
+      <div className="AddItem" style={{overflowX: "hidden", overflowY: "hidden"}}>
+        <Scanner id="Scanner" onDetected={this._onDetected} onCapture={this.handleOCR} barcode={this.state.is_barcode_scanning} ref="Scanner"/> 
+        <div className="results">
+          <Result result={this.state.currentResult}
+              onClickRetakeBarcode={this.onClickRetakeBarcodeButton}
+              onClickRetakeExpirationDate={this.onClickRetakeExpirationDateButton} />
         </div>
-        <div>
-          <div className="results">
-            {!this.state.is_confirmed ? <Result result={this.state.currentResult}
-                onClickRetakeBarcode={this.onClickRetakeBarcodeButton}
-                onClickRetakeExpirationDate={this.onClickRetakeExpirationDateButton} /> : null }
-          </div>
-          <div style={{backgroundColor: '#FFFFFF'}/*{position: 'absolute', zIndex : '1'}*/}>
-            <Button id="AddManuallyButton" onClick={this.onClickManualAddButton}>Add Manually</Button>
-            <Typography>{ this.state.is_retaking ? "(Retaking)" : (this.state.is_barcode_scanning ? BARCODE_TERM : EXPIRATION_TERM) }</Typography>
-            {(this.state.currentResult != null) ? 
-              <Button id='onClickMoveToConfirmButton' onClick={this.onClickMoveToConfirmButton}>Move to ConfirmItem</Button> : null}
-          </div>
+        <div className="StatusTerm">{ this.state.is_retaking ? "(Retaking)" : (this.state.is_barcode_scanning ? BARCODE_TERM : EXPIRATION_TERM) }</div>
+        <div className="Footer">
+          <div id="AddManuallyButton" className="ManualAddButton" onClick={this.onClickManualAddButton} >+</div>
+          {(this.state.currentResult != null) ? 
+            <div id='onClickMoveToConfirmButton' className="ConfirmButton" onClick={this.onClickMoveToConfirmButton} >Confirm</div> : null}
         </div>
-      </React.Fragment>
+      </div>
     );
   }
 }

@@ -61,17 +61,10 @@ class Scanner extends Component {
     return (
       <div className="ScannerMine">
         <div id="interactive" className="viewport">
-          <video id="video" className="videoCamera" 
+          {(!this.props.barcode) ? <div onClick={this.props.onCapture} style={{left: '0px', top: '0px', width: '100%', height: '100%', zIndex: '20', position: 'absolute'}}></div> : null}
+          <video style={{zIndex: '2'}} id="video" className="videoCamera" 
             preload="auto" 
             src="" muted={true} playsInline={true}></video>
-           <div>
-            {(!this.props.barcode) ? 
-            <p>
-              <Button id='capture' onClick={this.props.onCapture}>Capture</Button> 
-            </p>
-              : 
-              null}
-          </div> 
           <canvas id="canvas" className="drawingBuffer"></canvas>
         </div>
       </div>

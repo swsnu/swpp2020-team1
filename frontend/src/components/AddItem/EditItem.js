@@ -89,9 +89,9 @@ class EditItem extends Component {
         <div className="EditItem">
           <table>
             <tr>
-              <td className="tableContentName"><p>Name</p></td>
+              <td className="tableContentName">Name</td>
               <td>
-                <TextField inputProps={{style: {fontSize: 13}}}
+                <TextField inputProps={{style: {marginTop: "0px", marginBottom: "0px", padding: "2px 0 0 0", fontSize: 13}}}
               error={this.state.name === "" ? true : false}
               value={this.state.name}
               helperText={/*this.state.name === "" ? "이름을 입력해주세요" : ""*/""}
@@ -101,9 +101,9 @@ class EditItem extends Component {
               </td>
             </tr>
             <tr>
-              <td className="tableContentName"><p>Barcode Number</p></td>
+              <td className="tableContentName">Barcode Number</td>
               <td>
-                <TextField inputProps={{style: {fontSize: 13}}}
+                <TextField inputProps={{style: {marginTop: "0px", marginBottom: "0px", padding: "2px 0 0 0", fontSize: 13}}}
                   value={this.state.barcode_num}
                   onChange={e => this.setState({ barcode_num: e.target.value })}
                   className="item_barcode_edit margin" 
@@ -111,10 +111,10 @@ class EditItem extends Component {
               </td>
             </tr>
             <tr>
-              <td className="tableContentName"><p>Expiration Date</p></td>
+              <td className="tableContentName">Expiration Date</td>
               <td>
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                  <KeyboardDatePicker inputProps={{style: {fontSize: 13}}}
+                  <KeyboardDatePicker inputProps={{style: {marginTop: "0px", marginBottom: "0px", padding: "2px 0 0 0", fontSize: 13}}}
                     openTo="year"
                     format="yyyy/MM/dd"
                     views={["year", "month", "date"]}
@@ -125,9 +125,9 @@ class EditItem extends Component {
               </td>
             </tr>
             <tr>
-              <td className="tableContentName"><p>Category</p></td>
+              <td className="tableContentName">Category</td>
               <td>
-                <Autocomplete 
+                <Autocomplete inputProps={{style: {marginTop: "0px", marginBottom: "0px", padding: "2px 0 0 0", fontSize: 13}}}
                   value={this.state.category_name}
                   options={this.categories}
                   getOptionLabel={(option) => {return (option.name ? option.name : option)}}
@@ -136,7 +136,7 @@ class EditItem extends Component {
                   freeSolo={true}
                   onChange={this.onCategoryChange}
                   renderInput={(params) =>
-                    <TextField {...params} />}/>
+                    <TextField {...params}  />}/>
               </td>
             </tr>
           </table>

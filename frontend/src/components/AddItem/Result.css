@@ -1,12 +1,13 @@
 .Result {
   position: absolute;
-  z-index: 2;
+  z-index: 25;
   left: 0px;
-  top: 0px;
+  top: -300px;
   width: 100%;
 
   filter: drop-shadow(0px -3px 4px rgba(0, 0, 0, 0.2));
   border-radius: 18px;
+  transition: all 0.5s;
 
   background: #F4F4F4;
 }
