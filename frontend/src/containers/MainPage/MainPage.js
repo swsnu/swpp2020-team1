@@ -1,18 +1,16 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import ItemContainer from '../ItemContainer/ItemContainer';
-import Basket from '../../components/Basket/Basket';
 import * as actionCreators from '../../store/actions/index';
 import * as userActionCreators from '../../store/actions/userAction';
-import { IconButton, Dialog, List, Typography, Button } from '@material-ui/core';
-import InboxIcon from '@material-ui/icons/Inbox'
+import { Dialog, List, Typography, Button } from '@material-ui/core';
 import NotiIcon from '@material-ui/icons/Notifications';
 import ArrowBack from '@material-ui/icons/ArrowBack'
 import Circle from '@material-ui/icons/Brightness1'
 import axios from 'axios';
 import NotiCard from '../../components/Notification/NotiCard';
 import './MainPage.css';
-import { Redirect } from 'react-router';
+import Header from "../Header/Header";
 
 class MainPage extends Component {
 
@@ -30,19 +28,12 @@ class MainPage extends Component {
   // temporary
   user_id = 1;
 
-  async componentDidMount() { 
-    if(this.props.currentUser !== 'SUCCESS') {
-      this.props.loginCheck()
-      // return  <Redirect to = "/signin" />
-    }
 
+  async componentDidMount() { 
     await axios.get('/back/user/')
-      .then(res => 
-        // this.user_id = res.data.user_id
-        this.user_id = 1
-       )
+      .then(res => this.user_id = res.data.user_id)
       .catch(e => console.log(e)) 
-      
+      console.log(`this.user_id: ${this.user_id}`)
     // temporary login
     // await axios.post('/back/signin/', {'username': 'jaeseoklee', 'password': '0000'})
     //   .then(res => console.log(res))
@@ -127,6 +118,7 @@ class MainPage extends Component {
     this.setState({ notifications: notiList })
     this.setState({ isUnreadNotiExists: this.isUnreadNotiExists() })
     console.log("notifications: " + JSON.stringify(this.state.notifications))
+    console.log(`this.props.itemcounts.length: ${this.props.itemcounts.length}`)
   }
 
   getAndBuildNotification = (user_id) => {
@@ -244,6 +236,7 @@ class MainPage extends Component {
     
     return (
         <div className="MainPage">
+          <Header/>
           <div className="title">
             <div className="titleOrange">Food</div>
             <div className="titleBlack">ify</div>

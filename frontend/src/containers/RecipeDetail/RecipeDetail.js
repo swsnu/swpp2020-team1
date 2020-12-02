@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import axios from 'axios';
 import * as actionCreators from '../../store/actions/index';
 import Comment from '../../components/Comment/Comment';
 import './RecipeDetail.css';
@@ -29,10 +29,13 @@ class RecipeDetail extends Component {
     ratingDialogOpen: false,
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     this.props.getRecipe(this.props.match.params.id);
     this.props.getRatedRecipes();
     this.props.getComments(this.props.match.params.id);
+    await axios.get('/back/user/')
+      .then(res => this.user_id = res.data.user_id)
+      .catch(e => console.log(e))
   }
 
   onClickBackButton = () => {

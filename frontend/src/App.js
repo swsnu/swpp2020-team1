@@ -40,27 +40,6 @@ class App extends Component {
   }
 }
 
-// function App(props) {
-//   return (
-//     <ConnectedRouter history={props.history}>
-//     <div className="App">
-//       <Switch>
-//         <Route path='/' exact component={SignIn}/>
-//         <Route path = '/signin' exact component={SignIn}/>
-//         <Route path = '/signup' exact component={SignUp}/>
-//         <LoginRoute path='/' exact component={MainPage}/>
-//         <LoginRoute path = '/item/add' exact component = {AddItem}/>
-//         <LoginRoute path = '/item/confirm' exact component={ItemConfirm}/>
-//         <LoginRoute path = '/recipes' exact component={RecipeRecommend}/>
-//         <LoginRoute path = '/recipes/:id' exact component={RecipeDetail}/>
-//         {/* <Route render={() => <h1>Not Found</h1>} /> */}
-//       </Switch>
-//     </div>
-//     </ConnectedRouter>
-//   );
-// }
-
-
 const mapDispatchToProps = dispatch => {
   return {
     loginCheck : (user) => dispatch (userActionCreators.loginCheckRequest())
