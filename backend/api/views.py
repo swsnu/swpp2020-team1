@@ -603,7 +603,7 @@ def comment_list(request, recipe_id=0):
                 'id': comm.id,
                 'content': comm.content,
                 'author_id': comm.author_id,
-                'author': get_user_model().objects.get(id=comm.author_id).username,
+                'author': get_user_model().objects.get(id=comm.author_id).first_name,
                 'recipe_id': comm.recipe_id,
                 'date': comm.date
             }
@@ -633,7 +633,7 @@ def comment_list(request, recipe_id=0):
             'id': comm.id,
             'content': comm.content,
             'author_id': request.user.id,
-            'author': request.user.username,
+            'author': request.user.first_name,
             'recipe_id': comm.recipe_id,
             'date': comm.date
         }
@@ -659,7 +659,7 @@ def comment_info(request, comment_id=0):
             'id': comm.id,
             'content': comm.content,
             'author_id': comm.author.id,
-            'author': comm.author.username,
+            'author': comm.author.first_name,
             'recipe_id': comm.recipe_id,
             'date': comm.date
         })
@@ -690,7 +690,7 @@ def comment_info(request, comment_id=0):
             'id': comm.id,
             'content': comm.content,
             'author_id': comm.author.id,
-            'author': comm.author.username,
+            'author': comm.author.first_name,
             'recipe_id': comm.recipe_id,
             'date': comm.date
         })
