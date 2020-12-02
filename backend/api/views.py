@@ -41,9 +41,6 @@ def signin(request):
     signin:
         POST: sign in with given username and password
     '''
-    if Category.objects.all().count() == 0 or Recipe.objects.all().count() == 0:
-        initialize_category()
-        initialize_recipe()
     if request.method == 'POST':
         try:
             req_data = json.loads(request.body.decode())
@@ -76,6 +73,9 @@ def signout(request):
         return HttpResponseNotAllowed(['GET'])
 
 def user_info(request):
+    if Category.objects.all().count() == 0 or Recipe.objects.all().count() == 0:
+        initialize_category()
+        initialize_recipe()
     if request.method == 'GET':
         if request.user.is_authenticated:
             username_dic = { 'username' : request.user.username, 'user_id': request.user.id}

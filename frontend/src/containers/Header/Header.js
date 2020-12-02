@@ -4,13 +4,9 @@ import { withRouter } from 'react-router-dom';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
 import { withStyles } from '@material-ui/core/styles';
 import Logout from '../Header/LogOut';
-
-import * as userActionCreators from '../../store/actions/userAction';
 
 const drawerWidth = 240;
 const styles = (theme) => ({
@@ -43,7 +39,6 @@ const styles = (theme) => ({
   },
 });
 
-
 class Header extends Component {
   componentDidMount() {
     if (this.props.logged_in) {
@@ -63,16 +58,17 @@ class Header extends Component {
           <AppBar position="static" className={classes.appBar} style={{ background: 'white', boxShadow: 'black' }}>
             <Toolbar>
               <IconButton
-                edge="start"
-                id="redirect-main"
-                onClick={() => this.clickRedirectToMain()}
-                aria-label="menu"
-              >
+              edge="start"
+              id="redirect-main"
+              onClick={() => this.clickRedirectToMain()}
+              aria-label="menu">
                 <Typography variant="h6" className={classes.title} style={{ color: 'black' }}>
                   HOME
                 </Typography>
               </IconButton>
-              <Typography variant="h6" className={classes.title} style={{ color: 'black' }} />
+              <Typography variant="h6" className={classes.title} style={{ color: 'black' }} align="center">
+                Welcome {this.props.current_user}!
+              </Typography>
               <Logout/>
             </Toolbar>
           </AppBar>
@@ -81,50 +77,15 @@ class Header extends Component {
     }
 
     return (
-      <div className="header_login">
-        <AppBar position="fixed" className={classes.appBar} style={{ background: 'white', boxShadow: 'black' }}>
-          <Toolbar>
-            <IconButton
-              aria-label="open drawer"
-              edge="start"
-              onClick={this.props.handleDrawerToggle}
-              className={classes.menuButton}
-            >
-              <MenuIcon style={{ color: 'black' }} />
-            </IconButton>
-            <IconButton
-              edge="start"
-              onClick={() => this.clickRedirectToDashboard()}
-              aria-label="menu"
-            >
-              <Typography variant="h6" className={classes.title} style={{ color: 'black' }}>
-                PillBox
-              </Typography>
-            </IconButton>
-            <Typography variant="h6" className={classes.title} style={{ color: 'black' }} align="center">
-              Stay Healthy
-              {' '}
-              {this.props.current_user.name}
-!
-            </Typography>
-            <Button
-              id="signout-button"
-              color="inherit"
-              style={{ color: 'black' }}
-              onClick={() => this.onSignOutButtonClick()}
-            >
-              Sign Out
-            </Button>
-          </Toolbar>
-        </AppBar>
-      </div>
+      <div></div>
     );
   }
 }
 
 const mapStateToProps = (state) => ({
   logged_in: state.user.logged_in,
-  current_user: state.user.current_user,
+  current_user: state.user.status.currentUser
+  
 });
 
 const mapDispatchToProps = (dispatch) => ({
