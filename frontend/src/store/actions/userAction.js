@@ -1,8 +1,6 @@
 import * as actionTypes from './actionTypes';
 import { push } from 'connected-react-router';
 import axios from 'axios';
-axios.defaults.xsrfCookieName = 'csrftoken';
-axios.defaults.xsrfHeaderName = 'X-CSRFToken';
 
 export const signUpRequest = (newUser) => {
     return dispatch => {
@@ -10,6 +8,7 @@ export const signUpRequest = (newUser) => {
         return axios.post('/back/signup/', newUser)
         .then( response => {
             dispatch(signUpSuccess());
+            dispatch(push('/signin'));
         })
     }
 }
@@ -42,6 +41,11 @@ export const loginRequest = (user) => {
       return axios.post('/back/signin/', user)
         .then( response => {
             dispatch(loginSuccess(user.username))
+            dispatch(push('/'))
+        })
+        .catch(error => {
+            dispatch(loginFailure())
+            alert('login fail')
         })
   }
 }
@@ -76,7 +80,6 @@ export const logoutRequest = () => {
 }
 
 export function login() {
-  console.log("login()")
   return {
       type: actionTypes.LOGIN
   };

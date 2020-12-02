@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as userActionCreators from '../../../store/actions/userAction';
-import {withRouter} from 'react-router'
+import {withRouter} from 'react-router';
+import { Redirect } from 'react-router';
 
 import Container from '@material-ui/core/Container';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -61,11 +62,7 @@ class SignUp extends Component {
       this.props.onSignupUser(user)
         .then(() => {
           console.log("User Signed Up");
-          this.props.history.push('/signin');
         })
-        .catch(error => {
-          alert('signup fail')
-        });
     }
   };
 
@@ -115,7 +112,9 @@ class SignUp extends Component {
 
   render() {
     const { classes } = this.props;
-
+    if(this.props.loginState === 'SUCCESS') {
+      return <Redirect to='/'/>
+    }
     return (
       <div className="Signup">
       <Container component="main" maxWidth="xs">
@@ -222,6 +221,7 @@ export const mapDispatchToProps = (dispatch) => ({
 const mapStateToProps = (state) => ({
   registerState : state.user.register.status,
   registerErrorCode : state.user.register.error,
-  userState : state.user.status
+  userState : state.user.status,
+  loginState : state.user.login.status
 });
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withRouter(SignUp)));

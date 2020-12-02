@@ -1,9 +1,10 @@
 import './App.css';
 import React, {Component} from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import axios from 'axios';
+import { Route, Switch } from 'react-router-dom';
 import * as userActionCreators from './store/actions/userAction';
 import {connect} from 'react-redux';
+import { ConnectedRouter } from 'connected-react-router';
+import axios from 'axios';
 
 import SignIn from './containers/Landing/SignIn/SignIn';
 import SignUp from './containers/Landing/SignUp/SignUp';
@@ -12,7 +13,7 @@ import AddItem from './containers/AddItem/AddItem';
 import ItemConfirm from './containers/ItemConfirm/ItemConfirm';
 import RecipeRecommend from './containers/RecipeRecommend/RecipeRecommend';
 import RecipeDetail from './containers/RecipeDetail/RecipeDetail';
-
+import LoginRoute from './LoginRoute';
 
 class App extends Component {
   componentDidMount(){
@@ -21,28 +22,48 @@ class App extends Component {
   }
   render(){
     return (
-    <BrowserRouter>
-      <div className="App">
-        <Switch>
-        {/* <Route path='/' exact component={SignIn}/> */}
-          <Route path = '/signin' exact component={SignIn}/>
-          <Route path = '/signup' exact component={SignUp}/>
-          <Route path = '/' exact component={MainPage}/>
-          <Route path = '/item/add' exact component = {AddItem}/>
-          <Route path = '/item/confirm' exact component={ItemConfirm}/>
-          <Route path = '/recipes' exact component={RecipeRecommend}/>
-          <Route path = '/recipes/:id' exact component={RecipeDetail}/>
-          {/* <Route render={() => <h1>Not Found</h1>} /> */}
-        </Switch>
-      </div>
-    </BrowserRouter>
+      <ConnectedRouter history={this.props.history}>
+        <div className="App">
+          <Switch>
+            <Route path = '/signin' exact component={SignIn}/>
+            <Route path = '/signup' exact component={SignUp}/>
+              <LoginRoute path='/' exact component={MainPage}/>
+              <LoginRoute path = '/item/add' exact component = {AddItem}/>
+              <LoginRoute path = '/item/confirm' exact component={ItemConfirm}/>
+              <LoginRoute path = '/recipes' exact component={RecipeRecommend}/>
+              <LoginRoute path = '/recipes/:id' exact component={RecipeDetail}/>
+            {/* <Route render={() => <h1>Not Found</h1>} /> */}
+          </Switch>
+        </div>
+      </ConnectedRouter>
     );
   }
 }
 
+// function App(props) {
+//   return (
+//     <ConnectedRouter history={props.history}>
+//     <div className="App">
+//       <Switch>
+//         <Route path='/' exact component={SignIn}/>
+//         <Route path = '/signin' exact component={SignIn}/>
+//         <Route path = '/signup' exact component={SignUp}/>
+//         <LoginRoute path='/' exact component={MainPage}/>
+//         <LoginRoute path = '/item/add' exact component = {AddItem}/>
+//         <LoginRoute path = '/item/confirm' exact component={ItemConfirm}/>
+//         <LoginRoute path = '/recipes' exact component={RecipeRecommend}/>
+//         <LoginRoute path = '/recipes/:id' exact component={RecipeDetail}/>
+//         {/* <Route render={() => <h1>Not Found</h1>} /> */}
+//       </Switch>
+//     </div>
+//     </ConnectedRouter>
+//   );
+// }
+
+
 const mapDispatchToProps = dispatch => {
   return {
-      loginCheck : (user) => dispatch (userActionCreators.loginCheckRequest())
+    loginCheck : (user) => dispatch (userActionCreators.loginCheckRequest())
   }
 }
 

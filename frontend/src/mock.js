@@ -2,6 +2,7 @@ import thunk from "redux-thunk";
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { createBrowserHistory } from 'history';
 import { connectRouter } from 'connected-react-router'; 
+import * as actionTypes from './store/actions/actionTypes';
 
 const history = createBrowserHistory();
 
@@ -51,11 +52,82 @@ export const getMockStore = initial => {
     }
   );
 
+  const getMockUserReducer = jest.fn(
+    initialState => (state = initialState, action) => { 
+      switch(action.type) {
+            case actionTypes.SIGN_UP:
+              return {
+                ...state,
+                register: {
+                  status: 'WAITING',
+                  error: -1
+                }
+              }
+            case actionTypes.SIGN_UP_SUCCESS:
+              return {
+                ...state,
+                register: {
+                  ...state.register,
+                  status: 'SUCCESS'
+                }
+              }
+            case actionTypes.SIGN_UP_FAILURE:
+              return {
+                ...state,
+                register:{
+                  status: 'FAILURE',
+                  error: action.error
+                }
+              }
+            case  actionTypes.LOGIN:
+              return {
+                ...state,
+                login : {
+                  status: 'WAITING'
+                }
+              }
+          case actionTypes.LOGIN_SUCCESS:
+              return {
+                ...state,
+                login: {
+                    status: 'SUCCESS'
+                },
+                status: {
+                  ...state.status,
+                  isLoggedIn: true,
+                  currentUser: action.username
+                }
+              }
+          case actionTypes.LOGIN_FAILURE:
+              return {
+                ...state,
+                login:{
+                  status: 'FAILURE'
+                }
+              }
+            case actionTypes.LOGOUT:
+              return {
+                ...state,
+                login : { status : 'INIT'},
+                status : {
+                  ...state.status,
+                  isLoggedIn : false,
+                  currentUser : ''
+                }
+              }
+            default:
+              break;
+          }
+      return state;
+    }
+  );
+
   const mockArticleReducer = getMockArticleReducer(initial.article);
   const mockItemReducer = getMockItemReducer(initial.item);
   const mockItemCountReducer = getMockItemCountReducer(initial.itemcount);
   const mockNotiReducer = getMockNotiReducer(initial.notification);
   const mockRecipeReducer = getMockRecipeReducer(initial.recipe);
+  const mockUserReducer = getMockUserReducer(initial.user);
   
   const rootReducer = combineReducers({
     article: mockArticleReducer,
@@ -63,6 +135,7 @@ export const getMockStore = initial => {
     itemcount: mockItemCountReducer,
     notification: mockNotiReducer,
     recipe: mockRecipeReducer,
+    user : mockUserReducer,
     router: connectRouter(history)
   });
 
