@@ -1,7 +1,7 @@
 ''' init_db.py: initialize recipe and category '''
 
 import csv
-from .models import Category, Recipe
+from .models import Category, Recipe, Barcode
 
 def initialize_category():
     ''' initialize_category: initialize category '''
@@ -30,3 +30,12 @@ def initialize_recipe():
             category_obj = Category.objects.filter(name=ingredient_name)[0]
             recipe_obj.ingredients.add(category_obj)
         recipe_obj.save()
+
+def initialize_barcode():
+    ''' initialize_barcode: initialize barcode'''
+    bulk_list = []
+    with open('csvfiles/barcode.csv', 'r', encoding='utf8') as barcodes:
+        reader = csv.reader(barcodes)
+        for line in reader:
+            bulk_list.append(Barcode(barcode_num=line[0], item_name=line[1]))
+    Barcode.objects.bulk_create(bulk_list)
