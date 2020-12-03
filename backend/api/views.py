@@ -12,7 +12,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.contrib.auth import get_user_model
 from .models import Category, Barcode, Item, ItemCount, Recipe, RecipeComment, Notification
-from .init_db import initialize_category, initialize_recipe
+from .init_db import initialize_category, initialize_recipe, initialize_barcode
 
 # Create your views here.
 
@@ -73,9 +73,16 @@ def signout(request):
         return HttpResponseNotAllowed(['GET'])
 
 def user_info(request):
+    '''
+    user_info:
+        GET: sign in:
+    '''
+    # INITIALIZING DB (TEMPORARY)
     if Category.objects.all().count() == 0 or Recipe.objects.all().count() == 0:
         initialize_category()
         initialize_recipe()
+    if Barcode.objects.all().count() == 0:
+        initialize_barcode()
     if request.method == 'GET':
         if request.user.is_authenticated:
             username_dic = { 'username' : request.user.username, 'user_id': request.user.id}
@@ -506,14 +513,14 @@ def recipe_search(request):
         for recipe in recipes:
             recipe['num_ingredients'] = len(set(recipe['ingredients'])
                 .intersection(ingredients_set))
+        random.shuffle(recipes)
         recipes_sorted = sorted(recipes, key=lambda recipe: -recipe['num_ingredients'])
         recipes_with_ingredients = [recipe for recipe
             in recipes_sorted if recipe['num_ingredients'] > 0]
         if len(recipes_with_ingredients) > 0:
             return JsonResponse(recipes_with_ingredients, safe=False)
         else:
-            random.shuffle(recipes_sorted)
-            return JsonResponse(recipes_sorted[:10], safe=False)
+            return JsonResponse(recipes_sorted[:20], safe=False)
     else:
         return HttpResponseNotAllowed(['POST'])
 
@@ -572,7 +579,7 @@ def recipe_info(request, recipe_id=0):
             'cuisine_type': recipe.cuisine_type,
             'ingredients': [ingredient.id for ingredient in recipe.ingredients.all()],
             'rating_average': recipe.rating_sum / recipe.rating_count,
-        }        
+        }
         return JsonResponse(response_dict)
     else:
         return HttpResponseNotAllowed(['GET', 'PUT'])
