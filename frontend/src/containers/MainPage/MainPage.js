@@ -81,7 +81,9 @@ class MainPage extends Component {
       if (noti.noti_type === 'expire' || noti.noti_type === 'buy_item') {
         let { id, noti_type, is_read, expire_date, item_count_id } = noti;
         let itemId = this.props.itemcounts.find(ic => ic.id === item_count_id).item_id
-        let itemName = this.props.items.find(item => item.id === itemId).name
+        let item = this.props.items.find(item => item.id === itemId)
+        let itemName = item.name
+        let category = item.category_id
 
         const expirationDateType = new Date(expire_date)
         let creationTimestamp = noti.noti_type === 'expire' ? 
@@ -95,6 +97,7 @@ class MainPage extends Component {
           isRead: is_read,
           expirationDate: expire_date,
           itemName: itemName,
+          category: category,
           elapsedDays: elapsedDays,
         })
       }
@@ -102,23 +105,28 @@ class MainPage extends Component {
     
     notiList.sort((a, b) => new Date(a.elapsedDays) - new Date(b.elapsedDays))
 
-    if (this.props.itemcounts.length !== 0) {
-      const itemId = this.props.itemcounts[[Math.floor(Math.random() * this.props.itemcounts.length)]].item_id
-      const itemName = this.props.items.find(item => item.id === itemId).name
+    let itemcountsWithCategory = this.props.itemcounts.filter((ic) => {
+      return this.props.items.find((item) => ic.item_id === item.id).category_id !== 200
+    })
+
+    if (itemcountsWithCategory.length !== 0) {
+      let itemId = itemcountsWithCategory[[Math.floor(Math.random() * itemcountsWithCategory.length)]].item_id
+      let item = this.props.items.find(item => item.id === itemId)
+      let itemName = item.name
+      let category = item.category_id
       notiList.unshift({
         id: 0,
         notiType: 'recipe',
         isRead: true,
         expirationDate: '',
         itemName: itemName,
+        category: category,
         elapsedDays: 0,
       })
     }
 
     this.setState({ notifications: notiList })
     this.setState({ isUnreadNotiExists: this.isUnreadNotiExists() })
-    console.log("notifications: " + JSON.stringify(this.state.notifications))
-    console.log(`this.props.itemcounts.length: ${this.props.itemcounts.length}`)
   }
 
   getAndBuildNotification = (user_id) => {
@@ -132,10 +140,16 @@ class MainPage extends Component {
     this.setState({openDialog: true})
   }
 
-  onReadNotification = async (notiId) => {
-    if (notiId !== 0) { // notiId === 0 means 'recipe' noti type
+  onReadNotification = async (notiId, notiType, category) => {
+    if (notiType === 'recipe') {
+      this.props.onSearchRecipes([category], 'all');
+      this.props.history.push('/recipes')
+    } else if (notiType === 'expire') {
       await this.props.onSetIsRead(notiId);
-      console.log("onSetIsRead! + notifications: " + JSON.stringify(this.props.notifications))
+      this.props.onSearchRecipes([category], 'all');
+      this.props.history.push('/recipes')
+    } else if (notiType === 'buy_item') {
+      await this.props.onSetIsRead(notiId);
     }
     this.buildNotificationInfo();
     this.setState({

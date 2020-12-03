@@ -5,7 +5,7 @@ import { Typography, Container, ListItem, Button } from '@material-ui/core';
 import CalendarImg from '../../icons/calendar.png'
 
 const NotiCard = props => {
-  const { id, notiType, itemName, expirationDate, isRead, elapsedDays } = props.noti
+  const { id, notiType, itemName, expirationDate, isRead, category, elapsedDays } = props.noti
   const expirationDateType = new Date(expirationDate)
   let notiContent = null
   if (notiType === 'expire') {
@@ -97,7 +97,7 @@ const NotiCard = props => {
     console.log(`Noti type ${notiType} is not supported.`)
   }
   return (
-    <Button className='NotiCardBtn' style={{padding: 0}} onClick={() => props.onRead(id)}>
+    <Button className='NotiCardBtn' style={{padding: 0}} onClick={() => props.onRead(id, notiType, category)}>
       { notiContent }
     </Button>
   )
