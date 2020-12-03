@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { Typography, Container, Button, TextField, Select, InputLabel, MenuItem, Dialog, DialogTitle, DialogContent, DialogActions, Card, Grid } from "@material-ui/core";
 import * as actionCreators from '../../store/actions/index';
 import EditItem from '../../components/AddItem/EditItem';
+import Result from '../../components/AddItem/Result';
 import './ItemConfirm.css';
 import moment from 'moment'
 
@@ -20,7 +21,7 @@ class ItemConfirm extends Component {
       container: this.containers[0],
       count: 0
     },
-    addDialogOpen: false,
+    addResultOpen: false,
 
     item_edit: {},
     editDialogOpen: false,
@@ -68,11 +69,11 @@ class ItemConfirm extends Component {
   }
   
   onClickAddItemButton = () => {
-    this.setState({addDialogOpen: true})
+    this.setState({addResultOpen: true})
   }
 
   onCancelAddButton = () => {
-    this.setState({addDialogOpen: false})
+    this.setState({addResultOpen: false})
   }
 
   onConfirmAddButton = (info) => {
@@ -89,7 +90,7 @@ class ItemConfirm extends Component {
         'container': info.container, 
         'count': parseInt(info.count)
       }),
-      addDialogOpen: false
+      addResultOpen: false
     })
   }
 
@@ -104,62 +105,37 @@ class ItemConfirm extends Component {
     this.props.history.push('/');
   }
 
-  onClickWebcamModeButton = () => {
-    this.props.history.push('/item/add', this.state.items);
-  }
-
   render() {
     const newItems = this.state.items.map((item, idx) => {
       // temporary category name
       return (
-        <Card key={idx} className="new_item">
-          <Grid container spacing={2}>
-            <Grid item xs={2}>
-              <Typography color="textSecondary">Name</Typography>
-              <Typography>{item.name}</Typography>
-            </Grid>
-            <Grid item xs={2}>
-              <Typography color="textSecondary">Barcode number</Typography>
-              <Typography>{item.barcode_num}</Typography>
-            </Grid>
-            <Grid item xs={2}>
-              <Typography color="textSecondary">Expiration date</Typography>
-              <Typography>{item.expiration_date}</Typography>
-            </Grid>
-            <Grid item xs={2}>
-              <Typography color="textSecondary">Count</Typography>
-              <Typography>{item.count}</Typography>
-              </Grid>
-            <Grid item xs={2}>
-              <Typography color="textSecondary">Category</Typography>
-              <Typography>{item.category_name}</Typography>
-            </Grid>
-            <Grid item xs={2}>
-              <Typography color="textSecondary">Container</Typography>
-              <Typography>{item.container}</Typography>
-            </Grid>            
-          </Grid>
-          <Button className="btn_item_edit" onClick={() => this.onClickEditItemButton(item, idx)}>edit</Button>
-        </Card>
+        <EditItem key={idx} itemInfo={item} />
       );
     });
 
+    if(document.getElementsByClassName("Result").length > 0) {
+      if(!this.state.addResultOpen) {
+        document.getElementsByClassName("Result")[0].style.top = "-300px";
+      } else {
+        document.getElementsByClassName("Result")[0].style.top = "-25px";
+      }
+    }
+
     return (
       <div className="ItemConfirm">
-        <Dialog open={this.state.editDialogOpen} onClose={() => this.setState({editDialogOpen: false})}>
-          <EditItem itemInfo={this.state.item_edit} onCancelEdit={this.onCancelEditButton} onConfirmEdit={this.onConfirmEditButton}></EditItem>
-        </Dialog>
-        <Dialog open={this.state.addDialogOpen} onClose={() => this.setState({addDialogOpen: false})}>
-          <EditItem itemInfo={this.state.item_add} onCancelEdit={this.onCancelAddButton} onConfirmEdit={this.onConfirmAddButton}></EditItem>
-        </Dialog>
-
-        <Typography variant="h5">New Items</Typography>
-        {newItems}
-
-        <Button className="btn_add_item" onClick={this.onClickAddItemButton}>Add New Item</Button>
-
-        <Button className="btn_confirm" onClick={this.onClickConfirmButton}>Confirm</Button>
-        <Button className="btn_webcam_mode" onClick={this.onClickWebcamModeButton}>Go to automatic mode</Button>
+        <Result result={{ name: '', category_id: '', category_name: '', barcode_num: '', expiration_date: '', count: 1 }}></Result>
+        <div className="Header">
+          <p>Add Ingredients</p>  
+        </div>
+        
+        <div className="Main">
+          {newItems}  
+        </div>
+        
+        <div className="Footer">
+          <div id="AddManuallyButton" className="ManualAddButton" onClick={this.onClickAddItemButton} >+</div>
+          <div id='onClickMoveToConfirmButton' className="ConfirmButton" onClick={this.onClickConfirmButton} >Confirm</div>
+        </div>
       </div>
      );
   }

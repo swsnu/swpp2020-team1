@@ -1,16 +1,11 @@
-import React, { Component} from "react";
-import { connect } from "react-redux";
-import { withRouter } from "react-router";
-import Webcam from 'react-webcam';
+import React, { Component } from "react";
 import axios from 'axios';
 
 // material-ui components
-import { Typography, Button, TextField, Grid, Dialog } from '@material-ui/core';
 import parseDate from '../../components/AddItem/DateParser';
 import Scanner from '../../components/AddItem/Scanner';
 import Result from '../../components/AddItem/Result';
 import dataURLtoFile from '../../components/AddItem/URLtoFile';
-import EditItem from '../../components/AddItem/EditItem';
 import moment from 'moment';
 import './AddItem.css';
 
@@ -39,9 +34,8 @@ class AddItem extends Component {
     OCRResult: "",
     saveImage: false,
     container_default: (this.props.location.state ? this.props.location.state.container : this.containers[0]),
-    is_editing: false,
     is_barcode_scanning: false,
-    is_confirmed: true,
+    is_result_visible: false,
     is_retaking: false,
     currentResult: this.default_result,
     resultList: []
@@ -117,7 +111,7 @@ class AddItem extends Component {
       screenShot: imageSrc,
       imageFile: imageFile,
       is_barcode_scanning: (this.state.is_retaking ? false : true),
-      is_confirmed: (this.state.is_retaking ? false : true),
+      is_result_visible: (this.state.is_retaking ? true : false),
       is_retaking: false
     }))
     this.getExpirationDateFromImage(e, data => this.handleDetect(data));
@@ -135,7 +129,7 @@ class AddItem extends Component {
     let expiration_date = this.state.currentResult.expiration_date;
     let count = this.state.currentResult.count;
 
-    this.setState((prevState, props) => ({is_barcode_scanning: false, is_confirmed: false, is_retaking: false, 
+    this.setState((prevState, props) => ({is_barcode_scanning: false, is_result_visible: true, is_retaking: false, 
       status: EXPIRATION_TERM, currentResult: { ...this.state.currentResult, container: this.state.container_default}}))
     console.log(`barcode_num: ${barcode_num}`)
     /*
@@ -215,28 +209,23 @@ class AddItem extends Component {
   }
 
   onClickRetakeBarcodeButton = () => {
-    this.setState({ is_retaking: true, is_confirmed: true, is_barcode_scanning: true });
+    this.setState({ is_retaking: true, is_result_visible: false, is_barcode_scanning: true });
   }
 
   onClickRetakeExpirationDateButton = () => {
-    this.setState({ is_retaking: true, is_confirmed: true, is_barcode_scanning: false, currentResult: { ...this.state.currentResult, expiration_date: '' } });
-  }
-
-  onClickEditButton = () => {
-    this.setState({ is_editing: true });
+    this.setState({ is_retaking: true, is_result_visible: false, is_barcode_scanning: false, currentResult: { ...this.state.currentResult, expiration_date: '' } });
   }
 
   onClickManualAddButton = () => {
-    if(!this.state.is_confirmed) {
+    if(this.state.is_result_visible) {
       this.setState((prevState, props) => ({
         screenShot: null,
         imageFile: null,
         resultList: [ ...this.state.resultList, this.state.currentResult ],
-        currentResult: this.default_result,
-        is_editing: true
+        currentResult: this.default_result
       }))
     } else {
-      this.setState({is_editing: true});
+      this.setState({ is_result_visible: true })
     }
   }
 
@@ -255,48 +244,22 @@ class AddItem extends Component {
     })
   }
 
-  //function for EditItem component
-  onCancelEditButton = () => {
-    this.setState({is_editing: false});
-  }
-
-  //function for EditItem component
-  onConfirmEditButton = (edit) => {
-    if (!edit.valid) {
-      return;
-    }
-
-    let confirm_item = {
-      ...this.state.currentResult,
-      name: edit.name,
-      category_name: edit.category_name,
-      barcode_num: edit.barcode_num,
-      expiration_date: moment(edit.expiration_date).format("YYYY/MM/DD"),
-      count: edit.count,
-      container: edit.container
-    }
-
-    this.setState({ is_editing: false, is_barcode_scanning: false, is_confirmed: false, currentResult: confirm_item });
-  }
-
   render() {
     if(document.getElementsByClassName("Result").length > 0) {
-      if(this.state.is_confirmed) {
+      if(!this.state.is_result_visible) {
         document.getElementsByClassName("Result")[0].style.top = "-300px";
       } else {
-        document.getElementsByClassName("Result")[0].style.top = "0px";
+        document.getElementsByClassName("Result")[0].style.top = "-25px";
       }
     }
 
     return (
       <div className="AddItem" style={{overflowX: "hidden", overflowY: "hidden"}}>
         <Scanner id="Scanner" onDetected={this._onDetected} onCapture={this.handleOCR} barcode={this.state.is_barcode_scanning} ref="Scanner"/> 
-        <div className="results">
-          <Result result={this.state.currentResult}
-              onClickRetakeBarcode={this.onClickRetakeBarcodeButton}
-              onClickRetakeExpirationDate={this.onClickRetakeExpirationDateButton} />
-        </div>
-        <div className="StatusTerm">{ this.state.is_retaking ? "(Retaking)" : (this.state.is_barcode_scanning ? BARCODE_TERM : EXPIRATION_TERM) }</div>
+        <Result result={this.state.currentResult}
+            onClickRetakeBarcode={this.onClickRetakeBarcodeButton}
+            onClickRetakeExpirationDate={this.onClickRetakeExpirationDateButton} />
+        <div className="StatusTerm">{ this.state.is_retaking ? "Retaking" : (this.state.is_barcode_scanning ? BARCODE_TERM : EXPIRATION_TERM) }</div>
         <div className="Footer">
           <div id="AddManuallyButton" className="ManualAddButton" onClick={this.onClickManualAddButton} >+</div>
           {(this.state.currentResult != null) ? 

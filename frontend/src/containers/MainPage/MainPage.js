@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import ItemContainer from '../ItemContainer/ItemContainer';
-import Basket from '../../components/Basket/Basket';
 import * as actionCreators from '../../store/actions/index';
 import * as userActionCreators from '../../store/actions/userAction';
 import { IconButton, Dialog, List, Typography, Button } from '@material-ui/core';

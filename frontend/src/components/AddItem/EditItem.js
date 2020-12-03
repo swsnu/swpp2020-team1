@@ -1,15 +1,31 @@
 import React, { Component, Fragment } from "react";
-import { connect } from 'react-redux';
-import * as actionCreators from '../../store/actions/index';
 
 // material-ui components
 import { Button, TextField, DialogTitle, DialogContent, DialogActions, MenuItem, InputLabel, Select } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import {DatePicker, KeyboardDatePicker, MuiPickersUtilsProvider} from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
+import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import Checkbox from '@material-ui/core/Checkbox';
+
+import RemoveIcon from '@material-ui/icons/Remove';
+import AddIcon from '@material-ui/icons/Add';
+
 import axios from 'axios';
 
 import './EditItem.css';
+
+const theme = createMuiTheme({
+  typography: {
+    fontFamily: `"Source Code Pro", "Roboto", "Helvetica", "Arial", sans-serif`,
+    fontSize: 11
+   }
+});
+
+const style = {
+  marginTop: "0px", 
+  marginBottom: "0px",
+}
 
 class EditItem extends Component {
   containers = ['freezer', 'fridge', 'shelf'];
@@ -29,12 +45,12 @@ class EditItem extends Component {
   componentDidMount() {
     const info = this.props.itemInfo
 
-    let expiration_date = new Date(info.expiration_date);
-    if (expiration_date.toString() === "Invalid Date") expiration_date = Date.now();
+    //let expiration_date = new Date(info.expiration_date);
+    //if (expiration_date.toString() === "Invalid Date") expiration_date = Date.now();
     this.setState({
       name: info.name ? info.name : '',
       barcode_num: info.barcode_num ? info.barcode_num : '',
-      expiration_date: expiration_date,
+      expiration_date: info.expiration_date ? info.expiration_date : '',
       category_id: info.category_id ? info.category_id : 0,
       category_name: info.category_name ? info.category_name : '',
       count: info.count ? info.count : 1,
@@ -87,34 +103,36 @@ class EditItem extends Component {
     return (
       <Fragment>
         <div className="EditItem">
-          <table>
+          <ThemeProvider theme={theme}><table><tbody>
             <tr>
               <td className="tableContentName">Name</td>
-              <td>
-                <TextField inputProps={{style: {marginTop: "0px", marginBottom: "0px", padding: "2px 0 0 0", fontSize: 13}}}
-              error={this.state.name === "" ? true : false}
-              value={this.state.name}
-              helperText={/*this.state.name === "" ? "이름을 입력해주세요" : ""*/""}
-              onChange={e => {this.setState({ name: e.target.value }); this.checkValidity(e.target.value, this.state.expiration_date)}}
-              className="item_name_edit margin" 
-              margin="dense" />
+              <td className="tableContent">
+                <TextField fullWidth={true} style={style}
+                  error={this.state.name === "" ? true : false}
+                  value={this.state.name}
+                  helperText={/*this.state.name === "" ? "이름을 입력해주세요" : ""*/""}
+                  onChange={e => {this.setState({ name: e.target.value }); this.checkValidity(e.target.value, this.state.expiration_date)}}
+                  className="item_name_edit margin" 
+                  margin="dense" />
               </td>
+              <td></td>
             </tr>
             <tr>
               <td className="tableContentName">Barcode Number</td>
-              <td>
-                <TextField inputProps={{style: {marginTop: "0px", marginBottom: "0px", padding: "2px 0 0 0", fontSize: 13}}}
+              <td className="tableContent">
+                <TextField fullWidth={true} style={style}
                   value={this.state.barcode_num}
                   onChange={e => this.setState({ barcode_num: e.target.value })}
                   className="item_barcode_edit margin" 
                   margin="dense" />
               </td>
+              <td></td>
             </tr>
             <tr>
               <td className="tableContentName">Expiration Date</td>
-              <td>
-                <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                  <KeyboardDatePicker inputProps={{style: {marginTop: "0px", marginBottom: "0px", padding: "2px 0 0 0", fontSize: 13}}}
+              <td className="tableContent">
+                <MuiPickersUtilsProvider utils={DateFnsUtils} style={style}>
+                  <KeyboardDatePicker
                     openTo="year"
                     format="yyyy/MM/dd"
                     views={["year", "month", "date"]}
@@ -123,11 +141,14 @@ class EditItem extends Component {
                   />           
                 </MuiPickersUtilsProvider>
               </td>
+              <td className="Checkbox">
+                <Checkbox style={{padding: "0 0 0 0"}}></Checkbox>
+              </td>
             </tr>
             <tr>
               <td className="tableContentName">Category</td>
-              <td>
-                <Autocomplete inputProps={{style: {marginTop: "0px", marginBottom: "0px", padding: "2px 0 0 0", fontSize: 13}}}
+              <td className="tableContent">
+                <Autocomplete style={style} fullWidth={true}
                   value={this.state.category_name}
                   options={this.categories}
                   getOptionLabel={(option) => {return (option.name ? option.name : option)}}
@@ -136,20 +157,23 @@ class EditItem extends Component {
                   freeSolo={true}
                   onChange={this.onCategoryChange}
                   renderInput={(params) =>
-                    <TextField {...params}  />}/>
+                    <TextField {...params} style={style} />}/>
               </td>
+              <td></td>
             </tr>
-          </table>
+          </tbody></table></ThemeProvider>
           <div className="EditItemContent">
-            <TextField 
-              type="number"
-              value={this.state.count}
-              onChange={e => e.target.value >= 1 ? this.setState({ count: e.target.value }) : null}
-              className="item_count_edit margin" 
-              label="Count"
-              margin="dense" />
-            
-            <InputLabel id="select_container_label">Container</InputLabel>
+            <div className="Count">
+              <RemoveIcon className="Button" style={{ color: "#FFFFFF" }} />
+              <TextField 
+                type="number"
+                value={this.state.count}
+                onChange={e => e.target.value >= 1 ? this.setState({ count: e.target.value }) : null}
+                className="item_count_edit margin" 
+                label="Count"
+                margin="dense" />
+              <AddIcon className="Button" style={{ color: "#FFFFFF" }} />  
+            </div>
             <Select 
               labelId="select_container_label"
               value={this.state.container}

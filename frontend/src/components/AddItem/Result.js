@@ -8,6 +8,7 @@ class Result extends Component {
     const result = this.props.result
     return (
       <div className="Result">
+        <div className="Header"></div>
         <EditItem itemInfo={result} />
         <div display="flex" flex-direction="row">
           <Button id="onClickRetakeBarcodeButton" onClick={this.props.onClickRetakeBarcode} >Retake Barcode</Button>

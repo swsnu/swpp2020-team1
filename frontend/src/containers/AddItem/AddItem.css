@@ -10,7 +10,7 @@
 .AddItem .StatusTerm {
     position: absolute;
     z-index: 5;
-    top: 30%;
+    top: 25%;
     left: 0%;
     width: 100%;
     align-self: center;
@@ -42,6 +42,10 @@
     line-height: 31px;
 }
 
+.AddItem .ConfirmButton:hover {
+    background: #f4f4f4;
+}
+
 .AddItem .ManualAddButton {
     background: #7DBF1A;
     height: 40px;
@@ -51,7 +55,7 @@
 
     font-family: 'Roboto', sans-serif;
     font-size: 40px;
-    font-weight: 200;
+    font-weight: 300;
     text-align: center;
     color: #ffffff;
 
@@ -60,6 +64,10 @@
 
     position: absolute;
     right: 20px;
+}
+
+.AddItem .ManualAddButton:hover {
+    background: #f4f4f4;
 }
 
 .AddItem .Footer {
