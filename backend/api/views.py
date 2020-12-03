@@ -41,9 +41,6 @@ def signin(request):
     signin:
         POST: sign in with given username and password
     '''
-    if Category.objects.all().count() == 0 or Recipe.objects.all().count() == 0:
-        initialize_category()
-        initialize_recipe()
     if request.method == 'POST':
         try:
             req_data = json.loads(request.body.decode())
@@ -76,6 +73,9 @@ def signout(request):
         return HttpResponseNotAllowed(['GET'])
 
 def user_info(request):
+    if Category.objects.all().count() == 0 or Recipe.objects.all().count() == 0:
+        initialize_category()
+        initialize_recipe()
     if request.method == 'GET':
         if request.user.is_authenticated:
             username_dic = { 'username' : request.user.username, 'user_id': request.user.id}
@@ -476,14 +476,16 @@ def recipe_search(request):
     recipe_search:
         GET: get recipes by ingredients and preference
     '''
-    if request.method == 'GET':
+    print(request)
+    if request.method == 'POST':
         try:
             body = request.body.decode()
-            ingredients_set = set(json.loads(body)['ingredients'])
+            ingredients = json.loads(body)['ingredients']
             preference = json.loads(body)['preference']
         except (KeyError, JSONDecodeError) as error:
             print(error)
             return HttpResponseBadRequest()
+        ingredients_set = set(ingredients)
         recipe_queryset = None
         if preference == 'all':
             recipe_queryset = Recipe.objects.all()
@@ -513,7 +515,7 @@ def recipe_search(request):
             random.shuffle(recipes_sorted)
             return JsonResponse(recipes_sorted[:10], safe=False)
     else:
-        return HttpResponseNotAllowed(['GET'])
+        return HttpResponseNotAllowed(['POST'])
 
 def recipe_info(request, recipe_id=0):
     '''
@@ -601,7 +603,7 @@ def comment_list(request, recipe_id=0):
                 'id': comm.id,
                 'content': comm.content,
                 'author_id': comm.author_id,
-                'author': get_user_model().objects.get(id=comm.author_id).username,
+                'author': get_user_model().objects.get(id=comm.author_id).first_name,
                 'recipe_id': comm.recipe_id,
                 'date': comm.date
             }
@@ -631,7 +633,7 @@ def comment_list(request, recipe_id=0):
             'id': comm.id,
             'content': comm.content,
             'author_id': request.user.id,
-            'author': request.user.username,
+            'author': request.user.first_name,
             'recipe_id': comm.recipe_id,
             'date': comm.date
         }
@@ -657,7 +659,7 @@ def comment_info(request, comment_id=0):
             'id': comm.id,
             'content': comm.content,
             'author_id': comm.author.id,
-            'author': comm.author.username,
+            'author': comm.author.first_name,
             'recipe_id': comm.recipe_id,
             'date': comm.date
         })
@@ -688,7 +690,7 @@ def comment_info(request, comment_id=0):
             'id': comm.id,
             'content': comm.content,
             'author_id': comm.author.id,
-            'author': comm.author.username,
+            'author': comm.author.first_name,
             'recipe_id': comm.recipe_id,
             'date': comm.date
         })

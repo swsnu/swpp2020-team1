@@ -3,15 +3,14 @@ import { connect } from 'react-redux';
 import ItemContainer from '../ItemContainer/ItemContainer';
 import * as actionCreators from '../../store/actions/index';
 import * as userActionCreators from '../../store/actions/userAction';
-import { IconButton, Dialog, List, Typography, Button } from '@material-ui/core';
-import InboxIcon from '@material-ui/icons/Inbox'
+import { Dialog, List, Typography, Button } from '@material-ui/core';
 import NotiIcon from '@material-ui/icons/Notifications';
 import ArrowBack from '@material-ui/icons/ArrowBack'
 import Circle from '@material-ui/icons/Brightness1'
 import axios from 'axios';
 import NotiCard from '../../components/Notification/NotiCard';
 import './MainPage.css';
-import { Redirect } from 'react-router';
+import Header from "../Header/Header";
 
 class MainPage extends Component {
 
@@ -29,19 +28,12 @@ class MainPage extends Component {
   // temporary
   user_id = 1;
 
-  async componentDidMount() { 
-    if(this.props.currentUser !== 'SUCCESS') {
-      this.props.loginCheck()
-      // return  <Redirect to = "/signin" />
-    }
 
+  async componentDidMount() { 
     await axios.get('/back/user/')
-      .then(res => 
-        // this.user_id = res.data.user_id
-        this.user_id = 1
-       )
+      .then(res => this.user_id = res.data.user_id)
       .catch(e => console.log(e)) 
-      
+      console.log(`this.user_id: ${this.user_id}`)
     // temporary login
     // await axios.post('/back/signin/', {'username': 'jaeseoklee', 'password': '0000'})
     //   .then(res => console.log(res))
@@ -126,6 +118,7 @@ class MainPage extends Component {
     this.setState({ notifications: notiList })
     this.setState({ isUnreadNotiExists: this.isUnreadNotiExists() })
     console.log("notifications: " + JSON.stringify(this.state.notifications))
+    console.log(`this.props.itemcounts.length: ${this.props.itemcounts.length}`)
   }
 
   getAndBuildNotification = (user_id) => {
@@ -150,6 +143,16 @@ class MainPage extends Component {
     })
   }
 
+  switchToNormalMode = () => {
+    this.setState({ mode: "normal", selectedCuisine: null, selectedItemIds: [] });
+    document.getElementsByClassName("ItemSelectButton")[0].style.background = "#E8A065";
+    document.getElementsByClassName("ItemSelectDiv")[0].style.height = "55px";
+    let removeItemButtons = document.getElementsByClassName("btn_remove_item");
+    for(let i = 0; i < removeItemButtons.length; i++) {
+      removeItemButtons[i].style.visibility = "visible";
+    }
+  }
+
   onClickItemSelectButton = () => {
     if(this.state.mode === "normal") {
       this.setState({ mode: "select" });
@@ -160,7 +163,7 @@ class MainPage extends Component {
       }
     } else if(this.state.mode === "select") {
       if(this.state.selectedItemIds.length < 1) {
-        alert("please select one or more ingredients!");
+        this.switchToNormalMode();
       } else {
         this.setState({ mode: "preference" })
         document.getElementsByClassName("ItemSelectDiv")[0].style.height =
@@ -169,17 +172,25 @@ class MainPage extends Component {
     }
   }
 
+  getCategoryList = (itemIds) => {
+    let categories = []
+    for (let id of itemIds) {
+      let item = this.props.items.find(elem => elem.id === id)
+      categories.push(item.category_id)
+    } 
+    return Array.from(new Set(categories)); // make unique
+  }
+
   onClickRecipeButton = () => {
+    let selectedCuisine = 'all'
     if (this.state.selectedCuisine) {
+      selectedCuisine = this.state.selectedCuisine.toLowerCase()
       document.getElementsByClassName(this.state.selectedCuisine)[0].style.background = "#F4F4F4";
     }
-    this.setState({ mode: "normal", selectedCuisine: null, selectedItemIds: [] });
-    document.getElementsByClassName("ItemSelectButton")[0].style.background = "#E8A065";
-    document.getElementsByClassName("ItemSelectDiv")[0].style.height = "55px";
-    let removeItemButtons = document.getElementsByClassName("btn_remove_item");
-    for(let i = 0; i < removeItemButtons.length; i++) {
-      removeItemButtons[i].style.visibility = "visible";
-    }
+    let categoryList = this.getCategoryList(this.state.selectedItemIds);
+    this.props.onSearchRecipes(categoryList, selectedCuisine);
+    this.switchToNormalMode();
+    this.props.history.push('/recipes')
   }
 
   onClickSelectItem = (id) => {
@@ -187,7 +198,7 @@ class MainPage extends Component {
     if(tempSelectedItemIds.filter(i => i === id).length > 0) {
       tempSelectedItemIds = tempSelectedItemIds.filter(i => i !== id);
     } else {
-      if(tempSelectedItemIds.length >= 3) {
+      if(tempSelectedItemIds.length >= 5) {
         tempSelectedItemIds.shift();
       }
       tempSelectedItemIds.push(id);
@@ -225,6 +236,7 @@ class MainPage extends Component {
     
     return (
         <div className="MainPage">
+          <Header/>
           <div className="title">
             <div className="titleOrange">Food</div>
             <div className="titleBlack">ify</div>
@@ -276,8 +288,8 @@ class MainPage extends Component {
                   onClick={() => this.onClickSelectPreference("Japanese")}>Japanese</div>
                 <div className="btn_preference Chinese"
                   onClick={() => this.onClickSelectPreference("Chinese")}>Chinese</div>
-                <div className="btn_preference Italian"
-                  onClick={() => this.onClickSelectPreference("Italian")}>Italian</div>
+                <div className="btn_preference Western"
+                  onClick={() => this.onClickSelectPreference("Western")}>Western</div>
               </div>
               <div className="ItemSelectButtonFooter"
                 onClick={this.onClickRecipeButton}>Move</div>
@@ -321,6 +333,7 @@ const mapDispatchToProps = dispatch => {
     onGetItemCounts: (item_id) => dispatch(actionCreators.getItemCounts(item_id)),
     onGetUserNotiList: (user_id) => dispatch(actionCreators.getUserNotiList(user_id)),
     onSetIsRead: (noti_id) => dispatch(actionCreators.setIsRead(noti_id)),
+    onSearchRecipes: (ingredients, preference) => dispatch(actionCreators.searchRecipes(ingredients, preference)),
     loginCheck : (user) => dispatch (userActionCreators.loginCheckRequest())
   }
 }

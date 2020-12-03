@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as userActionCreators from '../../../store/actions/userAction';
-import {withRouter} from 'react-router'
+import {withRouter} from 'react-router';
+import { Redirect } from 'react-router';
 
 import Container from '@material-ui/core/Container';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -39,7 +40,6 @@ const styles = (theme) => ({
   },
 });
 
-
 class SignIn extends Component { 
   state = {
     email_input: '',
@@ -66,18 +66,16 @@ class SignIn extends Component {
     this.props.onLoginUser(user)
       .then(() => {
         console.log("User Logged In");
-        this.props.history.push('/');
       })
-      .catch(error => {
-          alert('login fail')
-      });
   };
 
   render() {
     const { classes } = this.props;
-
+    if(this.props.loginState === 'SUCCESS') {
+      return <Redirect to='/'/>
+    }
     return (
-      <div className="Login">
+      <div className="SignIn">
         <Container component="main" maxWidth="xs">
           <CssBaseline />
           <div className={classes.paper}>
@@ -132,7 +130,7 @@ class SignIn extends Component {
                   </Link>
                 </Grid>
                 <Grid item>
-                  <Link variant="body2" onClick={() => this.handlerSignup()}>
+                  <Link id="sign-up" variant="body2" onClick={() => this.handlerSignup()}>
                     Don&apos;t have an account? Sign Up
                   </Link>
                 </Grid>
