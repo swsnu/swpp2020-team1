@@ -483,7 +483,6 @@ def recipe_search(request):
     recipe_search:
         GET: get recipes by ingredients and preference
     '''
-    print(request)
     if request.method == 'POST':
         try:
             body = request.body.decode()
