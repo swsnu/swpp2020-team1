@@ -148,7 +148,8 @@ class EditItem extends Component {
                       disableExpirationField: !this.state.disableExpirationField,
 
                     })}}
-                    color="primary" />
+                    color="primary"
+	    	    style={{padding: "0 0 0 0"}}/>
               </td>
             </tr>
             <tr>

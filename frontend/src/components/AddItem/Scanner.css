@@ -5,9 +5,11 @@
 
 .Scanner .viewport {
   width: 100%;
+  height: 100%;
   margin: 0 auto;
+  min-width: 100%;
+  min-height: 100%;
 }
-
 .drawingBuffer {
   z-index: 1;
   position: absolute;
@@ -16,6 +18,10 @@
 }
 
 .videoCamera {
-  height: 100%;
+  object-fit: cover;
   width: 100%;
+  height: 100vh;
+  min-width: 100%;
+  min-height: 100vh;
+
 }
