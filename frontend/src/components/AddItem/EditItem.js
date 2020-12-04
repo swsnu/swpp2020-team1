@@ -1,12 +1,11 @@
 import React, { Component, Fragment } from "react";
 
 // material-ui components
-import { Button, TextField, DialogTitle, DialogContent, DialogActions, MenuItem, InputLabel, Select } from '@material-ui/core';
+import { Button, TextField, DialogTitle, DialogContent, DialogActions, MenuItem, InputLabel, Select, Checkbox } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import {DatePicker, KeyboardDatePicker, MuiPickersUtilsProvider} from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
-import Checkbox from '@material-ui/core/Checkbox';
 
 import RemoveIcon from '@material-ui/icons/Remove';
 import AddIcon from '@material-ui/icons/Add';
@@ -35,11 +34,15 @@ class EditItem extends Component {
   categories = []
 
   state = {
-    valid: true
+    valid: true,
+    disableExpirationField: false
   }
 
   componentDidMount() {
     const info = this.props.itemInfo;
+    if (info.expiration_date === "-") {
+      this.setState({disableExpirationField: true})
+    }
 
     //let expiration_date = new Date(info.expiration_date);
     //if (expiration_date.toString() === "Invalid Date") expiration_date = Date.now();
@@ -122,19 +125,30 @@ class EditItem extends Component {
             <tr>
               <td className="tableContentName">Expiration Date</td>
               <td className="tableContent">
-                <MuiPickersUtilsProvider utils={DateFnsUtils} style={style} >
-                  <KeyboardDatePicker
-                    InputProps={{classes: {input: classes.typography}}}
-                    openTo="year"
-                    format="yyyy/MM/dd"
-                    views={["year", "month", "date"]}
-                    value={this.props.itemInfo.expiration_date === '' ? Date.now() : this.props.itemInfo.expiration_date}
-                    onChange={(date) => { this.props.onUpdateCurrentItem({ expiration_date: date }); this.checkValidity(this.props.itemInfo.name, date)}}
-                  />           
-                </MuiPickersUtilsProvider>
+                <div>
+
+                  <MuiPickersUtilsProvider utils={DateFnsUtils} style={style} >
+                    <KeyboardDatePicker
+                      InputProps={{classes: {input: classes.typography}}}
+                      openTo="year"
+                      format="yyyy/MM/dd"
+                      views={["year", "month", "date"]}
+                      value={this.state.disableExpirationField ? null : 
+                        (this.state.expiration_date === '' ? Date.now() : this.state.expiration_date)}
+                      onChange={(date) => { this.props.onUpdateCurrentItem({ expiration_date: date }); this.checkValidity(this.props.itemInfo.name, date)}}
+                    />           
+                  </MuiPickersUtilsProvider>
+                </div>
+                
               </td>
               <td className="Checkbox">
-                <Checkbox style={{padding: "0 0 0 0"}}></Checkbox>
+                <Checkbox
+                  checked={!this.state.disableExpirationField}
+                    onChange={() => {this.setState({
+                      disableExpirationField: !this.state.disableExpirationField,
+
+                    })}}
+                    color="primary" />
               </td>
             </tr>
             <tr>
