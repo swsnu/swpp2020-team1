@@ -11,11 +11,19 @@ import thunk from 'redux-thunk';
 import userReducer from './reducers/userReducer';
 import { createBrowserHistory } from 'history';
 import { connectRouter, routerMiddleware } from 'connected-react-router';
+import { persistReducer } from 'redux-persist';	
+import storage from 'redux-persist/lib/storage';
 
 import axios from 'axios';
 axios.defaults.xsrfCookieName = "csrftoken"; 
 axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
 axios.defaults.withCredentials = true
+
+const persistConfig = {	
+  key: 'root',	
+  storage,
+  whitelist: ['recipe']
+};
 
 export const history = createBrowserHistory();
 
@@ -33,6 +41,7 @@ const rootReducer = combineReducers({
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 // const store = createStore(rootReducer, composeEnhancers(applyMiddleware(thunk)));
-const store = createStore(rootReducer, composeEnhancers(applyMiddleware(thunk, routerMiddleware(history))));
+const enhancedReducer = persistReducer(persistConfig, rootReducer);	
+const store = createStore(enhancedReducer, composeEnhancers(applyMiddleware(thunk, routerMiddleware(history))));
 
 export default store;
