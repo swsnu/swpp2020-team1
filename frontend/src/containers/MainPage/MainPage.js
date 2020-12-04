@@ -104,10 +104,13 @@ class MainPage extends Component {
     }
     
     notiList.sort((a, b) => new Date(a.elapsedDays) - new Date(b.elapsedDays))
-
-    let itemcountsWithCategory = this.props.itemcounts.filter((ic) => {
-      return this.props.items.find((item) => ic.item_id === item.id).category_id !== 200
-    })
+    let itemcountsWithCategory = []
+    if (this.props.items.length > 0) {
+      itemcountsWithCategory = this.props.itemcounts.filter((ic) => {
+        let item = this.props.items.find((item) => ic.item_id === item.id)
+        return item && item.category_id && item.category_id !== 200
+      })
+    }
 
     if (itemcountsWithCategory.length !== 0) {
       let itemId = itemcountsWithCategory[[Math.floor(Math.random() * itemcountsWithCategory.length)]].item_id

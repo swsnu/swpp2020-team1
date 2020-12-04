@@ -280,9 +280,11 @@ class AddItem extends Component {
     let confirm_item = {
       ...this.state.currentResult,
       name: edit.name,
+      category_id: edit.category_id,
       category_name: edit.category_name,
       barcode_num: edit.barcode_num,
-      expiration_date: moment(edit.expiration_date).format("YYYY/MM/DD"),
+      expiration_date: edit.expiration_date ?
+        moment(edit.expiration_date).format("YYYY/MM/DD") : '-',
       count: edit.count,
       container: edit.container
     }

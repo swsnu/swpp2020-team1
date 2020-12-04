@@ -54,7 +54,8 @@ class ItemConfirm extends Component {
           return {
             'name': info.name, 
             'barcode_num': info.barcode_num, 
-            'expiration_date': moment(info.expiration_date).format("YYYY/MM/DD"),
+            'expiration_date': info.expiration_date ?
+                moment(info.expiration_date).format("YYYY/MM/DD") : '-',
             'category_id': info.category_id, 
             'category_name': info.category_name,
             'container': info.container, 
@@ -83,7 +84,8 @@ class ItemConfirm extends Component {
       items: this.state.items.concat({
         'name': info.name, 
         'barcode_num': info.barcode_num, 
-        'expiration_date': moment(info.expiration_date).format("YYYY/MM/DD"),
+        'expiration_date': info.expiration_date ?
+            moment(info.expiration_date).format("YYYY/MM/DD") : "-",
         'category_id': info.category_id, 
         'category_name': info.category_name,
         'container': info.container, 
@@ -98,6 +100,9 @@ class ItemConfirm extends Component {
       if (item.category_id === 0) {
         item.category_name = "기타";
         item.category_id = 200; // category_id of '기타'
+      }
+      if (item.expiration_date === '-') {
+        item.expiration_date = '2099/12/31';
       }
       this.props.onAddItem(item);
     }

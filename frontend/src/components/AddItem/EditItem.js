@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import * as actionCreators from '../../store/actions/index';
 
 // material-ui components
-import { Button, TextField, DialogTitle, DialogContent, DialogActions, MenuItem, InputLabel, Select } from '@material-ui/core';
+import { Button, TextField, DialogTitle, DialogContent, DialogActions, MenuItem, InputLabel, Select, Checkbox } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import {DatePicker, KeyboardDatePicker, MuiPickersUtilsProvider} from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
@@ -21,11 +21,15 @@ class EditItem extends Component {
     category_id: 0,
     count: '',
     container: '' ,
-    valid: true
+    valid: true,
+    disableExpirationField: false,
   }
 
   componentDidMount() {
     const info = this.props.itemInfo
+    if (info.expiration_date === "-") {
+      this.setState({disableExpirationField: true})
+    }
 
     let expiration_date = new Date(info.expiration_date);
     if (expiration_date.toString() === "Invalid Date") expiration_date = Date.now();
@@ -101,16 +105,30 @@ class EditItem extends Component {
               className="item_barcode_edit margin" 
               label="Barcode number"
               margin="dense" />
-            <MuiPickersUtilsProvider utils={DateFnsUtils}>
-              <KeyboardDatePicker
-                openTo="year"
-                format="yyyy/MM/dd"
-                label="Expiration date"
-                views={["year", "month", "date"]}
-                value={this.state.expiration_date === '' ? Date.now() : this.state.expiration_date}
-                onChange={(date) => {this.setState({expiration_date: date}); this.checkValidity(this.state.name, date)}}
-              />           
-            </MuiPickersUtilsProvider>
+            <div>
+              <Checkbox
+                checked={!this.state.disableExpirationField}
+                onChange={() => {this.setState({
+                  disableExpirationField: !this.state.disableExpirationField,
+
+                })}}
+                color="primary" />
+              <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                <KeyboardDatePicker
+                  disabled={this.state.disableExpirationField}
+                  openTo="year"
+                  format="yyyy/MM/dd"
+                  label="Expiration date"
+                  views={["year", "month", "date"]}
+                  value={this.state.disableExpirationField ? null : 
+                    (this.state.expiration_date === '' ? Date.now() : this.state.expiration_date)}
+                  onChange={(date) => {
+                    this.setState({expiration_date: date});
+                    this.checkValidity(this.state.name, date);
+                  }}
+                />           
+              </MuiPickersUtilsProvider>
+            </div>
             <TextField 
               type="number"
               value={this.state.count}
@@ -144,7 +162,11 @@ class EditItem extends Component {
         </DialogContent>
         <DialogActions>
           <Button className="btn_cancel_edit" onClick={this.props.onCancelEdit}>Cancel</Button>
-          <Button className="btn_confirm_edit" onClick={() => this.props.onConfirmEdit({...this.state})}>Ok</Button>
+          <Button className="btn_confirm_edit"
+              onClick={() => this.props.onConfirmEdit({...this.state,
+                expiration_date: this.state.disableExpirationField ? null : this.state.expiration_date})}>
+            Ok
+          </Button>
         </DialogActions>
       </Fragment>
     )
