@@ -15,6 +15,15 @@ export const getMockStore = initial => {
       }
     }
   );
+
+  const getMockCategoryReducer = jest.fn(
+    initialState => (state=initialState, action) => {
+      switch(action.type){
+        default:
+          return state;
+      }
+    }    
+  );
   
   const getMockItemReducer = jest.fn(
     initialState => (state=initialState, action) => {
@@ -50,6 +59,15 @@ export const getMockStore = initial => {
           return state;
       }
     }
+  );
+
+  const getMockCommentReducer = jest.fn(
+    initialState => (state=initialState, action) => {
+      switch(action.type){
+        default:
+          return state;
+      }
+    }    
   );
 
   const getMockUserReducer = jest.fn(
@@ -122,19 +140,23 @@ export const getMockStore = initial => {
     }
   );
 
-  const mockArticleReducer = getMockArticleReducer(initial.article);
-  const mockItemReducer = getMockItemReducer(initial.item);
-  const mockItemCountReducer = getMockItemCountReducer(initial.itemcount);
-  const mockNotiReducer = getMockNotiReducer(initial.notification);
-  const mockRecipeReducer = getMockRecipeReducer(initial.recipe);
-  const mockUserReducer = getMockUserReducer(initial.user);
+  const mockArticleReducer = getMockArticleReducer(initial.article || null);
+  const mockCategoryReducer = getMockCategoryReducer(initial.category || null);
+  const mockItemReducer = getMockItemReducer(initial.item || null);
+  const mockItemCountReducer = getMockItemCountReducer(initial.itemcount || null);
+  const mockNotiReducer = getMockNotiReducer(initial.notification || null);
+  const mockRecipeReducer = getMockRecipeReducer(initial.recipe || null);
+  const mockCommentReducer = getMockCommentReducer(initial.comment || null);
+  const mockUserReducer = getMockUserReducer(initial.user || null);
   
   const rootReducer = combineReducers({
     article: mockArticleReducer,
+    category: mockCategoryReducer,
     item: mockItemReducer,
     itemcount: mockItemCountReducer,
     notification: mockNotiReducer,
     recipe: mockRecipeReducer,
+    comment: mockCommentReducer,
     user : mockUserReducer,
     router: connectRouter(history)
   });
