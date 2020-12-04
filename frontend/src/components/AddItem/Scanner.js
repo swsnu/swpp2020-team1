@@ -51,8 +51,8 @@ class Scanner extends Component {
   }
 
   _onDetected = (result) => {
-    console.log("_onDetected called in scanner");
-    console.log(result)
+    //console.log("_onDetected called in scanner");
+    //console.log(result)
     this.props.onDetected(result);
   }
 

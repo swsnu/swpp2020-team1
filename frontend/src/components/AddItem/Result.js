@@ -9,7 +9,7 @@ class Result extends Component {
     return (
       <div className="Result">
         <div className="Header"></div>
-        <EditItem itemInfo={result} />
+        <EditItem />
         <div display="flex" flex-direction="row">
           <Button id="onClickRetakeBarcodeButton" onClick={this.props.onClickRetakeBarcode} >Retake Barcode</Button>
           <Button id="onClickRetakeExpirationDateButton" onClick={this.props.onClickRetakeExpirationDate} >Retake Expiration Date</Button>
@@ -19,4 +19,4 @@ class Result extends Component {
   }
 }
 
-export default Result;
+export default (Result);

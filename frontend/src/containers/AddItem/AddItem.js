@@ -1,12 +1,15 @@
 import React, { Component } from "react";
 import axios from 'axios';
-
+import { connect } from 'react-redux';
+ 
 // material-ui components
 import parseDate from '../../components/AddItem/DateParser';
 import Scanner from '../../components/AddItem/Scanner';
 import Result from '../../components/AddItem/Result';
 import dataURLtoFile from '../../components/AddItem/URLtoFile';
 import moment from 'moment';
+import * as actionCreators from '../../store/actions/index';
+ 
 import './AddItem.css';
 
 const BARCODE_TERM = 'SCAN the barcode'
@@ -23,22 +26,21 @@ class AddItem extends Component {
     category_name: '',
     barcode_num: '',
     expiration_date: '', 
+    container: this.containers[0],
     count: 1
   }
+
+  containerDefault = (this.props.location.state ? this.props.location.state.container : this.containers[0])
   
   state = {
-    webcam: true,
     screenShot: null,
     imageSrc: "",
     imageFile: "",
     OCRResult: "",
     saveImage: false,
-    container_default: (this.props.location.state ? this.props.location.state.container : this.containers[0]),
-    is_barcode_scanning: false,
-    is_result_visible: false,
-    is_retaking: false,
-    currentResult: this.default_result,
-    resultList: []
+    isBarcodeScanning: false,
+    isResultVisible: false,
+    isRetaking: false
   }
 
   // Used to activate webcam
@@ -49,9 +51,9 @@ class AddItem extends Component {
   handleDetect = (imageText) => {
     console.log("imageText_addCard: ", imageText);
     let ymd = parseDate(imageText);
+    this.props.onUpdateCurrentItem({ expiration_date: ymd })
     this.setState((prevState, props) => ({
-      OCRResult: ymd,
-      currentResult: { ...this.state.currentResult, expiration_date: ymd } 
+      OCRResult: ymd
     }))
   }
 
@@ -90,12 +92,11 @@ class AddItem extends Component {
   };
 
   handleOCR = async (e) => {
-    if(!this.state.is_retaking && (this.state.currentResult !== this.default_result)) {
+    if(!this.state.isRetaking && this.state.isResultVisible) {
+      this.props.onMoveItemToList();
       this.setState((prevState, props) => ({
         screenShot: null,
-        imageFile: null,
-        resultList: [ ...this.state.resultList, this.state.currentResult ],
-        currentResult: this.default_result
+        imageFile: null
       }))
     }
     var canvas = document.getElementById('canvas');     
@@ -110,143 +111,123 @@ class AddItem extends Component {
     this.setState((prevState, props) => ({
       screenShot: imageSrc,
       imageFile: imageFile,
-      is_barcode_scanning: (this.state.is_retaking ? false : true),
-      is_result_visible: (this.state.is_retaking ? true : false),
-      is_retaking: false
+      isBarcodeScanning: (this.state.isRetaking ? false : true),
+      isResultVisible: (this.state.isRetaking ? true : false),
+      isRetaking: false
     }))
     this.getExpirationDateFromImage(e, data => this.handleDetect(data));
-    console.log("After exp date", this.state.currentResult)
   }
 
-  _onDetected = (result) => {
-    if(!this.state.is_barcode_scanning) return;
+  _onDetected = async (result) => {
+    if(!this.state.isBarcodeScanning) return;
     
     let barcode_num = result.codeResult.code;
-    let user_id = 1;
-    let item_name = (this.state.is_retaking ? "" : this.state.currentResult.name);
-    let category_id = (this.state.is_retaking ? "" : this.state.currentResult.category_id);
-    let category_name = (this.state.is_retaking ? "" : this.state.currentResult.category_name);
-    let expiration_date = this.state.currentResult.expiration_date;
-    let count = this.state.currentResult.count;
+    console.log("barcode_num", barcode_num);
 
-    this.setState((prevState, props) => ({is_barcode_scanning: false, is_result_visible: true, is_retaking: false, 
-      status: EXPIRATION_TERM, currentResult: { ...this.state.currentResult, container: this.state.container_default}}))
-    console.log(`barcode_num: ${barcode_num}`)
+    let user_id = 1;
+    await axios.get('/back/user/')
+      .then(res => user_id = res.data.user_id)
+      .catch(e => console.log(e)) 
+    console.log(`user_id: ${user_id}`)
+
+    this.setState((prevState, props) => ({isBarcodeScanning: false, isResultVisible: true, 
+                                                   isRetaking: false, status: EXPIRATION_TERM }))
     /*
      * Check if <new_item> is in <user>'s Item DB
      * [ Goal ] To check whether item has <user-custom name>
      * key: (user_id, barcode_num)
      */
     let custom_item = null;
-    axios.get(`/back/item/user/${user_id}/`)
+    await axios.get(`/back/item/user/${user_id}/`)
       .then(res => 
         {
           console.log(res)
           custom_item = res.data.filter(item => 
             (item.barcode_id == barcode_num && item.user_id == user_id)
           )
-          // console.log(`custom_item count: ${custom_item.length}`)
+          //console.log(`custom_item count: ${custom_item.length}`)
           if(custom_item.length>0){
             custom_item = custom_item[custom_item.length - 1];
-            console.log('custom_item is:', custom_item)
-            item_name = custom_item.name; 
-            category_id = custom_item.category_id 
-            // console.log(`custom name: ${custom_item.name}`);
-            this.setState({
-              currentResult: { ...this.state.currentResult,  
-                name: item_name,
-                category_id: category_id,
-                category_name: category_name,
-                barcode_num: barcode_num,
-                expiration_date: expiration_date, 
-                count: count }
-              }
-            )
+            console.log('custom_item is:', custom_item);
+            this.props.onUpdateCurrentItem({
+              name: custom_item.name,
+              category_id: custom_item.category_id,
+              category_name: custom_item.category_name,
+              barcode_num: barcode_num
+            })
           }
         }
       )
-      .catch(e => {});
+      .catch(e => {
+        console.log("no custom item");
+      });
     
-    console.log('at here:', custom_item)
      /*
      * Item is new to this user!
      * Check if <new_item> is in Barcode DB
      * [ Goal ] To set item's <default name>
      * key: (barcode_num)
      */
-    if(custom_item == null){
+
+    console.log(custom_item, "custom_item")
+    if(custom_item.length == 0){
       axios.get(`/back/barcode/${barcode_num}/`)
         .then(res => {
-          console.log(res.data.item_name, "item_name");
-          item_name = res.data.item_name;
-          category_id = res.data.category_id;
-          category_name = res.data.category_name;
-          this.setState((prevState, props) => ({
-            currentResult: { ...this.state.currentResult,  
-              name: item_name,
-              category_id: category_id,
-              category_name: category_name,
-              barcode_num: barcode_num,
-              expiration_date: expiration_date, 
-              count: count }
-            }))
+          console.log(res.data.name, "name");
+          this.props.onUpdateCurrentItem({
+            name: res.data.name,
+            category_id: res.data.category_id,
+            category_name: res.data.category_name,
+            barcode_num: barcode_num
+          })
         })
         .catch(err => {
           // Item not found in Barcode DB
-          this.setState((prevState, props) => ({
-            currentResult: { ...this.state.currentResult,  
-              name: item_name, 
-              category_id: category_id, 
-              category_name: category_name,
-              barcode_num: barcode_num, 
-              expiration_date: expiration_date, 
-              count: count }
-            }));
+          this.props.onUpdateCurrentItem({
+            barcode_num: barcode_num
+          })
+          console.log("no item on barcode list")
         });
     }
-
-    console.log(this.state)
   }
 
   onClickRetakeBarcodeButton = () => {
-    this.setState({ is_retaking: true, is_result_visible: false, is_barcode_scanning: true });
+    this.setState({ isRetaking: true, isResultVisible: false, isBarcodeScanning: true });
+    this.props.onUpdateCurrentItem({
+      barcode_num: '', 
+      category_id: 0,
+      category_name: '',
+      name: ''
+    })
   }
 
   onClickRetakeExpirationDateButton = () => {
-    this.setState({ is_retaking: true, is_result_visible: false, is_barcode_scanning: false, currentResult: { ...this.state.currentResult, expiration_date: '' } });
+    this.setState({ isRetaking: true, isResultVisible: false, isBarcodeScanning: false });
+    this.props.onUpdateCurrentItem({
+      expiration_date: ''
+    });
   }
 
   onClickManualAddButton = () => {
-    if(this.state.is_result_visible) {
+    if(this.state.isResultVisible) {
       this.setState((prevState, props) => ({
         screenShot: null,
-        imageFile: null,
-        resultList: [ ...this.state.resultList, this.state.currentResult ],
-        currentResult: this.default_result
+        imageFile: null
       }))
+      this.props.onMoveItemToList();
     } else {
-      this.setState({ is_result_visible: true })
+      this.setState({ isResultVisible: true })
     }
   }
 
   onClickMoveToConfirmButton = () => {
-    let updatedResults = this.state.resultList;
-    let currentResult = this.state.currentResult;
-    updatedResults = updatedResults.concat(currentResult);
-
-    Promise.resolve()
-    .then(() => {
-      this.setState({resultList: updatedResults })
-    })
-    .then(() => {
-      console.log("after resultList", this.state.resultList)
-      this.props.history.push('/item/confirm', {items: this.state.resultList});
-    })
+    this.props.onMoveItemToList();
+    this.props.history.push('/item/confirm');
   }
 
   render() {
     if(document.getElementsByClassName("Result").length > 0) {
-      if(!this.state.is_result_visible) {
+      if(!this.state.isResultVisible) {
         document.getElementsByClassName("Result")[0].style.top = "-300px";
       } else {
         document.getElementsByClassName("Result")[0].style.top = "-25px";
@@ -255,19 +236,32 @@ class AddItem extends Component {
 
     return (
       <div className="AddItem" style={{overflowX: "hidden", overflowY: "hidden"}}>
-        <Scanner id="Scanner" onDetected={this._onDetected} onCapture={this.handleOCR} barcode={this.state.is_barcode_scanning} ref="Scanner"/> 
-        <Result result={this.state.currentResult}
-            onClickRetakeBarcode={this.onClickRetakeBarcodeButton}
+        <Scanner id="Scanner" onDetected={this._onDetected} onCapture={this.handleOCR} barcode={this.state.isBarcodeScanning} ref="Scanner"/> 
+        <Result onClickRetakeBarcode={this.onClickRetakeBarcodeButton}
             onClickRetakeExpirationDate={this.onClickRetakeExpirationDateButton} />
-        <div className="StatusTerm">{ this.state.is_retaking ? "Retaking" : (this.state.is_barcode_scanning ? BARCODE_TERM : EXPIRATION_TERM) }</div>
+        <div className="StatusTerm">{ this.state.isRetaking ? "Retaking" : (this.state.isBarcodeScanning ? BARCODE_TERM : EXPIRATION_TERM) }</div>
         <div className="Footer">
           <div id="AddManuallyButton" className="ManualAddButton" onClick={this.onClickManualAddButton} >+</div>
-          {(this.state.currentResult != null) ? 
-            <div id='onClickMoveToConfirmButton' className="ConfirmButton" onClick={this.onClickMoveToConfirmButton} >Confirm</div> : null}
+          <div id='onClickMoveToConfirmButton' className="ConfirmButton" style={{visibility: (this.props.resultList.length == 0 && !this.props.currentResult.name ? "hidden" : "visible")}} onClick={this.onClickMoveToConfirmButton} >Confirm</div>
         </div>
       </div>
     );
   }
 }
 
-export default AddItem;
+
+const mapStateToProps = state => {
+  return {
+    currentResult: state.additem.currentResult,
+    resultList: state.additem.resultList
+  };
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    onUpdateCurrentItem: (item) => dispatch(actionCreators.updateCurrentItem(item)),
+    onMoveItemToList: () => dispatch(actionCreators.moveItemToList())
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(AddItem);
