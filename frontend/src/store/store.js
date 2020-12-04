@@ -6,6 +6,7 @@ import notiReducer from './reducers/notification';
 import categoryReducer from './reducers/category';
 import recipeReducer from './reducers/recipe';
 import commentReducer from './reducers/comment';
+import additemReducer from './reducers/additem';
 
 import thunk from 'redux-thunk';
 import userReducer from './reducers/userReducer';
@@ -36,6 +37,7 @@ const rootReducer = combineReducers({
   recipe: recipeReducer,
   comment: commentReducer,
   user: userReducer,
+  additem: additemReducer,
   router : connectRouter(history),
 })
 

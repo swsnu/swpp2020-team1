@@ -5,3 +5,116 @@
 .newItem {
     margin: 10px;
 }
+
+.ItemConfirm {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0px;
+    top: 0px;
+    background-color: #f4f4f4;
+    overflow: hidden;
+}
+
+.ItemConfirm .Header {
+    width: 100%;
+    height: 50px;
+
+    font-family: "Source Code Pro", sans-serif;
+    font-style: normal;
+    font-weight: 900;
+    font-size: 24px;
+    line-height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #818181;
+}
+
+.ItemConfirm .Main {
+    width: 100%;
+    height: calc(100% - 120px);
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.ItemConfirm .Main::-webkit-scrollbar {
+    height: 4px;              /* height of horizontal scrollbar ← You're missing this */
+    width: 4px;               /* width of vertical scrollbar */
+    border: 1px solid #d5d5d5;
+}
+
+.ItemConfirm .Main::-webkit-scrollbar-track {
+  border-radius: 0;
+  background: #eeeeee;
+}
+
+.ItemConfirm .Main::-webkit-scrollbar-thumb {
+  border-radius: 0;
+  background: #b0b0b0;
+}
+
+.ItemConfirm .Main .EditItem {
+    padding: 10px;
+}
+
+.ItemConfirm .Footer {
+    height: 70px;
+    width: 100%;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.ItemConfirm .Footer .ConfirmButton {
+    background-color: #FFFFFF;
+    align-self: center;
+
+    width: 150.04px;
+    height: 31px;
+
+    background: #7DBF1A;
+    border-radius: 20px;
+
+    font-family: "Source Code Pro", sans-serif;
+    font-style: normal;
+    font-weight: 900;
+    font-size: 18px;
+    color: #ffffff;
+    text-align: center;
+    line-height: 31px;
+
+    filter: drop-shadow(0px 4px 3px rgba(0, 0, 0, 0.2));
+}
+
+.ItemConfirm .Footer .ConfirmButton:hover {
+    background: #f4f4f4;
+}
+
+.ItemConfirm .Footer .ManualAddButton {
+    background: #7DBF1A;
+    height: 40px;
+    width: 40px;
+    align-self: center;
+    line-height: 40px;
+
+    font-family: 'Roboto', sans-serif;
+    font-size: 40px;
+    font-weight: 300;
+    text-align: center;
+    color: #ffffff;
+
+    filter: drop-shadow(0px 3px 5px rgba(0, 0, 0, 0.2));
+    border-radius: 50%;
+
+    position: absolute;
+    right: 20px;
+}
+
+.ItemConfirm .Footer .ManualAddButton:hover {
+    background: #f4f4f4;
+}

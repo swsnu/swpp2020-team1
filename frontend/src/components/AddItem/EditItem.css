@@ -1,0 +1,46 @@
+.EditItemContent {
+    display: flex;
+    flex-direction: column;
+    height: fit-content;
+    max-width: 100px;
+}
+
+.EditItemContent .Count {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.EditItemContent .Count .Button {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background-color: #7DBF1A;
+    margin: 3px;
+    filter: drop-shadow(0px 6px 10px rgba(0, 0, 0, 0.14)), drop-shadow(0px 1px 18px rgba(0, 0, 0, 0.12)), drop-shadow(0px 3px 5px rgba(0, 0, 0, 0.2));
+}
+
+.EditItem {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.tableContentName {
+    text-align: right;
+    font-family: "Roboto", sans-serif;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 13px;
+    line-height: 18px;
+    min-width: 100px;
+    height: 25px;
+}
+
+.tableContent {
+    width: 150px;
+    min-width: 150px;
+    display: flex;
+    flex-direction: row;
+}
