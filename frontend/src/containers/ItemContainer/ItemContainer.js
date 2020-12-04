@@ -93,7 +93,9 @@ class ItemContainer extends Component {
     const itemcounts = (this.state.itemcounts.length > 0 ? this.state.itemcounts.map(ic => {
       return (
         <div key={ic.id} className="itemListShape">
-          <div className="expiration_date">{ic.expiration_date}</div>
+          <div className="expiration_date">
+            {ic.expiration_date === '2099/12/31' ? '-' : ic.expiration_date}
+          </div>
           <div className="count">{ic.count}</div>
           <IconButton className="btn_remove_item" onClick={(event) => this.onRemoveItem(event, ic.id, ic.count)}><RemoveIcon/></IconButton>
         </div>

@@ -31,7 +31,6 @@
     "react-tesseract-ocr": "^0.1.0",
     "react-webcam": "^5.2.1",
     "redux": "^4.0.5",
-    "redux-persist": "^6.0.0",
     "redux-thunk": "^2.3.0",
     "tesseract.js": "^2.1.4",
     "web-vitals": "^0.2.4"
