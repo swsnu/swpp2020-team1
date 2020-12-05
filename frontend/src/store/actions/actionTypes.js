@@ -46,5 +46,5 @@ export const LOGIN_FAILURE = 'LOGIN_FAILURE';
 
 export const LOGOUT = 'LOGOUT';
 
-export const UPDATE_CURRENT_ITEM = 'UPDATE_CURRENT_ITEM';
-export const MOVE_ITEM_TO_LIST = 'MOVE_ITEM_TO_LIST';
+export const UPDATE_ITEM_LIST = 'UPDATE_ITEM_TO_LIST';
+export const ADD_NEW_ITEM = 'ADD_NEW_ITEM';
