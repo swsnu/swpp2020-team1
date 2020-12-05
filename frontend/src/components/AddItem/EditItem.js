@@ -95,7 +95,7 @@ class EditItem extends Component {
 
   render() {
     const {classes} = this.props;
-    console.log(this.state.item);
+    //console.log(this.state.item);
     return (
       <Fragment>
         <div className="EditItem">
@@ -105,7 +105,7 @@ class EditItem extends Component {
               <td className="tableContent">
                 <TextField fullWidth={true} style={style}
                   error={!this.state.valid}
-                  value={this.props.resultList[this.props.id].name /*this.state.item.name*/}
+                  value={/*this.props.resultList[this.props.id].name*/ this.state.item.name}
                   onChange={e => { this.setState({item: {...this.state.item, name: e.target.value}}); 
                                    this.props.onUpdateItemList(this.props.id, { name: e.target.value }); 
                                    this.checkValidity(e.target.value, this.state.item.expiration_date)}}

@@ -141,7 +141,7 @@ class AddItem extends Component {
     await axios.get(`/back/item/user/${user_id}/`)
       .then(res => 
         {
-          console.log(res)
+          //console.log(res)
           custom_item = res.data.filter(item => 
             (item.barcode_id == barcode_num && item.user_id == user_id)
           )
@@ -172,9 +172,9 @@ class AddItem extends Component {
     if(custom_item.length == 0){
       axios.get(`/back/barcode/${barcode_num}/`)
         .then(res => {
-          console.log(res.data.name, "name");
+          console.log(res.data, "name");
           this.props.onUpdateItemList(this.props.resultList.length - 1, 
-            { name: res.data.name,
+            { name: res.data.item_name,
               category_id: res.data.category_id,
               category_name: res.data.category_name,
               barcode_num: barcode_num })
@@ -214,6 +214,9 @@ class AddItem extends Component {
   }
 
   onClickMoveToConfirmButton = () => {
+    if(this.state.isResultVisible) {
+      this.props.onAddNewItem();
+    }
     this.props.history.push('/item/confirm');
   }
 
