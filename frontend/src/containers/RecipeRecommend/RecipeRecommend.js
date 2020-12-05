@@ -44,7 +44,7 @@ class RecipeRecommend extends Component {
       const videoKey = videoUrl.substring(videoUrl.lastIndexOf('=') + 1)
       const score = recipe.rating_average
       return (
-        <ListItem button key={recipe.id} onClick={() => this.goToRecipeDetail(recipe.id)}>
+        <ListItem className="recipe_detail" button key={recipe.id} onClick={() => this.goToRecipeDetail(recipe.id)}>
           <img src={`http://i.ytimg.com/vi/${videoKey}/mqdefault.jpg`} width={160} height={90} />
           <div className='RecipeInfo'>
             <div className='RecipeTitle'>{recipe.title}</div>
@@ -84,7 +84,6 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onSearchRecipes: (ingredients, preference) => dispatch(actionCreators.searchRecipes(ingredients, preference)),
   }
 }
 
