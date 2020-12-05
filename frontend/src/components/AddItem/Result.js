@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { Button } from '@material-ui/core';
 import './Result.css';
 import EditItem from './EditItem';
+import { connect } from 'react-redux';
 
 class Result extends Component {
   render() {
@@ -9,14 +9,22 @@ class Result extends Component {
     return (
       <div className="Result">
         <div className="Header"></div>
-        <EditItem />
+        <EditItem isAddItem={this.props.isAddItem} 
+          onClickRetakeBarcode={this.props.onClickRetakeBarcode} 
+          onClickRetakeExpirationDate={this.props.onClickRetakeExpirationDate}
+          onClickEditItem={this.props.onClickEditItem}
+          id={this.props.resultList.length - 1} />
         <div display="flex" flex-direction="row">
-          <Button id="onClickRetakeBarcodeButton" onClick={this.props.onClickRetakeBarcode} >Retake Barcode</Button>
-          <Button id="onClickRetakeExpirationDateButton" onClick={this.props.onClickRetakeExpirationDate} >Retake Expiration Date</Button>
         </div>
       </div>
     )
   }
 }
 
-export default (Result);
+const mapStateToProps = state => {
+  return {
+    resultList: state.additem.resultList
+  };
+}
+
+export default connect(mapStateToProps, null)(Result);

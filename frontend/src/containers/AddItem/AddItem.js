@@ -51,7 +51,7 @@ class AddItem extends Component {
   handleDetect = (imageText) => {
     console.log("imageText_addCard: ", imageText);
     let ymd = parseDate(imageText);
-    this.props.onUpdateCurrentItem({ expiration_date: ymd })
+    this.props.onUpdateItemList(this.props.resultList.length - 1, { expiration_date: ymd });
     this.setState((prevState, props) => ({
       OCRResult: ymd
     }))
@@ -93,7 +93,7 @@ class AddItem extends Component {
 
   handleOCR = async (e) => {
     if(!this.state.isRetaking && this.state.isResultVisible) {
-      this.props.onMoveItemToList();
+      this.props.onAddNewItem();
       this.setState((prevState, props) => ({
         screenShot: null,
         imageFile: null
@@ -149,12 +149,11 @@ class AddItem extends Component {
           if(custom_item.length>0){
             custom_item = custom_item[custom_item.length - 1];
             console.log('custom_item is:', custom_item);
-            this.props.onUpdateCurrentItem({
-              name: custom_item.name,
-              category_id: custom_item.category_id,
-              category_name: custom_item.category_name,
-              barcode_num: barcode_num
-            })
+            this.props.onUpdateItemList(this.props.resultList.length - 1, 
+              { name: custom_item.name,
+                category_id: custom_item.category_id,
+                category_name: custom_item.category_name,
+                barcode_num: barcode_num })
           }
         }
       )
@@ -174,18 +173,15 @@ class AddItem extends Component {
       axios.get(`/back/barcode/${barcode_num}/`)
         .then(res => {
           console.log(res.data.name, "name");
-          this.props.onUpdateCurrentItem({
-            name: res.data.name,
-            category_id: res.data.category_id,
-            category_name: res.data.category_name,
-            barcode_num: barcode_num
-          })
+          this.props.onUpdateItemList(this.props.resultList.length - 1, 
+            { name: res.data.name,
+              category_id: res.data.category_id,
+              category_name: res.data.category_name,
+              barcode_num: barcode_num })
         })
         .catch(err => {
           // Item not found in Barcode DB
-          this.props.onUpdateCurrentItem({
-            barcode_num: barcode_num
-          })
+          this.props.onUpdateItemList(this.props.resultList.length - 1, { barcode_num: barcode_num })
           console.log("no item on barcode list")
         });
     }
@@ -193,19 +189,16 @@ class AddItem extends Component {
 
   onClickRetakeBarcodeButton = () => {
     this.setState({ isRetaking: true, isResultVisible: false, isBarcodeScanning: true });
-    this.props.onUpdateCurrentItem({
-      barcode_num: '', 
-      category_id: 0,
-      category_name: '',
-      name: ''
-    })
+    this.props.onUpdateItemList(this.props.resultList.length - 1, 
+      { barcode_num: '', 
+        category_id: 0,
+        category_name: '기타',
+        name: '' })
   }
 
   onClickRetakeExpirationDateButton = () => {
     this.setState({ isRetaking: true, isResultVisible: false, isBarcodeScanning: false });
-    this.props.onUpdateCurrentItem({
-      expiration_date: ''
-    });
+    this.props.onUpdateItemList(this.props.resultList.length - 1, { expiration_date: Date.now() });
   }
 
   onClickManualAddButton = () => {
@@ -214,14 +207,13 @@ class AddItem extends Component {
         screenShot: null,
         imageFile: null
       }))
-      this.props.onMoveItemToList();
+      this.props.onAddNewItem();
     } else {
       this.setState({ isResultVisible: true })
     }
   }
 
   onClickMoveToConfirmButton = () => {
-    this.props.onMoveItemToList();
     this.props.history.push('/item/confirm');
   }
 
@@ -237,12 +229,11 @@ class AddItem extends Component {
     return (
       <div className="AddItem" style={{overflowX: "hidden", overflowY: "hidden"}}>
         <Scanner id="Scanner" onDetected={this._onDetected} onCapture={this.handleOCR} barcode={this.state.isBarcodeScanning} ref="Scanner"/> 
-        <Result onClickRetakeBarcode={this.onClickRetakeBarcodeButton}
+        <Result isAddItem={true} onClickRetakeBarcode={this.onClickRetakeBarcodeButton}
             onClickRetakeExpirationDate={this.onClickRetakeExpirationDateButton} />
         <div className="StatusTerm">{ this.state.isRetaking ? "Retaking" : (this.state.isBarcodeScanning ? BARCODE_TERM : EXPIRATION_TERM) }</div>
         <div className="Footer">
-          <div id="AddManuallyButton" className="ManualAddButton" onClick={this.onClickManualAddButton} >+</div>
-          <div id='onClickMoveToConfirmButton' className="ConfirmButton" style={{visibility: (this.props.resultList.length == 0 && !this.props.currentResult.name ? "hidden" : "visible")}} onClick={this.onClickMoveToConfirmButton} >Confirm</div>
+          <div id='onClickMoveToConfirmButton' className="ConfirmButton" onClick={this.onClickMoveToConfirmButton} >Confirm</div>
         </div>
       </div>
     );
@@ -252,15 +243,14 @@ class AddItem extends Component {
 
 const mapStateToProps = state => {
   return {
-    currentResult: state.additem.currentResult,
     resultList: state.additem.resultList
   };
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    onUpdateCurrentItem: (item) => dispatch(actionCreators.updateCurrentItem(item)),
-    onMoveItemToList: () => dispatch(actionCreators.moveItemToList())
+    onAddNewItem: () => dispatch(actionCreators.addNewItem()),
+    onUpdateItemList: (id, item) => dispatch(actionCreators.updateItemList(id, item))
   }
 }
 
