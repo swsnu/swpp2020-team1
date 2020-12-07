@@ -21,6 +21,7 @@ const styles = {
   content: {
     margin: 3,
     fontSize: 16,
+    whiteSpace: 'pre-line' // recognize new line character
   },
   date: {
     fontSize:14,
@@ -40,15 +41,18 @@ const styles = {
 const Comment = props => {
   let {classes, id, content, author, is_author, date, onEdit, onDelete} = props;
   return (
-    <Card variant="outlined">
+    <Card className="Comment" variant="outlined">
       <CardContent className={classes.cardContent}>
         <Box className={classes.author} align="left" fontWeight="fontWeightBold">@{author}</Box>
         <Typography className={classes.content} align="left">{content}</Typography>
         <Typography className={classes.date} align="left">{moment(date).format("LLL")}</Typography>
-        <Box className={classes.iconContainer} align="left" display={is_author ? "" : "none"}>
-          <IconButton className={classes.editIcon} onClick={() => onEdit(id, content)}><CreateIcon/></IconButton>
-          <IconButton className={classes.deleteIcon} onClick={() => onDelete(id)}><DeleteIcon/></IconButton>
-        </Box>
+        {is_author ?
+          <Box className={classes.iconContainer} align="left" >
+          <IconButton className={`${classes.editIcon} editButton`} onClick={() => onEdit(id, content)}><CreateIcon/></IconButton>
+          <IconButton className={`${classes.deleteIcon} deleteButton`} onClick={() => onDelete(id)}><DeleteIcon/></IconButton>
+          </Box>        
+        : null 
+        }
       </CardContent>
 
     </Card>

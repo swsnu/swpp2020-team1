@@ -114,7 +114,7 @@ class RecipeDetail extends Component {
     this.props.getComments(this.props.match.params.id);
     await axios.get('/back/user/')
       .then(res => this.user_id = res.data.user_id)
-      .catch(e => console.log(e))
+      .catch(e => {})
   }
 
   onClickBackButton = () => {
@@ -164,18 +164,21 @@ class RecipeDetail extends Component {
   render() {
     const {classes} = this.props;
 
-    let comments = this.props.comments.map(comment => {
-      return (
-        <Comment 
-          key={comment.id} 
-          id={comment.id}
-          content={comment.content} 
-          author={comment.author}
-          is_author={this.user_id === comment.author_id} 
-          date={comment.date}
-          onEdit={this.onClickEditButton}
-          onDelete={this.onClickDeleteButton}/>
-      );
+    let comments = this.props.comments
+      .map(comment => {return {...comment, date: new Date(comment.date)}})
+      .sort((c1, c2) => c2.date - c1.date) // sort by date
+      .map(comment => {
+        return (
+          <Comment 
+            key={comment.id} 
+            id={comment.id}
+            content={comment.content} 
+            author={comment.author}
+            is_author={this.user_id === comment.author_id} 
+            date={comment.date}
+            onEdit={this.onClickEditButton}
+            onDelete={this.onClickDeleteButton}/>
+        );
     });
 
     let alreadyRated = this.props.ratedRecipes && this.props.ratedRecipes.includes(parseInt(this.props.match.params.id));
@@ -216,7 +219,7 @@ class RecipeDetail extends Component {
               <Box className={classes.ratingText} fontWeight={700}>
                 {this.props.selectedRecipe.rating_average ? this.props.selectedRecipe.rating_average.toFixed(2)+" / 5.0" : "아직 별점이 없어요!"}
               </Box>
-              <Button className={classes.ratingButton} onClick={this.onClickRatingButton} disabled={alreadyRated}>
+              <Button className={`${classes.ratingButton} ratingButton`} onClick={this.onClickRatingButton} disabled={alreadyRated}>
                 {alreadyRated ? "평가 완료" : "별점 주기"}
               </Button>
             </Toolbar>
@@ -240,8 +243,8 @@ class RecipeDetail extends Component {
             <Box display={this.state.ratingWarning ? "" : "none"}><Typography color="error">별점을 입력해주세요!</Typography></Box>
           </DialogContent>
           <DialogActions>
-            <Button onClick={this.onCloseRatingDialog} color="primary">취소</Button>
-            <Button onClick={this.onConfirmRating} color="primary">확인</Button>
+            <Button className="closeRatingButton" onClick={this.onCloseRatingDialog} color="primary">취소</Button>
+            <Button className="confirmRatingButton" onClick={this.onConfirmRating} color="primary">확인</Button>
           </DialogActions>
           </Dialog>          
 
@@ -277,7 +280,7 @@ class RecipeDetail extends Component {
             rows={3}
             variant="outlined"
           />
-          <IconButton className={`${classes.createButton} newComment`} onClick={this.onClickCreateButton}><CreateIcon/></IconButton>
+          <IconButton className={`${classes.createButton} createCommentButton`} onClick={this.onClickCreateButton}><CreateIcon/></IconButton>
           {/* Comments */}
           <div>{comments}</div>
           
@@ -296,12 +299,14 @@ class RecipeDetail extends Component {
               className="editComment"
               placeholder="내용을 입력하세요"
               multiline
+              rows={5}
+              variant="outlined"
               fullWidth
             />
           </DialogContent>
           <DialogActions>
-            <Button onClick={this.onCloseEditCommentDialog} color="primary">취소</Button>
-            <Button onClick={this.onConfirmEdit} color="primary">확인</Button>
+            <Button className="closeEditButton" onClick={this.onCloseEditCommentDialog} color="primary">취소</Button>
+            <Button className="confirmEditButton" onClick={this.onConfirmEdit} color="primary">확인</Button>
           </DialogActions>
         </Dialog>
 

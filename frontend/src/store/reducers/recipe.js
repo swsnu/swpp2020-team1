@@ -21,7 +21,7 @@ const recipeReducer = (state = initialState, action) => {
           if (r.id === action.recipe.id) return action.recipe;
           else return r;
         }),
-        selectedRecipe: action.recipe,
+        selectedRecipe: action.recipe, // to update the rating of current page (trigger re-render)
         searchResults: state.searchResults.map(r => {
           if(r.id === action.recipe.id) {
             r.rating_average = action.recipe.rating_average
