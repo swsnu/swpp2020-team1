@@ -19,18 +19,6 @@ const EXPIRATION_TERM = 'MOVE to expiration date and TOUCH the screen'
 
 class AddItem extends Component {
   containers = ['freezer', 'fridge', 'shelf'];
-
-  default_result= {
-    name: '',
-    category_id: '',
-    category_name: '',
-    barcode_num: '',
-    expiration_date: '', 
-    container: this.containers[0],
-    count: 1
-  }
-
-  containerDefault = (this.props.location.state ? this.props.location.state.container : this.containers[0])
   
   state = {
     screenShot: null,
@@ -192,8 +180,8 @@ class AddItem extends Component {
     this.props.onUpdateItemList(this.props.resultList.length - 1, 
       { barcode_num: '', 
         category_id: 0,
-        category_name: '기타',
-        name: '' })
+        category_name: '기타'
+      })
   }
 
   onClickRetakeExpirationDateButton = () => {
@@ -220,6 +208,12 @@ class AddItem extends Component {
     this.props.history.push('/item/confirm');
   }
 
+  componentDidMount = () => {
+    const containerDefault = (this.props.location.state ? this.props.location.state.container : this.containers[0])
+    this.props.onSetDefaultContainer(containerDefault);
+    this.props.onUpdateItemList(0, {container: containerDefault})
+  }
+
   render() {
     if(document.getElementsByClassName("Result").length > 0) {
       if(!this.state.isResultVisible) {
@@ -232,8 +226,8 @@ class AddItem extends Component {
     return (
       <div className="AddItem" style={{overflowX: "hidden", overflowY: "hidden"}}>
         <Scanner id="Scanner" onDetected={this._onDetected} onCapture={this.handleOCR} barcode={this.state.isBarcodeScanning} ref="Scanner"/> 
-        <Result isAddItem={true} onClickRetakeBarcode={this.onClickRetakeBarcodeButton}
-            onClickRetakeExpirationDate={this.onClickRetakeExpirationDateButton} />
+        {this.state.isResultVisible ? <Result isAddItem={true} onClickRetakeBarcode={this.onClickRetakeBarcodeButton}
+            onClickRetakeExpirationDate={this.onClickRetakeExpirationDateButton} /> : null }
         <div className="StatusTerm">{ this.state.isRetaking ? "Retaking" : (this.state.isBarcodeScanning ? BARCODE_TERM : EXPIRATION_TERM) }</div>
         <div className="Footer">
           <div id='onClickMoveToConfirmButton' className="ConfirmButton" onClick={this.onClickMoveToConfirmButton} >Confirm</div>
@@ -253,7 +247,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     onAddNewItem: () => dispatch(actionCreators.addNewItem()),
-    onUpdateItemList: (id, item) => dispatch(actionCreators.updateItemList(id, item))
+    onUpdateItemList: (id, item) => dispatch(actionCreators.updateItemList(id, item)),
+    onSetDefaultContainer: (container) => dispatch(actionCreators.setDefaultContainer(container))
   }
 }
 

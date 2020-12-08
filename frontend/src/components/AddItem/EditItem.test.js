@@ -1,9 +1,15 @@
 import React from 'react';
+import axios from 'axios';
 import { shallow, mount } from 'enzyme';
 import EditItem from './EditItem';
+import { Provider } from 'react-redux';
+import { Route, Redirect, Switch, BrowserRouter } from 'react-router-dom';
 import { TextField, Select, Button } from '@material-ui/core';
+import { editItemCount } from '../../store/actions';
+//import { it } from 'date-fns/locale';
+import { getMockStore } from '../../mock';
 
-const resultMock = {
+const resultMock0 = {
   name: '냉장 서울우유 1L',
   barcode_num: 8801115114154,
   expiration_date: '2020/11/24',
@@ -12,22 +18,123 @@ const resultMock = {
   count: 4, 
   container: 'freezer'
 }
+
+const resultMock1 = {
+  name: '냉장 서울우유 1L',
+  barcode_num: 8801115114154,
+  expiration_date: '-',
+  category_name: '우유',
+  category_id: 0,
+  count: 4, 
+  container: 'freezer'
+}
+
+const stubInitialState = {
+  additem: {
+    resultList: [resultMock0, resultMock1]
+  }
+}
+
+const mockStore = getMockStore(stubInitialState);
+
 const onCancelEditMock = jest.fn();
 const onConfirmEditMock = jest.fn().mockResolvedValue({
-  resultMock
+  resultMock0
 });
+
 const props = {
-  result: resultMock,
+  result: resultMock0,
   onCancelEdit: onCancelEditMock,
   onConfirmEdit: onConfirmEditMock
 }
 
-describe('<EditItem />', () => {
-  let component;
+describe('<EditItem //>', () => {
+  let editItem;
+
   beforeEach(() => {
-    component = mount(<EditItem { ...props }/>);
-    //component.update();
+    editItem = (id) => {
+      return (
+      <Provider store={mockStore}>
+        <BrowserRouter>
+        <Switch>
+          <Route path='/' exact render={() => <EditItem id={id} />} />
+        </Switch>
+        </BrowserRouter>
+      </Provider>
+    )}
   })
+
+  it('should render EditItem', () => {
+    const component = mount(editItem(0));
+    const wrapper = component.find('.EditItem');
+    expect(wrapper.length).toBe(1);
+  })
+
+  it('should render EditItem when expiration date is null', () => {
+    const component = mount(editItem(1));
+    const wrapper = component.find('.EditItem');
+    expect(wrapper.length).toBe(1);
+  })
+
+  it('should get correct value and changes for Name TextField', () => {
+    let wrapper = mount(editItem(0)).find(TextField).find('.item_name_edit').find('input');
+    expect(wrapper.props().value).toEqual(resultMock0.name);
+    wrapper.simulate('change', { target: { value: '냉장 매일우유 1L' }})
+    //expect(wrapper.props().value).toEqual('냉장 매일우유 1L')
+  })
+
+  it('should get correct value and changes for Barcode TextField', () => {
+    let wrapper = mount(editItem(0)).find(TextField).find('.item_barcode_edit').find('input');
+    expect(wrapper.props().value).toEqual(resultMock0.barcode_num);
+    wrapper.simulate('change', { target: { value: 123456789 }})
+    //expect(wrapper.props().value).toEqual(123456789)
+  })
+
+  it('should get correct value and changes for ExpirationDate TextField', () => {
+    let wrapper = mount(editItem(0)).find(TextField).find('.item_expiration_date_edit').find('input');
+    expect(wrapper.props().value).toEqual(resultMock0.expiration_date);
+    wrapper.simulate('change', { target: { value: '2020/11/15' }})
+    //expect(wrapper.props().value).toEqual('2020/11/15')
+  })
+
+  it('should get correct value and changes for Count TextField', () => {
+    let wrapper = mount(editItem(0)).find(TextField).find('.item_count_edit').find('input');
+    expect(wrapper.props().value).toEqual(resultMock0.count);
+    wrapper.simulate('change', { target: { value: 6 }})
+    //expect(wrapper.props().value).toEqual(6)
+  })
+
+  it('should get correct value and changes for Category TextField', () => {
+    const spyGet = jest.spyOn(axios, 'get')
+      .mockImplementation(url => {
+        return new Promise((resolve, reject) => {
+          resolve({data: []});
+        })
+      })
+    
+    let wrapper = mount(editItem(0)).find('.item_category_name_edit').find('input');
+    expect(wrapper.props().value).toEqual(resultMock0.category_name);
+    console.log(mount(editItem(0)).debug())
+    wrapper.simulate('change', { target: { value: '맥주' }})
+    //expect(wrapper.props().value).toEqual('맥주')
+  })
+
+  it('should get correct value and changes for Container TextField', () => {
+    const spyGet = jest.spyOn(axios, 'get')
+      .mockImplementation(url => {
+        return new Promise((resolve, reject) => {
+          resolve({data: []});
+        })
+      })
+    
+    let wrapper = mount(editItem(0)).find(Select).find('.item_container_edit').find('input');
+    expect(wrapper.props().value).toEqual(resultMock0.container);
+    wrapper.simulate('change', { target: { value: 'fridge' }})
+    //expect(wrapper.props().value).toEqual('fridge')
+  })
+})
+
+/*
 
   it('should work properly for blank result', () => {
     const resultBlankMock = {}
@@ -41,48 +148,6 @@ describe('<EditItem />', () => {
     expect(componentBlank.state().container).toEqual('freezer');
   })
 
-  it('should get correct value and changes for Name TextField', () => {
-    let wrapper = component.find(TextField).find('.item_name_edit').find('input');
-    expect(wrapper.props().value).toEqual(resultMock.name);
-    wrapper.simulate('change', { target: { value: '냉장 매일우유 1L' }})
-    expect(component.state().name).toEqual('냉장 매일우유 1L')
-  })
-
-  it('should get correct value and changes for Barcode TextField', () => {
-    let wrapper = component.find(TextField).find('.item_barcode_edit').find('input');
-    expect(wrapper.props().value).toEqual(resultMock.barcode_num);
-    wrapper.simulate('change', { target: { value: 123456789 }})
-    expect(component.state().barcode_num).toEqual(123456789)
-  })
-
-  it('should get correct value and changes for ExpirationDate TextField', () => {
-    let wrapper = component.find(TextField).find('.item_expiration_date_edit').find('input');
-    expect(wrapper.props().value).toEqual(resultMock.expiration_date);
-    wrapper.simulate('change', { target: { value: '2020/11/15' }})
-    expect(component.state().expiration_date).toEqual('2020/11/15')
-  })
-
-  it('should get correct value and changes for Count TextField', () => {
-    let wrapper = component.find(TextField).find('.item_count_edit').find('input');
-    expect(wrapper.props().value).toEqual(resultMock.count);
-    wrapper.simulate('change', { target: { value: 6 }})
-    expect(component.state().count).toEqual(6)
-  })
-
-  it('should get correct value and changes for Category TextField', () => {
-    let wrapper = component.find(TextField).find('.item_category_name_edit').find('input');
-    expect(wrapper.props().value).toEqual(resultMock.category_name);
-    wrapper.simulate('change', { target: { value: '맥주' }})
-    expect(component.state().category_name).toEqual('맥주')
-  })
-
-  it('should get correct value and changes for Container TextField', () => {
-    let wrapper = component.find(Select).find('.item_container_edit').find('input');
-    console.log(wrapper.debug())
-    expect(wrapper.props().value).toEqual(resultMock.container);
-    wrapper.simulate('change', { target: { value: 'fridge' }})
-    expect(component.state().container).toEqual('fridge')
-  })
 
   it('should work properly on onConfirmEdit button', () => {
     let wrapper = component.find(Button).find('.btn_confirm_edit').find('button');
@@ -97,3 +162,4 @@ describe('<EditItem />', () => {
     expect(onCancelEditMock).toHaveBeenCalledTimes(1);
   })
 })
+*/

@@ -70,6 +70,23 @@ export const getMockStore = initial => {
     }    
   );
 
+  const getMockAddItemReducer = jest.fn(
+    initialState => (state=initialState, action) => {
+      switch(action.type) {
+        case actionTypes.UPDATE_ITEM_LIST:
+          const changedResultList = state.resultList.map((item, idx) => {
+            if(action.id === idx) {
+              return { ...state.resultList[idx], ...action.item };
+            }
+            return item;
+          })
+          return { ...state, resultList: changedResultList };
+        default:
+          return state;
+      }
+    }    
+  );
+
   const getMockUserReducer = jest.fn(
     initialState => (state = initialState, action) => { 
       switch(action.type) {
@@ -147,6 +164,7 @@ export const getMockStore = initial => {
   const mockNotiReducer = getMockNotiReducer(initial.notification || null);
   const mockRecipeReducer = getMockRecipeReducer(initial.recipe || null);
   const mockCommentReducer = getMockCommentReducer(initial.comment || null);
+  const mockAddItemReducer = getMockAddItemReducer(initial.additem || null);
   const mockUserReducer = getMockUserReducer(initial.user || null);
   
   const rootReducer = combineReducers({
@@ -157,6 +175,7 @@ export const getMockStore = initial => {
     notification: mockNotiReducer,
     recipe: mockRecipeReducer,
     comment: mockCommentReducer,
+    additem: mockAddItemReducer,
     user : mockUserReducer,
     router: connectRouter(history)
   });
