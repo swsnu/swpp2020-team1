@@ -17,7 +17,7 @@ class ApiTestCase(TestCase):
         response = client.get('/back/token/')
         csrftoken = response.cookies['csrftoken'].value  # Get csrf token from cookie
 
-        response = client.post('/back/signup/', json.dumps({'username': 'chris', 'password': 'chris'}),
+        response = client.post('/back/signup/', json.dumps({'username': 'chris', 'password': 'chris', 'nickname': 'christmas'}),
                                content_type='application/json', HTTP_X_CSRFTOKEN=csrftoken)
         self.assertEqual(response.status_code, 201)  # Pass csrf protection
         response = client.post('/back/token/', json.dumps({'username': 'chris', 'password': 'chris'}),

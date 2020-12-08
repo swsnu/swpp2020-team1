@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import ItemContainer from '../ItemContainer/ItemContainer';
 import * as actionCreators from '../../store/actions/index';
-import * as userActionCreators from '../../store/actions/userAction';
+import * as userActionCreators from '../../store/actions/user';
 import { Dialog, List, Typography, Button } from '@material-ui/core';
 import NotiIcon from '@material-ui/icons/Notifications';
 import ArrowBack from '@material-ui/icons/ArrowBack'
@@ -10,7 +10,9 @@ import Circle from '@material-ui/icons/Brightness1'
 import axios from 'axios';
 import NotiCard from '../../components/Notification/NotiCard';
 import './MainPage.css';
-import Header from "../Header/Header";
+import Logout from '../Header/LogOut';
+
+
 
 class MainPage extends Component {
 
@@ -22,32 +24,23 @@ class MainPage extends Component {
     notifications: [],
     selectedItemIds: [],
     selectedCuisine: null,
-    mode: "normal"
+    mode: "normal",
+    clicked: false
   }
 
   // temporary
   user_id = 1;
 
-
   async componentDidMount() { 
     await axios.get('/back/user/')
       .then(res => this.user_id = res.data.user_id)
       .catch(e => console.log(e)) 
-      console.log(`this.user_id: ${this.user_id}`)
-    // temporary login
-    // await axios.post('/back/signin/', {'username': 'jaeseoklee', 'password': '0000'})
-    //   .then(res => console.log(res))
-    //   .catch(e => console.log(e))
-
     await this.props.onGetUserItems(this.user_id);
+    
     for (const item of this.props.items) {
       await this.props.onGetItemCounts(item.id)
     }
-    // console.log("itemcounts: " + JSON.stringify(this.props.itemcounts))
-    // console.log("items: " + JSON.stringify(this.props.items))
-    // console.log("notifications: " + JSON.stringify(this.props.notifications))
 
-    this.getAndBuildNotification(this.user_id)
 
     window.addEventListener("resize", this.resize.bind(this));
     this.resize();
@@ -170,7 +163,7 @@ class MainPage extends Component {
     }
   }
 
-  onClickItemSelectButton = () => {
+  onClickItemSelectButton = (e) => {
     if(this.state.mode === "normal") {
       this.setState({ mode: "select" });
       document.getElementsByClassName("ItemSelectButton")[0].style.background = "#C4C4C4";
@@ -250,11 +243,12 @@ class MainPage extends Component {
     const fridgeItems = items.filter(i => i.container === 'fridge')
     const shelfItems = items.filter(i => i.container === 'shelf')
 
+    const clickedStyle = { background:'#c4c4c4' } 
     
     return (
         <div className="MainPage">
-          <Header/>
           <div className="title">
+            <Logout/>
             <div className="titleOrange">Food</div>
             <div className="titleBlack">ify</div>
             <div className="btn_notification" onClick={this.onClickNotiIcon}>
@@ -262,7 +256,6 @@ class MainPage extends Component {
               { this.state.isUnreadNotiExists ? <Circle style={styles.overlay} color="secondary"/> : null }
             </div>
           </div>
-          {/*<Typography>{this.state.currentWidth} and {this.state.currentHeight}</Typography>*/}
           <ItemContainer 
             type="freezer"
             selectedItemIds={this.state.selectedItemIds}
@@ -290,8 +283,7 @@ class MainPage extends Component {
             items={shelfItems}
             buildNotification={() => {this.getAndBuildNotification(this.user_id)}}
             mode={this.state.mode}/>
-          {/* <Basket/> */}
-          <div className="ItemSelectDiv" onClick={this.onClickItemSelectButton}>
+          <div className="ItemSelectDiv" onClick={(event)=>this.onClickItemSelectButton(event)}>
             <div className="ItemSelectButton">
               <div className="ItemSelectButtonHeader">
                 {this.state.mode !== "normal" ?

@@ -10,6 +10,10 @@ export const signUpRequest = (newUser) => {
             dispatch(signUpSuccess());
             dispatch(push('/signin'));
         })
+        .catch( error => {
+            dispatch(signUpFailure(error.data.code));
+            alert('Failed to Sign Up')
+        })
     }
 }
 
@@ -20,7 +24,6 @@ export function register() {
 }
  
 export function signUpSuccess() {
-    console.log("signUpSuccess");
     return {
         type: actionTypes.SIGN_UP_SUCCESS
     };
@@ -34,8 +37,6 @@ export function signUpFailure(error) {
 }
 
 export const loginRequest = (user) => {
-  console.log("loginRequest/user");
-  console.log(user)
   return dispatch => {
       dispatch(login());
       return axios.post('/back/signin/', user)
@@ -53,7 +54,8 @@ export const loginRequest = (user) => {
 export const loginCheckRequest = () => {
   return dispatch => {
       dispatch(login());
-      return axios.get('/back/user/').then(
+      return axios.get('/back/user/')
+      .then(
           response => {
               dispatch(loginSuccess(response.data.username))
           }
@@ -68,7 +70,8 @@ export const loginCheckRequest = () => {
 export const logoutRequest = () => {
   return dispatch => {
       return axios.get('/back/signout/')
-      .then( response => {
+      .then( 
+          response => {
           dispatch({
               type : actionTypes.LOGOUT
           })

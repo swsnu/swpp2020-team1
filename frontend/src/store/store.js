@@ -9,7 +9,7 @@ import commentReducer from './reducers/comment';
 import additemReducer from './reducers/additem';
 
 import thunk from 'redux-thunk';
-import userReducer from './reducers/userReducer';
+import userReducer from './reducers/user';
 import { createBrowserHistory } from 'history';
 import { connectRouter, routerMiddleware } from 'connected-react-router';
 import { persistReducer } from 'redux-persist';	
