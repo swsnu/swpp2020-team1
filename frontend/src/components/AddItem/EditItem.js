@@ -68,6 +68,7 @@ class EditItem extends Component {
   }
 
   onCategoryChange = (event, value) => {
+    console.log("here")
     if (value && value.name) { // value is object {id, name}
       console.log("value: " + JSON.stringify(value))
       this.setState({ item: { ...this.state.item, category_id: value.id, category_name: value.name }});
@@ -95,7 +96,6 @@ class EditItem extends Component {
 
   render() {
     const {classes} = this.props;
-    //console.log(this.state.item);
     return (
       <Fragment>
         <div className="EditItem">
@@ -146,6 +146,7 @@ class EditItem extends Component {
                     InputProps={{classes: {input: classes.typography}}}
                     openTo="year"
                     format="yyyy/MM/dd"
+                    className="item_expiration_date_edit"
                     views={["year", "month", "date"]}
                     value={this.state.disableExpirationField ? null : this.props.resultList[this.props.id].expiration_date}
                     onChange={(date) => { this.setState({ item: {...this.state.item, expiration_date: date }}); 
@@ -177,6 +178,7 @@ class EditItem extends Component {
                   id="auto-select"
                   autoSelect
                   freeSolo={true}
+                  className="item_category_name_edit"
                   onChange={this.onCategoryChange}
                   renderInput={(params) =>
                     <TextField {...params} style={style} InputProps={{ ...params.InputProps, style: {fontSize: 14, fontFamily: "Noto Sans KR"} }} />}/>

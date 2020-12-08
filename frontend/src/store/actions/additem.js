@@ -20,3 +20,22 @@ export const addNewItem = () => {
   }
 }
 
+export const resetItemList_ = () => {
+  return { type: actionTypes.RESET_ITEM_LIST };
+}
+
+export const resetItemList = () => {
+  return dispatch => {
+    dispatch(resetItemList_());
+  }
+}
+
+export const setDefaultContainer_ = (container) => {
+  return { type: actionTypes.SET_DEFAULT_CONTAINER, container };
+}
+
+export const setDefaultContainer = (container) => {
+  return dispatch => {
+    dispatch(setDefaultContainer_(container));
+  }
+}

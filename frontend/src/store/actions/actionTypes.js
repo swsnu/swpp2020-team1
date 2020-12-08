@@ -46,5 +46,7 @@ export const LOGIN_FAILURE = 'LOGIN_FAILURE';
 
 export const LOGOUT = 'LOGOUT';
 
+export const SET_DEFAULT_CONTAINER = 'SET_DEFAULT_CONTAINER';
 export const UPDATE_ITEM_LIST = 'UPDATE_ITEM_TO_LIST';
 export const ADD_NEW_ITEM = 'ADD_NEW_ITEM';
+export const RESET_ITEM_LIST = 'RESET_ITEM_LIST';
