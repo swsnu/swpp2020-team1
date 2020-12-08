@@ -5,10 +5,13 @@ import { Provider } from 'react-redux';
 import { Route, Redirect, Switch, BrowserRouter } from 'react-router-dom';
 
 import ItemContainer from './ItemContainer';
+// import Item from '../../components/Item/Item'
 import { getMockStore } from '../../mock';
 import * as itemActionCreators from '../../store/actions/item';
 import * as itemcountActionCreators from '../../store/actions/itemcount';
 
+
+// jest.mock('../../components/Item/Item', () => jest.fn())
 
 function flushPromises() {
   return new Promise(resolve => setImmediate(resolve));
@@ -41,6 +44,14 @@ describe('<ItemContainer />', () => {
 
   let itemContainer, mockHistory, mockItems;
   beforeEach(() => {
+    // Item.mockImplementation(props => {
+    //   return (
+    //     <div className="Item">
+    //         <button className="selectItem" onClick={(id) => props.onClickSelectItem(id)}></button>
+    //         <button className="clickCard" onClick={(ic) => props.onClickCard(ic)}></button>
+    //     </div>
+    //   );
+    // })
 
     mockHistory = {push: jest.fn()}
     mockItems = [
@@ -66,7 +77,7 @@ describe('<ItemContainer />', () => {
       <Provider store={mockStore}>
         <BrowserRouter>
         <Switch>
-          <ItemContainer type="freezer" items={mockItems} selectedItemIds={[]} history={mockHistory}/>
+          <ItemContainer type="freezer" items={mockItems} selectedItemIds={[1]} history={mockHistory}/>
         </Switch>
         </BrowserRouter>
       </Provider>
@@ -89,6 +100,26 @@ describe('<ItemContainer />', () => {
     // why this is not working? maybe because it's not a route defined in App.js
     // expect(mockHistory.push).toHaveBeenCalled();
   });
+
+  it('should handle itemcounts', () => {
+    const component = mount(itemContainer);
+    const itemContainerInstance = component.find(ItemContainer.WrappedComponent).instance();
+    itemContainerInstance.setState({
+      itemcounts: [{"id": 1, "expiration_date": "2020/11/30", "count": 1, "item_id": 1}],
+    })
+    const removeItemButton = component.find('.btn_remove_item').at(0);
+    removeItemButton.simulate('click');
+  });
+
+  // it('should handle click item', () => {
+  //   const component = mount(itemContainer);
+  //   const itemContainerInstance = component.find(ItemContainer.WrappedComponent).instance();
+  //   itemContainerInstance.setState({
+  //     itemcounts: [{"id": 1, "expiration_date": "2020/11/30", "count": 1, "item_id": 1}],
+  //   })
+  //   const itemButton = component.find(Item).at(0);
+  //   itemButton.simulate('click');
+  // });
 
   it('should handle remove item button', () => {
     const spyEditItemCount = jest.spyOn(itemcountActionCreators, 'editItemCount')

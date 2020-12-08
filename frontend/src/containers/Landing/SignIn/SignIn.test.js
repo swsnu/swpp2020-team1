@@ -6,7 +6,7 @@ import { ConnectedRouter } from 'connected-react-router';
 import { Redirect } from 'react-router-dom';
 import { getMockStore } from '../../../mock';
 import { history } from '../../../store/store';
-import * as userActionCreators from '../../../store/actions/userAction';
+import * as userActionCreators from '../../../store/actions/user';
 import * as actionTypes from '../../../store/actions/actionTypes'
 
 const stubInitialState = {

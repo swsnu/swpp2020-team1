@@ -107,7 +107,8 @@ class ItemContainer extends Component {
           <Container>
             <div className="ContainerHeader">
               <div className="ContainerName">{this.props.type.toUpperCase()}</div>
-              <div className="AddItemButton"><div><AddIcon style={{color: "#ffffff"}}/></div><div className="AddItemLine" onClick={() => this.onClickAddItemButton()}>Add</div></div>
+              <div className="AddItemButton"><div><AddIcon style={{color: "#ffffff"}}/></div>
+              <div className="AddItemLine" onClick={() => this.onClickAddItemButton()}>Add</div></div>
             </div>
             <div className={this.props.type === "fridge" ? "ItemGrid ItemGridFridge" : "ItemGrid"}>
               {items}
@@ -135,7 +136,6 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     onEditItemCount: (id, count) => dispatch(actionCreators.editItemCount(id, count)),
-    onGetUserNotiList: (user_id) => dispatch(actionCreators.getUserNotiList(user_id)),
   }
 }
 
