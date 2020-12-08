@@ -91,7 +91,7 @@ describe('<NotiCard />', () => {
         noti={noti}/>);
   });
 
-  it('should render date string (buy_item)', () => {
+  it('should render date string (expire)', () => {
     let noti = { id: 1, notiType: 'expire', itemName: 'itemName1',
       expirationDate: '2020/12/25', elapsedDays: 2, isRead: false, noneed: '1' } 
     let component = mount(
