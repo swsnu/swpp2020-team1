@@ -32,7 +32,7 @@ const Item = props => {
         <div className="item-title">{props.name}</div>
         <div key={itemFastestExpDate.id} className="item">
           <div className="expiration_date">
-            {itemFastestExpDate.expiration_date === '2099/12/31' ? '-' : itemFastestExpDate.expiration_date }
+            {itemFastestExpDate.expiration_date === '2099/12/31' ? null : itemFastestExpDate.expiration_date }
           </div>
           <div className="count">{itemFastestExpDate.count}</div>
           <IconButton className="btn_remove_item" onClick={(event) => props.onRemoveItem(event, itemFastestExpDate.id, itemFastestExpDate.count)}><RemoveIcon/></IconButton>

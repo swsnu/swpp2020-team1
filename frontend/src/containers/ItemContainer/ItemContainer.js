@@ -94,7 +94,7 @@ class ItemContainer extends Component {
       return (
         <div key={ic.id} className="itemListShape">
           <div className="expiration_date">
-            {ic.expiration_date === '2099/12/31' ? '-' : ic.expiration_date}
+            {ic.expiration_date === '2099/12/31' ? null : ic.expiration_date}
           </div>
           <div className="count">{ic.count}</div>
           <IconButton className="btn_remove_item" onClick={(event) => this.onRemoveItem(event, ic.id, ic.count)}><RemoveIcon/></IconButton>
