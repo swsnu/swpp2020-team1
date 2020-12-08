@@ -39,7 +39,7 @@ const NotiCard = props => {
     let purchaseLink = `https://www.coupang.com/np/search?component=&q=${itemName}&channel=user`
 
     let elapsedDaysString = null
-    if (elapsedDays > 2) elapsedDaysString = `${elapsedDays}일 전`
+    if (elapsedDays >= 2) elapsedDaysString = `${elapsedDays}일 전`
     else if (elapsedDays === 1) elapsedDaysString = '어제'
     else if (elapsedDays === 0) elapsedDaysString = '오늘'
     else elapsedDaysString = '방금'
@@ -64,7 +64,7 @@ const NotiCard = props => {
             </Typography>
             </div>
           </div>
-        <div onClick={() => {window.open(purchaseLink, '_blank').focus();}}
+        <div className='purchaseLink' onClick={() => {window.open(purchaseLink);}}
             style={{height: 20, width: 90, textAlign: 'center', backgroundColor: '#7DBF1A', borderRadius: 10}}>
           <Typography style={{fontSize: 13, color: '#ffffff', alignSelf: 'center'}}>
             {"구매하러 가기"}
