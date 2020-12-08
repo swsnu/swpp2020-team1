@@ -190,7 +190,6 @@ class RecipeDetail extends Component {
             <Toolbar>
                 <IconButton className="backButton" onClick={this.onClickBackButton}><ArrowBackIcon/></IconButton>
                 <Typography className={classes.typography} variant="h5">Recipe</Typography>
-                <Button>Logout</Button>
             </Toolbar>
           </AppBar>
 
