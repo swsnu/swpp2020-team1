@@ -4,10 +4,10 @@ import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'connected-react-router';
 import { Redirect } from 'react-router-dom';
 
-import SignUp from './Signup';
+import SignUp from './SignUp';
 import { getMockStore } from '../../../mock';
 import { history } from '../../../store/store';
-import * as userActionCreators from '../../../store/actions/userAction';
+import * as userActionCreators from '../../../store/actions/user';
 
 const stubInitialState = {
   item: {

@@ -1,11 +1,11 @@
 import React from 'react';
-import Logout from './Logout';
+import LogOut from './LogOut';
 import {  mount } from 'enzyme';
 import { Provider } from 'react-redux';
 import {  ConnectedRouter } from 'connected-react-router';
 import { getMockStore } from '../../mock';
 import { history } from '../../store/store';
-import * as userActionCreators from '../../store/actions/userAction';
+import * as userActionCreators from '../../store/actions/user';
 
 const stubLoggedInState = {
   item: {
@@ -39,7 +39,7 @@ describe('Logout', ()=> {
         logout = (
             <Provider store = {mockStore}>
                 <ConnectedRouter history={history} >
-                    <Logout/>
+                    <LogOut/>
                  </ConnectedRouter>
             </Provider>
         )

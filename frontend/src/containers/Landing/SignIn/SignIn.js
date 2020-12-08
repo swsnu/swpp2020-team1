@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import * as userActionCreators from '../../../store/actions/userAction';
+import * as userActionCreators from '../../../store/actions/user';
 import {withRouter} from 'react-router';
 import { Redirect } from 'react-router';
 

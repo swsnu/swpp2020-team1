@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import * as userActionCreators from '../../store/actions/userAction';
+import * as userActionCreators from '../../store/actions/user';
 import {connect } from 'react-redux'
 import {withRouter} from 'react-router'
 import { Button } from '@material-ui/core';
