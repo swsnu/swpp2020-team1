@@ -17,7 +17,7 @@ class ApiTestCase(TestCase):
         response = client.get('/back/token/')
         csrftoken = response.cookies['csrftoken'].value  # Get csrf token from cookie
 
-        response = client.post('/back/signup/', json.dumps({'username': 'chris', 'password': 'chris', 'nickname': 'christmas'}),
+        response = client.post('/back/signup/', json.dumps({'email': 'chris@cc.com', 'password': 'chris', 'nickname': 'christmas'}),
                                content_type='application/json', HTTP_X_CSRFTOKEN=csrftoken)
         self.assertEqual(response.status_code, 201)  # Pass csrf protection
         response = client.post('/back/token/', json.dumps({'username': 'chris', 'password': 'chris'}),
@@ -184,6 +184,16 @@ class ApiTestCase(TestCase):
         response = client.delete('/back/item/1/count/')
         self.assertEqual(response.status_code, 405)
 
+    def test_user_info(self):
+        client = Client()
+        response = client.get('/back/token/')
+        csrftoken = response.cookies['csrftoken'].value  # Get csrf token from cookie
+        client.post('/back/signin/', json.dumps({'username': 'swpp', 'password': 'iluvswpp'}),
+                                content_type='application/json', HTTP_X_CSRFTOKEN=csrftoken)
+        Barcode.objects.get(barcode_num='8801234').delete()
+        response = client.get('/back/user/')
+        self.assertEqual(response.status_code, 200)
+
     def test_get_barcode(self):
         client = Client()
         response = client.get('/back/token/')
@@ -336,6 +346,41 @@ class ApiTestCase(TestCase):
         ### NOT ALLOWED ###
         response = client.delete('/back/recipe/1/')
         self.assertEqual(response.status_code, 405)
+
+    def test_recipe_search(self):
+        client = Client()
+        ### POST ###
+        response = client.post('/back/recipe/search/', json.dumps({'ingredients': [1], 'preference': 'korean'}),  content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+
+        response = client.post('/back/recipe/search/', json.dumps({'ingredients': [1], 'preference': 'all'}),  content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+
+        recipe = Recipe(title='aa', description='bb', video_url='cc', cuisine_type='korean')
+        recipe.save()
+        category = Category.objects.get(id=1)
+        recipe.ingredients.add(category)
+        recipe.save()
+        response = client.post('/back/recipe/search/', json.dumps({'ingredients': [1], 'preference': 'all'}),  content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+
+        ### KeyError
+        response = client.post('/back/recipe/search/', json.dumps({'ingredients': [1]}),  content_type='application/json')
+        self.assertEqual(response.status_code, 400)
+
+        ### NOT ALLOWED ###
+        response = client.put('/back/recipe/search/')
+        self.assertEqual(response.status_code, 405)
+
+    def test_recipe_rating(self):
+        client = Client()
+        response = client.get('/back/token/')
+        csrftoken = response.cookies['csrftoken'].value  # Get csrf token from cookie
+        client.post('/back/signin/', json.dumps({'username': 'swpp', 'password': 'iluvswpp'}),
+                                content_type='application/json', HTTP_X_CSRFTOKEN=csrftoken)
+        response = client.get('/back/recipe/rating/')
+        self.assertEqual(response.status_code, 200)
+
 
     def test_comment_list(self):
         User = get_user_model()

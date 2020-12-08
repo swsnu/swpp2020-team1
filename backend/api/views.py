@@ -481,7 +481,7 @@ def recipe_list(request):
 def recipe_search(request):
     '''
     recipe_search:
-        GET: get recipes by ingredients and preference
+        POST: get recipes by ingredients and preference
     '''
     if request.method == 'POST':
         try:
