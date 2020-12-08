@@ -1,9 +1,7 @@
 import React from 'react';
 import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
 import IconButton from '@material-ui/core/IconButton';
 import RemoveIcon from '@material-ui/icons/Remove';
-import { Dialog, Typography, Container } from '@material-ui/core';
 import "./Item.css";
 
 const Item = props => {
@@ -14,7 +12,6 @@ const Item = props => {
       return -1;
     }
   })[0];
-
   
   const onClickSelectCard = (id) => {
     console.log(id);
@@ -35,7 +32,7 @@ const Item = props => {
         <div className="item-title">{props.name}</div>
         <div key={itemFastestExpDate.id} className="item">
           <div className="expiration_date">
-            {itemFastestExpDate.expiration_date === '2099/12/31' ? '-' : itemFastestExpDate.expiration_date}
+            {itemFastestExpDate.expiration_date === '2099/12/31' ? '-' : itemFastestExpDate.expiration_date }
           </div>
           <div className="count">{itemFastestExpDate.count}</div>
           <IconButton className="btn_remove_item" onClick={(event) => props.onRemoveItem(event, itemFastestExpDate.id, itemFastestExpDate.count)}><RemoveIcon/></IconButton>

@@ -40,8 +40,7 @@ class ItemConfirm extends Component {
       items: this.state.items.concat({
         'name': info.name, 
         'barcode_num': info.barcode_num, 
-        'expiration_date': info.expiration_date ?
-            moment(info.expiration_date).format("YYYY/MM/DD") : "-",
+        'expiration_date': info.expiration_date,
         'category_id': info.category_id, 
         'category_name': info.category_name,
         'container': info.container, 
@@ -51,16 +50,28 @@ class ItemConfirm extends Component {
   }
 
   onClickConfirmButton = () => {
-    for (let item of this.state.items) {
-      if (item.category_id === 0) {
-        item.category_name = "기타";
-        item.category_id = 200; // category_id of '기타'
+    let resultListLength = this.props.resultList.length;
+    let tmpCount = 1;
+    for (let item of this.props.resultList) {
+      if(tmpCount == resultListLength) {
+        break;
+      } else {
+        tmpCount = tmpCount + 1;
       }
-      if (item.expiration_date === '-') {
-        item.expiration_date = '2099/12/31';
+  
+      let finalItem = item;
+      if (finalItem.category_id === 0) {
+        finalItem.category_name = "기타";
+        finalItem.category_id = 200; // category_id of '기타'
       }
-      this.props.onAddItem(item);
+      if (finalItem.expiration_date === '-') {
+        finalItem.expiration_date = '2099/12/31';
+      } else {
+        finalItem.expiration_date = moment(finalItem.expiration_date).format('YYYY/MM/DD');
+      }
+      this.props.onAddItem(finalItem);
     }
+    this.props.resetItemList();
     this.props.history.push('/');
   }
 
@@ -113,7 +124,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     onAddItem: (item) => dispatch(actionCreators.addItem(item)),
-    onAddNewItem: () => dispatch(actionCreators.addNewItem())
+    onAddNewItem: () => dispatch(actionCreators.addNewItem()),
+    resetItemList: () => dispatch(actionCreators.resetItemList())
   }
 }
 
