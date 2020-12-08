@@ -9,6 +9,7 @@ import Result from '../../components/AddItem/Result';
 import dataURLtoFile from '../../components/AddItem/URLtoFile';
 import moment from 'moment';
 import * as actionCreators from '../../store/actions/index';
+import { Dialog } from '@material-ui/core'
  
 import './AddItem.css';
 
@@ -81,7 +82,6 @@ class AddItem extends Component {
 
   handleOCR = async (e) => {
     if(!this.state.isRetaking && this.state.isResultVisible) {
-      this.props.onAddNewItem();
       this.setState((prevState, props) => ({
         screenShot: null,
         imageFile: null
@@ -186,19 +186,16 @@ class AddItem extends Component {
 
   onClickRetakeExpirationDateButton = () => {
     this.setState({ isRetaking: true, isResultVisible: false, isBarcodeScanning: false });
-    this.props.onUpdateItemList(this.props.resultList.length - 1, { expiration_date: Date.now() });
+    this.props.onUpdateItemList(this.props.resultList.length - 1, { expiration_date: new Date(Date.now()) });
   }
 
-  onClickManualAddButton = () => {
-    if(this.state.isResultVisible) {
-      this.setState((prevState, props) => ({
-        screenShot: null,
-        imageFile: null
-      }))
-      this.props.onAddNewItem();
-    } else {
-      this.setState({ isResultVisible: true })
-    }
+  onFinishEditItemButton = () => {
+    this.setState((prevState, props) => ({
+      screenShot: null,
+      imageFile: null,
+      isResultVisible: false
+    }))
+    this.props.onAddNewItem();
   }
 
   onClickMoveToConfirmButton = () => {
@@ -215,23 +212,18 @@ class AddItem extends Component {
   }
 
   render() {
-    if(document.getElementsByClassName("Result").length > 0) {
-      if(!this.state.isResultVisible) {
-        document.getElementsByClassName("Result")[0].style.top = "-300px";
-      } else {
-        document.getElementsByClassName("Result")[0].style.top = "-25px";
-      }
-    }
-
     return (
       <div className="AddItem" style={{overflowX: "hidden", overflowY: "hidden"}}>
         <Scanner id="Scanner" onDetected={this._onDetected} onCapture={this.handleOCR} barcode={this.state.isBarcodeScanning} ref="Scanner"/> 
-        {this.state.isResultVisible ? <Result isAddItem={true} onClickRetakeBarcode={this.onClickRetakeBarcodeButton}
-            onClickRetakeExpirationDate={this.onClickRetakeExpirationDateButton} /> : null }
         <div className="StatusTerm">{ this.state.isRetaking ? "Retaking" : (this.state.isBarcodeScanning ? BARCODE_TERM : EXPIRATION_TERM) }</div>
         <div className="Footer">
           <div id='onClickMoveToConfirmButton' className="ConfirmButton" onClick={this.onClickMoveToConfirmButton} >Confirm</div>
         </div>
+        <Dialog open={this.state.isResultVisible}>
+          <Result isAddItem={true} onClickRetakeBarcode={this.onClickRetakeBarcodeButton}
+                      onClickRetakeExpirationDate={this.onClickRetakeExpirationDateButton}
+                      onClickEditItem={this.onFinishEditItemButton} />
+        </Dialog>
       </div>
     );
   }

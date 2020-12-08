@@ -1,4 +1,5 @@
 import '../AddItem/EditItem.css';
+import moment from 'moment';
 
 const ItemCard = (props) => {
   return (
@@ -19,7 +20,7 @@ const ItemCard = (props) => {
         <tr>
           <td className="tableContentName">유통기한</td>
           <td className="tableContentItemCard2">
-            {new Date(props.item.expiration_date).getFullYear()}/{new Date(props.item.expiration_date).getMonth()+1}/{new Date(props.item.expiration_date).getDate()}
+            {props.item.expiration_date !== null ? moment(props.item.expiration_date).format('YYYY/MM/DD') : '' }
           </td>
         </tr>
         <tr>

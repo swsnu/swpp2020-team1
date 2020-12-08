@@ -50,7 +50,7 @@ class EditItem extends Component {
 
   componentDidMount() {
     const info = this.props.resultList[this.props.id];
-    if (info.expiration_date === "-") {
+    if (info.expiration_date == null) {
       this.setState({disableExpirationField: true})
     }
 
@@ -72,26 +72,35 @@ class EditItem extends Component {
     if (value && value.name) { // value is object {id, name}
       console.log("value: " + JSON.stringify(value))
       this.setState({ item: { ...this.state.item, category_id: value.id, category_name: value.name }});
-      this.props.onUpdateItemList(this.props.id, { category_id: value.id, category_name: value.name });
     } else {
       const found = this.categories.find(elem => elem.name === value)
       if (found) {
-        this.setState({ item: { ...this.state.item, category_id: found.id, category_name: found.name }});
-        this.props.onUpdateItemList(this.props.id, { category_id: found.id, category_name: found.name }); // value is string (custom category)
+        this.setState({ item: { ...this.state.item, category_id: found.id, category_name: found.name }}); // value is string (custom category)
       } else {
         this.setState({ item: { ...this.state.item, category_id: 0, category_name: value }});
-        this.props.onUpdateItemList(this.props.id, { category_id: 0, category_name: value });
       }
     }
   }
 
   checkValidity = (name, expiration_date) => {
-    if (name === '' || expiration_date.toString() === 'Invalid Date') {
+    console.log(this.state.disableExpirationField, expiration_date, 'wow')
+    if (name === '' || (!this.state.disableExpirationField && (expiration_date === null || expiration_date == 'Invalid Date'))) {
       this.setState({valid: false})
     } else {
       this.setState({valid: true})
-      console.log("valid true");
     }
+  }
+
+  onClickEditItemButton = () => {
+    //  this.state.disableExpirationField: true일때 ,
+    // expiration_date: Date.now(),
+    
+    //if(this.props.onClickEditItem) {
+      this.props.onUpdateItemList(this.props.id, this.state.item);
+      this.props.onClickEditItem();    
+    //}
+    
+    this.setState({item: {...this.state.item, name: '', barcode_num: '', expiration_date: null, category_id: 0, category_name: '기타', count: 1, container: 'freezer' }});
   }
 
   render() {
@@ -104,10 +113,9 @@ class EditItem extends Component {
               <td className="tableContentName">이름</td>
               <td className="tableContent">
                 <TextField fullWidth={true} style={style}
-                  error={!this.state.valid}
-                  value={/*this.props.resultList[this.props.id].name*/ this.state.item.name}
+                  error={this.state.item.name === ''}
+                  value={this.state.item.name}
                   onChange={e => { this.setState({item: {...this.state.item, name: e.target.value}}); 
-                                   this.props.onUpdateItemList(this.props.id, { name: e.target.value }); 
                                    this.checkValidity(e.target.value, this.state.item.expiration_date)}}
                   className="item_name_edit margin" 
                   margin="dense"
@@ -120,9 +128,8 @@ class EditItem extends Component {
               <td className="tableContentName">바코드</td>
               <td className="tableContent">
                 <TextField fullWidth={true} style={style}
-                  value={this.props.resultList[this.props.id].barcode_num}
-                  onChange={e => {this.setState({ item: { ...this.state.item, barcode_num: e.target.value }}); 
-                                  this.props.onUpdateItemList(this.props.id, { barcode_num: e.target.value });}}
+                  value={this.state.item.barcode_num}
+                  onChange={e => {this.setState({ item: { ...this.state.item, barcode_num: e.target.value }}); }}
                   className="item_barcode_edit margin" 
                   margin="dense"
                   InputProps={{
@@ -148,17 +155,26 @@ class EditItem extends Component {
                     format="yyyy/MM/dd"
                     className="item_expiration_date_edit"
                     views={["year", "month", "date"]}
-                    value={this.state.disableExpirationField ? null : this.props.resultList[this.props.id].expiration_date}
+                    value={this.state.disableExpirationField ? null : this.state.item.expiration_date }
                     onChange={(date) => { this.setState({ item: {...this.state.item, expiration_date: date }}); 
-                                          this.props.onUpdateItemList(this.props.id, { expiration_date: date }); 
-                                          this.checkValidity(this.state.item.name, date)}}
+                                          this.checkValidity(this.state.item.name, date);
+                                          console.log(date);}}
                   />           
                 </MuiPickersUtilsProvider>
               </td>
               <td className="Checkbox">
                 <Checkbox
                   checked={!this.state.disableExpirationField}
-                  onChange={() => {this.setState({ disableExpirationField: !this.state.disableExpirationField, })}}
+                  onChange={() => { console.log('at checkbox', this.state.disableExpirationField)
+                                    let checkBoxExpDate = this.state.disableExpirationField ? Date(Date.now()) : null;
+                                    Promise.resolve()
+                                    .then(() => {
+                                      this.setState({ item: { ...this.state.item, expiration_date: checkBoxExpDate },
+                                                      disableExpirationField: !this.state.disableExpirationField });
+                                    })
+                                    .then(() => {
+                                      this.checkValidity(this.state.item.name, checkBoxExpDate);
+                                    }) }}
                   color="primary"
 	    	          style={{padding: "0 0 0 0", height: "20px", width: "20px"}} />
               </td>
@@ -172,7 +188,7 @@ class EditItem extends Component {
               <td className="tableContentName">항목</td>
               <td className="tableContent">
                 <Autocomplete style={style} fullWidth={true}
-                  value={this.props.resultList[this.props.id].category_name}
+                  value={this.state.item.category_name}
                   options={this.categories}
                   getOptionLabel={(option) => {return (option.name ? option.name : option)}}
                   id="auto-select"
@@ -191,34 +207,29 @@ class EditItem extends Component {
             <div style={{fontFamily: '"Noto Sans KR", sans-serif', fontSize: 13, color: "#949494"}}>수량</div>
             <div className="Count">
               <RemoveIcon className="Button" style={{ color: "#FFFFFF" }} 
-                onClick={() => {if(this.props.resultList[this.props.id].count > 1) { this.setState({ item: {...this.state.item, count: (this.state.item.count - 1) }});
-                                                                    this.props.onUpdateItemList(this.props.id, { count: (this.props.resultList[this.props.id].count - 1) }); }}} />
+                onClick={() => {if(this.state.item.count > 1) { this.setState({ item: {...this.state.item, count: (this.state.item.count - 1) }}); }}} />
               <TextField 
-                value={this.props.resultList[this.props.id].count}
-                onChange={e => {this.setState({item: {...this.state.item, count: e.target.value}});
-                                this.props.onUpdateItemList(this.props.id, { count: e.target.value });}}
+                value={this.state.item.count}
+                onChange={e => {this.setState({item: {...this.state.item, count: e.target.value}});}}
                 className="item_count_edit margin"
                 inputProps={{style: { textAlign: "center" }}}
                 InputProps={{classes: {input: classes.typography} }} 
                 style={style}
                 margin="dense" />
               <AddIcon className="Button" style={{ color: "#FFFFFF" }} 
-                onClick={() => {this.setState({item: {...this.state.item, count: (this.state.item.count + 1) }});
-                                this.props.onUpdateItemList(this.props.id, { count: (this.props.resultList[this.props.id].count + 1) }); }} />  
+                onClick={() => {this.setState({item: {...this.state.item, count: (this.state.item.count + 1) }}); }} />  
             </div>
             <Select 
               labelId="select_container_label"
-              value={this.props.resultList[this.props.id].container}
-              onChange={e => {this.setState({item: {...this.state.item, container: e.target.value}});
-                              this.props.onUpdateItemList(this.props.id, { container: e.target.value });} }
+              value={this.state.item.container}
+              onChange={e => {this.setState({item: {...this.state.item, container: e.target.value}}); }}
               className="item_container_edit margin" 
               label="Container">
               {this.containers.map(c => (
                 <MenuItem key={c} value={c}>{c}</MenuItem>
               ))}
             </Select>
-            {this.props.isAddItem ? 
-              null : <button onClick={this.props.onClickEditItem}>추가</button>}
+            <button disabled={!this.state.valid} onClick={this.onClickEditItemButton}>완료</button>
           </div>
         </div>
       </Fragment>

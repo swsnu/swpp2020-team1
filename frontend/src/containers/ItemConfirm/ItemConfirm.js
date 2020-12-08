@@ -95,7 +95,7 @@ class ItemConfirm extends Component {
       } else {
         return null;
       }
-    });
+    }).reverse();
 
     return (
       <div className="ItemConfirm">
