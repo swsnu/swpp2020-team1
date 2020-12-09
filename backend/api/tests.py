@@ -381,7 +381,6 @@ class ApiTestCase(TestCase):
         response = client.get('/back/recipe/rating/')
         self.assertEqual(response.status_code, 200)
 
-
     def test_comment_list(self):
         User = get_user_model()
         user1 = User.objects.create_user(username='user1', password='pw1')

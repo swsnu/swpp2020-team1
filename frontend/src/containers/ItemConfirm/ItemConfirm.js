@@ -69,7 +69,7 @@ class ItemConfirm extends Component {
     });  
   }
 
-  onClickConfirmButton = () => {
+  onClickConfirmButton = async () => {
     for (let item of this.props.resultList) {
       let finalItem = item;
       if (finalItem.category_id === 0) {
@@ -81,8 +81,7 @@ class ItemConfirm extends Component {
       } else {
         finalItem.expiration_date = moment(finalItem.expiration_date).format('YYYY/MM/DD');
       }
-      console.log("hihi");
-      this.props.onAddItem(finalItem);
+      await this.props.onAddItem(finalItem);
     }
 
     this.props.resetItemList();

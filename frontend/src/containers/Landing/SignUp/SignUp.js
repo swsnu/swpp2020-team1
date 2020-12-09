@@ -71,13 +71,12 @@ class SignUp extends Component {
 
   credentialChecker = (e) => {
     e.preventDefault();
-    const emailReg = /^[^@\s]+@[^@.\s]+\.[^@\s]+$/;
-    const passwordReg = /^(?=.*[a-z])(?=.*\d).{6,}$/;
-
     let emailError = false;
     let passwordError = false;
     let passwordConfirmError = false;
-    if (!emailReg.test(this.state.email_input)) {
+    let emailInput = this.state.email_input
+    let pwInput = this.state.pw_input
+    if (!emailInput || emailInput.indexOf('@') === -1 || emailInput.indexOf('@') !== emailInput.lastIndexOf('@')) {
       emailError = true;
       this.setState({
         emailError,
@@ -88,7 +87,8 @@ class SignUp extends Component {
         emailError,
       });
     }
-    if (!passwordReg.test(this.state.pw_input)) {
+    console.log(pwInput)
+    if (!pwInput || pwInput.length < 6) {
       passwordError = true;
       this.setState({
         pw_error: passwordError,
