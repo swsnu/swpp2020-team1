@@ -17,11 +17,13 @@ const styles = {
     marginBottom: 5,
     fontSize: 16,
     fontWeight: "fontWeightMedium",
+    fontFamily: ["Noto Sans KR", "sans-serif"]
   },
   content: {
     margin: 3,
     fontSize: 16,
-    whiteSpace: 'pre-line' // recognize new line character
+    whiteSpace: 'pre-line', // recognize new line character
+    fontFamily: ["Noto Sans KR", "sans-serif"]
   },
   date: {
     fontSize:14,
