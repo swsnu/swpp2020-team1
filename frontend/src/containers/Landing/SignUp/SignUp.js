@@ -14,6 +14,9 @@ import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import Link from '@material-ui/core/Link';
 import { withStyles } from '@material-ui/core/styles';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 const styles = (theme) => ({
   '@global': {
@@ -206,6 +209,15 @@ class SignUp extends Component {
                 </Link>
               </Grid>
             </Grid>
+            <Dialog 
+              open={this.props.registerState==="FAILURE"} 
+              fullWidth
+              maxWidth="sm">
+            <DialogTitle id="form-dialog-title">이미 사용 중인 이메일입니다.</DialogTitle>
+            <DialogActions>
+              <Button className="confirmRatingButton" onClick={this.props.onSignup} color="primary">확인</Button>
+            </DialogActions>
+          </Dialog>   
           </form>
         </div>
       </Container>
@@ -216,6 +228,7 @@ class SignUp extends Component {
 
 export const mapDispatchToProps = (dispatch) => ({
   onSignupUser: async (user) => { await dispatch(userActionCreators.signUpRequest(user)); },
+  onSignup: async (user) => { await dispatch(userActionCreators.register(user)); }, 
 });
 
 const mapStateToProps = (state) => ({

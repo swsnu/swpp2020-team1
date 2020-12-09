@@ -68,6 +68,12 @@
     cursor: pointer;
 }
 
+.btn_logout{
+    position: absolute;
+    left: 10px;
+    top: 0px; 
+}
+
 .btn_bell {
     vertical-align: middle;
 }
