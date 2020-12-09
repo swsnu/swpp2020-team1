@@ -312,10 +312,10 @@ class MainPage extends Component {
           <Dialog open={this.state.openDialog} fullScreen={true}>
             <div>
               <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-                <Button style={{padding: 0}} onClick={() => { this.setState({ openDialog: false }) }}>
+                <Button style={{paddingBottom: 5}} onClick={() => { this.setState({ openDialog: false }) }}>
                   <ArrowBack/>
                 </Button>
-                <Typography style={{fontSize: 24, color: '#818181', fontWeight: 900}}>Notifications</Typography>
+                <div className="NotiHeader">Notifications</div>
               </div>
             </div>
             <div>

@@ -45,7 +45,9 @@ class RecipeRecommend extends Component {
       const score = recipe.rating_average
       return (
         <ListItem className="recipe_detail" button key={recipe.id} onClick={() => this.goToRecipeDetail(recipe.id)}>
-          <img src={`http://i.ytimg.com/vi/${videoKey}/mqdefault.jpg`} width={160} height={90} />
+          <div className="thumbnail_wrapper">
+            <img className="thumbnail" src={`http://i.ytimg.com/vi/${videoKey}/mqdefault.jpg`}/>
+          </div>
           <div className='RecipeInfo'>
             <div className='RecipeTitle'>{recipe.title}</div>
             <div className='RecipeScore'>
