@@ -40,7 +40,7 @@
     text-align: center;
     letter-spacing: 0.25px;
 
-    color: #E86565;
+    color: #7DBF1A;
 }
 
 /* .count {
@@ -61,7 +61,7 @@
 /* .btn_remove_item {
     height: 20px;
     width: 20px;
-    background-color: #E8A065;
+    background-color: #7DBF1A;
     filter: drop-shadow(0px 3px 5px rgba(0,0,0,0.2));
     transition: all 0.5s;
     margin-left: 5px;
@@ -69,7 +69,7 @@
 } */
 
 .Select:hover {
-    background-color: #E86565;
+    background-color: #7DBF1A;
 }
 
 .Selected {
@@ -78,7 +78,6 @@
     width: 100%;
     left: 0px;
     top: 0px;
-    background-color: rgba(232, 160, 101, 0.4);
 }
 
 .item {

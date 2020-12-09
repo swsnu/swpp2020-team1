@@ -21,7 +21,7 @@
 }
 
 .title .titleOrange {
-    color: #E8A065;
+    color: #7DBF1A;
     display: inline-block;
 }
 
@@ -38,7 +38,7 @@
     height: auto;
     transition: background-color 0.5s;
 
-    background: #E8A065;
+    background: #7DBF1A;
     border-radius: 8px;
     resize: none;
 }

@@ -157,7 +157,7 @@ class MainPage extends Component {
 
   switchToNormalMode = () => {
     this.setState({ mode: "normal", selectedCuisine: null, selectedItemIds: [] });
-    document.getElementsByClassName("ItemSelectButton")[0].style.background = "#E8A065";
+    document.getElementsByClassName("ItemSelectButton")[0].style.background = "#7DBF1A";
     document.getElementsByClassName("ItemSelectDiv")[0].style.height = "55px";
     let removeItemButtons = document.getElementsByClassName("btn_remove_item");
     for(let i = 0; i < removeItemButtons.length; i++) {
@@ -206,6 +206,7 @@ class MainPage extends Component {
   }
 
   onClickSelectItem = (id) => {
+    if (this.state.mode !== 'select') return;
     let tempSelectedItemIds = this.state.selectedItemIds;
     if(tempSelectedItemIds.filter(i => i === id).length > 0) {
       tempSelectedItemIds = tempSelectedItemIds.filter(i => i !== id);
@@ -217,7 +218,9 @@ class MainPage extends Component {
     }
 
     if(tempSelectedItemIds.length > 0) {
-      document.getElementsByClassName("ItemSelectButton")[0].style.background = "#E8A065";
+      document.getElementsByClassName("ItemSelectButton")[0].style.background = "#7DBF1A";
+    } else {
+      document.getElementsByClassName("ItemSelectButton")[0].style.background = "#C4C4C4";
     }
     this.setState({ selectedItemIds: tempSelectedItemIds});
   }
@@ -266,6 +269,7 @@ class MainPage extends Component {
             onClickSelectItem={(id) => this.onClickSelectItem(id)}
             currentWidth={this.state.currentWidth}
             currentHeight={this.state.currentHeight}
+            shouldShowTutorial={!this.props.items || this.props.items.length === 0}
             items={freezerItems}
             buildNotification={() => {this.getAndBuildNotification(this.user_id)}}
             mode={this.state.mode}/>
@@ -275,6 +279,7 @@ class MainPage extends Component {
             onClickSelectItem={(id) => this.onClickSelectItem(id)}
             currentWidth={this.state.currentWidth}
             currentHeight={this.state.currentHeight}
+            shouldShowTutorial={!this.props.items || this.props.items.length === 0}
             items={fridgeItems}
             buildNotification={() => {this.getAndBuildNotification(this.user_id)}}
             mode={this.state.mode}/>
@@ -284,6 +289,7 @@ class MainPage extends Component {
             onClickSelectItem={(id) => this.onClickSelectItem(id)}
             currentWidth={this.state.currentWidth}
             currentHeight={this.state.currentHeight}
+            shouldShowTutorial={!this.props.items || this.props.items.length === 0}
             items={shelfItems}
             buildNotification={() => {this.getAndBuildNotification(this.user_id)}}
             mode={this.state.mode}/>

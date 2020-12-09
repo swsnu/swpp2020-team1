@@ -286,7 +286,7 @@ class AddItem extends Component {
         <Scanner id="Scanner" onDetected={this._onDetected} onCapture={this.handleOCR} barcode={this.state.isBarcodeScanning} ref="Scanner"/> 
         <div className="StatusTerm">{ this.state.isRetaking ? "Retaking" : (this.state.isBarcodeScanning ? BARCODE_TERM : EXPIRATION_TERM) }</div>
         <div className="Footer">
-          <div id='onClickMoveToConfirmButton' className="ConfirmButton" onClick={this.onClickMoveToConfirmButton} >직접 입력</div>
+          <div id='onClickMoveToConfirmButton' className="ConfirmButton" onClick={this.onClickMoveToConfirmButton} >목록 보기</div>
         </div>
         <Dialog open={this.state.isResultVisible} classes={{paper: classes.newPaper}}>
           <Result isAddItem={true} onClickRetakeBarcode={this.onClickRetakeBarcodeButton}

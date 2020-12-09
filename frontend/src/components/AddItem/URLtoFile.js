@@ -1,5 +1,5 @@
 export default function dataURLtoFile(dataurl, filename) {
-  if(dataurl == null) return null;
+  if(dataurl == null || dataurl === 'data:,') return null;
   //console.log("Inside dataURLtoFile")
   let arr = dataurl.split(',');
   let mime = arr[0].match(/:(.*?);/)[1];
