@@ -10,55 +10,67 @@ import moment from 'moment'
 
 class ItemConfirm extends Component {
   containers = ['freezer', 'fridge', 'shelf'];
-  state = {
-    items: [],
 
-    item_edit: {},
+  defaultItem = {
+    name: '',
+    container: 'freezer',
+    category_id: 0,
+    category_name: '기타',
+    barcode_num: '',
+    expiration_date: Date.now(),
+    count: 1
+  }
+
+  state = {
+    currentItem: this.defaultItem,
     editDialogOpen: false,
-    editingItemIdx: -1
+    editingItemIdx: -1,
+    editingItem: null
   }
 
   onClickEditItemButton = (id) => {
-    this.setState({ addResultOpen: true, editingItemIdx: id });
+    this.setState({ 
+      addResultOpen: true, 
+      editingItemIdx: id, 
+      editingItem: this.props.resultList[id] 
+    });
   }
 
-  onFinishAddItemButton = () => {
-    console.log(this.state.editingItemIdx);
-    this.props.onAddNewItem();
-    
-  }
-
-  onFinishEditItemButton = () => {
-    this.setState({ editingItemIdx: -1 });  
-  }
-
-  onConfirmAddButton = (info) => {
-    if (!info.valid) {
-      return;
-    }
+  onClickFinishAddItemButton = () => {
+    this.props.onAddNewItem(this.state.currentItem);
     this.setState({
-      items: this.state.items.concat({
-        'name': info.name, 
-        'barcode_num': info.barcode_num, 
-        'expiration_date': info.expiration_date,
-        'category_id': info.category_id, 
-        'category_name': info.category_name,
-        'container': info.container, 
-        'count': parseInt(info.count)
-      }),
+      currentItem: this.defaultItem
+    });
+  }
+
+  onChangeAddItemValue = (value) => {
+    this.setState({
+      currentItem: {
+        ...this.state.currentItem,
+        ...value
+      }
     })
   }
 
-  onClickConfirmButton = () => {
-    let resultListLength = this.props.resultList.length;
-    let tmpCount = 1;
-    for (let item of this.props.resultList) {
-      if(tmpCount == resultListLength) {
-        break;
-      } else {
-        tmpCount = tmpCount + 1;
+  onChangeEditItemValue = (value) => {
+    this.setState({
+      editingItem: {
+        ...this.state.editingItem,
+        ...value
       }
-  
+    })
+  }
+
+  onClickFinishEditItemButton = () => {
+    this.props.onUpdateItemList(this.state.editingItemIdx, this.state.editingItem);
+    this.setState({ 
+      editingItemIdx: -1,
+      editingItem: null 
+    });  
+  }
+
+  onClickConfirmButton = () => {
+    for (let item of this.props.resultList) {
       let finalItem = item;
       if (finalItem.category_id === 0) {
         finalItem.category_name = "기타";
@@ -69,8 +81,10 @@ class ItemConfirm extends Component {
       } else {
         finalItem.expiration_date = moment(finalItem.expiration_date).format('YYYY/MM/DD');
       }
+      console.log("hihi");
       this.props.onAddItem(finalItem);
     }
+
     this.props.resetItemList();
     this.props.history.push('/');
   }
@@ -86,20 +100,22 @@ class ItemConfirm extends Component {
   render() {
     const newItems = this.props.resultList.map((item, idx) => {
       // temporary category name
-      if(idx < this.props.resultList.length - 1) {
-        if(idx == this.state.editingItemIdx) {
-          return <EditItem id={idx} onClickEditItem={this.onFinishEditItemButton} />
-        } else {
-          return <ItemCard key={idx} id={idx} item={item} onClickEdit={this.onClickEditItemButton} />;
-        }
+      if(idx == this.state.editingItemIdx) {
+        return <EditItem id={idx} key={idx}
+                  item={this.state.editingItem} 
+                  onChangeEditItem={this.onChangeEditItemValue} 
+                  onClickFinishEditItem={this.onClickFinishEditItemButton} />
       } else {
-        return null;
+        return <ItemCard key={idx} id={idx} item={item} onClickEdit={this.onClickEditItemButton} />;
       }
     }).reverse();
 
     return (
       <div className="ItemConfirm">
-        <Result isAddItem={false} onClickEditItem={this.onFinishAddItemButton}></Result>
+        <Result isAddItem={false} 
+                item={this.state.currentItem} 
+                onClickFinishEditItem={this.onClickFinishAddItemButton} 
+                onChangeEditItem={this.onChangeAddItemValue} />
         <div className="HeaderName"></div>
         
         <div className="Main">
@@ -124,7 +140,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     onAddItem: (item) => dispatch(actionCreators.addItem(item)),
-    onAddNewItem: () => dispatch(actionCreators.addNewItem()),
+    onUpdateItemList: (id, item) => dispatch(actionCreators.updateItemList(id, item)),
+    onAddNewItem: (item) => dispatch(actionCreators.addNewItem(item)),
     resetItemList: () => dispatch(actionCreators.resetItemList())
   }
 }

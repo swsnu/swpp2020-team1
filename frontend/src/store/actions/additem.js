@@ -10,13 +10,13 @@ export const updateItemList = (id, item) => {
   }; 
 };
 
-export const addNewItem_ = () => {
-  return { type: actionTypes.ADD_NEW_ITEM };
+export const addNewItem_ = (item) => {
+  return { type: actionTypes.ADD_NEW_ITEM, item };
 }
 
-export const addNewItem = () => {
+export const addNewItem = (item) => {
   return dispatch => {
-    dispatch(addNewItem_());
+    dispatch(addNewItem_(item));
   }
 }
 
@@ -27,15 +27,5 @@ export const resetItemList_ = () => {
 export const resetItemList = () => {
   return dispatch => {
     dispatch(resetItemList_());
-  }
-}
-
-export const setDefaultContainer_ = (container) => {
-  return { type: actionTypes.SET_DEFAULT_CONTAINER, container };
-}
-
-export const setDefaultContainer = (container) => {
-  return dispatch => {
-    dispatch(setDefaultContainer_(container));
   }
 }
