@@ -1,15 +1,11 @@
 import React from 'react';
-import axios from 'axios';
-import { shallow, mount } from 'enzyme';
+import { mount } from 'enzyme';
 import EditItem from './EditItem';
-import { Provider } from 'react-redux';
-import { Route, Redirect, Switch, BrowserRouter } from 'react-router-dom';
-import { TextField, Select, Button } from '@material-ui/core';
-import { editItemCount } from '../../store/actions';
-//import { it } from 'date-fns/locale';
-import { getMockStore } from '../../mock';
+import { TextField, Select } from '@material-ui/core';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import axios from 'axios';
 
-const resultMock0 = {
+const itemMock = {
   name: '냉장 서울우유 1L',
   barcode_num: 8801115114154,
   expiration_date: '2020/11/24',
@@ -19,7 +15,7 @@ const resultMock0 = {
   container: 'freezer'
 }
 
-const resultMock1 = {
+const itemBlankExpDateMock = {
   name: '냉장 서울우유 1L',
   barcode_num: 8801115114154,
   expiration_date: null,
@@ -29,137 +25,103 @@ const resultMock1 = {
   container: 'freezer'
 }
 
-const stubInitialState = {
-  additem: {
-    resultList: [resultMock0, resultMock1]
-  }
-}
-
-const mockStore = getMockStore(stubInitialState);
-
-const onCancelEditMock = jest.fn();
-const onConfirmEditMock = jest.fn().mockResolvedValue({
-  resultMock0
-});
+const mockonChangeEditItem = jest.fn(value => value);
+const onClickFinishEditItem = jest.fn();
+const onClickRetakeBarcode = jest.fn();
+const onClickRetakeExpirationDate = jest.fn();
 
 const props = {
-  result: resultMock0,
-  onCancelEdit: onCancelEditMock,
-  onConfirmEdit: onConfirmEditMock
+  item: itemMock,
+  onChangeEditItem: mockonChangeEditItem,
+  onClickFinishEditItem: onClickFinishEditItem,
+  isAddItem: true,
+  onClickRetakeBarcode: onClickRetakeBarcode,
+  onClickRetakeExpirationDate: onClickRetakeExpirationDate
 }
 
-describe('<EditItem //>', () => {
-  let editItem;
-
+describe('<EditItem />', () => {
+  let component;
   beforeEach(() => {
-    editItem = (id) => {
-      return (
-      <Provider store={mockStore}>
-        <BrowserRouter>
-        <Switch>
-          <Route path='/' exact render={() => <EditItem id={id} />} />
-        </Switch>
-        </BrowserRouter>
-      </Provider>
-    )}
+    let spyAxiosGet = jest.spyOn(axios, 'get')
+    .mockImplementation(url => {
+      return new Promise((resolve, reject) => {
+        resolve({status: 200, data: [{id: 1, name: "우유"}, {id: 2, name: "맥주"}]});
+        reject();
+      });
+    })
+
+    component = mount(<EditItem { ...props }/>);
+    //component.update();
   })
 
-  it('should render EditItem', () => {
-    const component = mount(editItem(0));
-    const wrapper = component.find('.EditItem');
+  it('should render correctly', () => {
+    let wrapper = component.find(".EditItem")
     expect(wrapper.length).toBe(1);
   })
-
-  it('should render EditItem when expiration date is null', () => {
-    const component = mount(editItem(1));
-    const wrapper = component.find('.EditItem');
-    expect(wrapper.length).toBe(1);
+  
+  it('should check expiration date when null', () => {
+    const propsBlank = { item: itemBlankExpDateMock }
+    let componentBlank = mount(<EditItem {...propsBlank} />).find('EditItem')
+    expect(componentBlank.state().disableExpirationField).toBe(true);
   })
 
   it('should get correct value and changes for Name TextField', () => {
-    let wrapper = mount(editItem(0)).find(TextField).find('.item_name_edit').find('input');
-    expect(wrapper.props().value).toEqual(resultMock0.name);
-    wrapper.simulate('change', { target: { value: '냉장 매일우유 1L' }})
-    //expect(wrapper.props().value).toEqual('냉장 매일우유 1L')
+    let wrapper = component.find(TextField).find('.item_name_edit').find('input');
+    expect(wrapper.props().value).toEqual(itemMock.name);
+    wrapper.simulate('change', { target: { value: '냉장 매일우유 1L' }});
+    expect(mockonChangeEditItem.mock.calls[mockonChangeEditItem.mock.calls.length - 1][0].name).toEqual('냉장 매일우유 1L');
   })
 
   it('should get correct value and changes for Barcode TextField', () => {
-    let wrapper = mount(editItem(0)).find(TextField).find('.item_barcode_edit').find('input');
-    expect(wrapper.props().value).toEqual(resultMock0.barcode_num);
+    let wrapper = component.find(TextField).find('.item_barcode_edit').find('input');
+    expect(wrapper.props().value).toEqual(itemMock.barcode_num);
     wrapper.simulate('change', { target: { value: 123456789 }})
-    //expect(wrapper.props().value).toEqual(123456789)
+    expect(mockonChangeEditItem.mock.calls[mockonChangeEditItem.mock.calls.length - 1][0].barcode_num).toEqual(123456789)
   })
 
   it('should get correct value and changes for ExpirationDate TextField', () => {
-    let wrapper = mount(editItem(0)).find(TextField).find('.item_expiration_date_edit').find('input');
-    expect(wrapper.props().value).toEqual(resultMock0.expiration_date);
+    let wrapper = component.find(TextField).find('.item_expiration_date_edit').find('input');
+    expect(wrapper.props().value).toEqual(itemMock.expiration_date);
     wrapper.simulate('change', { target: { value: '2020/11/15' }})
-    //expect(wrapper.props().value).toEqual('2020/11/15')
   })
 
   it('should get correct value and changes for Count TextField', () => {
-    let wrapper = mount(editItem(0)).find(TextField).find('.item_count_edit').find('input');
-    expect(wrapper.props().value).toEqual(resultMock0.count);
+    let wrapper = component.find(TextField).find('.item_count_edit').find('input');
+    expect(wrapper.props().value).toEqual(itemMock.count);
     wrapper.simulate('change', { target: { value: 6 }})
-    //expect(wrapper.props().value).toEqual(6)
+    expect(mockonChangeEditItem.mock.calls[mockonChangeEditItem.mock.calls.length - 1][0].count).toEqual(6)
   })
 
   it('should get correct value and changes for Category TextField', () => {
-    const spyGet = jest.spyOn(axios, 'get')
-      .mockImplementation(url => {
-        return new Promise((resolve, reject) => {
-          resolve({data: []});
-        })
-      })
-    
-    let wrapper = mount(editItem(0)).find('.item_category_name_edit').find('input');
-    expect(wrapper.props().value).toEqual(resultMock0.category_name);
-    console.log(mount(editItem(0)).debug())
-    wrapper.simulate('change', { target: { value: '맥주' }})
-    //expect(wrapper.props().value).toEqual('맥주')
+    let wrapper = component.find(Autocomplete);
+    expect(wrapper.props().value).toEqual(itemMock.category_name);
+    wrapper.simulate('change', {target: { value: '맥주'}});
+  })
+
+  it('should get correct response for Category Checkbox', () => {
+    let wrapper = component.find('.Checkbox').find('input')
+    wrapper.simulate('change');
+    expect(component.find('EditItem').state().disableExpirationField).toEqual(true);
   })
 
   it('should get correct value and changes for Container TextField', () => {
-    const spyGet = jest.spyOn(axios, 'get')
-      .mockImplementation(url => {
-        return new Promise((resolve, reject) => {
-          resolve({data: []});
-        })
-      })
-    
-    let wrapper = mount(editItem(0)).find(Select).find('.item_container_edit').find('input');
-    expect(wrapper.props().value).toEqual(resultMock0.container);
+    let wrapper = component.find(Select).find('.item_container_edit').find('input');
+    expect(wrapper.props().value).toEqual(itemMock.container);
     wrapper.simulate('change', { target: { value: 'fridge' }})
-    //expect(wrapper.props().value).toEqual('fridge')
+    expect(mockonChangeEditItem.mock.calls[mockonChangeEditItem.mock.calls.length - 1][0].container).toEqual('fridge')
+  })
+
+  it('should work well with clicking buttons', () => {
+    let wrapper1 = component.find("#EditItemMinusButton").find('svg')
+    wrapper1.simulate('click')
+    expect(mockonChangeEditItem.mock.calls[mockonChangeEditItem.mock.calls.length - 1][0].count).toEqual(3);
+
+    let wrapper2 = component.find("#EditItemPlusButton").find('svg')
+    wrapper2.simulate('click')
+    expect(mockonChangeEditItem.mock.calls[mockonChangeEditItem.mock.calls.length - 1][0].count).toEqual(5);
+
+    let wrapper3 = component.find("#FinishEditButton")
+    wrapper3.simulate('click')
+    expect(onClickFinishEditItem).toHaveBeenCalledTimes(1)
   })
 })
-
-/*
-
-  it('should work properly for blank result', () => {
-    const resultBlankMock = {}
-    const propsBlank = { result: resultBlankMock, onCancelEdit: onCancelEditMock, onConfirmEdit: onConfirmEditMock }
-    let componentBlank = mount(<EditItem { ...propsBlank }/>)
-    expect(componentBlank.state().name).toEqual('');
-    expect(componentBlank.state().barcode_num).toEqual('');
-    expect(componentBlank.state().expiration_date).toEqual('');
-    expect(componentBlank.state().category_name).toEqual('');
-    expect(componentBlank.state().count).toEqual(1);
-    expect(componentBlank.state().container).toEqual('freezer');
-  })
-
-
-  it('should work properly on onConfirmEdit button', () => {
-    let wrapper = component.find(Button).find('.btn_confirm_edit').find('button');
-    wrapper.simulate('click')
-    expect(onConfirmEditMock).toHaveBeenCalledTimes(1);
-    expect(onConfirmEditMock).toHaveBeenCalledWith(resultMock);
-  })
-
-  it('should work properly on onCancelEdit button', () => {
-    let wrapper = component.find(Button).find('.btn_cancel_edit').find('button');
-    wrapper.simulate('click')
-    expect(onCancelEditMock).toHaveBeenCalledTimes(1);
-  })
-})
-*/
