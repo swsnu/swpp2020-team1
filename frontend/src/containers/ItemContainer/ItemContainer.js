@@ -8,8 +8,76 @@ import GridListTile from '@material-ui/core/GridListTile';
 import { Dialog, Typography, Container, Button, Icon } from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
 import AddIcon from '@material-ui/icons/Add';
+import AddCircleIcon from '@material-ui/icons/AddCircle';
 import RemoveIcon from '@material-ui/icons/Remove';
+import RemoveCircleIcon from '@material-ui/icons/RemoveCircle';
+import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
 import './ItemContainer.css';
+
+import { makeStyles } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+
+
+const styles = (theme) => ({
+  root: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    minWidth: 275,
+  },
+  bullet: {
+    display: 'inline-block',
+    margin: '0 2px',
+    transform: 'scale(0.8)',
+  },
+  title: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontFamily: ['Noto Sans KR', 'sans-serif', 'Roboto'].join(','),
+    fontWeight: 500,
+    fontSize: 14,
+  },
+  expire: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontFamily: ['Noto Sans KR', 'sans-serif', 'Roboto'].join(','),
+    fontSize: 14,
+    fontWeight: 500,
+    color: theme.palette.error.main,
+    marginBottom: 5,
+  },
+  count:{
+    fontFamily: ['Noto Sans KR', 'sans-serif', 'Roboto'].join(','),
+    fontSize: 14,
+    fontWeight: 500,
+    color: theme.palette.text.primary,
+  },
+  countButton:{
+    marginLeft: 5,
+    marginRight: 5,
+  },
+  countBlock:{
+    fontWeight: 900,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  pos: {
+    fontFamily: ['Noto Sans KR', 'sans-serif', 'Roboto'].join(','),
+    fontSize: 14,
+    fontWeight: 500,
+    marginBottom: 12,
+  },
+  xButton:{
+    marginTop: 12,
+    marginBottom: 12, 
+  }
+});
 
 class ItemContainer extends Component {
   state = {
@@ -39,8 +107,30 @@ class ItemContainer extends Component {
     .then(() => {
       this.props.buildNotification();
     })
-
   }
+
+  onAddItem = (e, id, count) => {
+    if (!e) var e = window.event;
+    e.cancelBubble = true;
+    if (e.stopPropagation) e.stopPropagation();
+
+    if(this.state.seen) {
+      let tmpItemCounts = this.state.itemcounts;
+      tmpItemCounts = tmpItemCounts.map(i => {
+        if(i.id === id) return { ...i, count: i.count + 1 };
+        return i;
+      })
+      tmpItemCounts = tmpItemCounts.filter(i => i.count != 0)
+      this.setState({ itemcounts: tmpItemCounts })
+    }
+
+    this.props.onEditItemCount(id, count+1)
+    .then(() => {
+      this.props.buildNotification();
+    })
+  }
+
+
 
   componentDidMount() {
     let itemGridTiles = document.getElementsByClassName("ItemGridTile")
@@ -67,6 +157,7 @@ class ItemContainer extends Component {
   }
 
   render() {
+    const { classes } = this.props;
     let items = null;
     if (this.props.items) {
       items = this.props.items.map(i => {
@@ -81,6 +172,7 @@ class ItemContainer extends Component {
               className="Item"
               onClickCard={(itemcounts) => this.onClickCard(itemcounts)}
               onClickSelectItem={(id) => this.props.onClickSelectItem(id)}
+              onAddItem={(e, ic_id, count) => this.onAddItem(e, ic_id, count)} 
               onRemoveItem={(e, ic_id, count) => this.onRemoveItem(e, ic_id, count)}
               mode={(this.props.selectedItemIds.filter(id => id === i.id).length > 0 ? "Selected" : this.props.mode)}
             />
@@ -92,13 +184,24 @@ class ItemContainer extends Component {
 
     const itemcounts = (this.state.itemcounts.length > 0 ? this.state.itemcounts.map(ic => {
       return (
-        <div key={ic.id} className="itemListShape">
-          <div className="expiration_date">
-            {ic.expiration_date === '2099/12/31' ? null : ic.expiration_date}
-          </div>
-          <div className="count">{ic.count}</div>
-          <IconButton className="btn_remove_item" onClick={(event) => this.onRemoveItem(event, ic.id, ic.count)}><RemoveIcon/></IconButton>
-        </div>
+        <Card key={ic.id} className={`${classes.root} itemListShape`}>
+        <CardContent>
+          <Typography className={classes.title} color="textSecondary">
+            Expiration Date
+          </Typography>
+          <Typography className={`"expiration_date" ${classes.expire}`} variant="h5" component="h2">
+          {ic.expiration_date === '2099/12/31' ? null : ic.expiration_date}
+          </Typography>
+          <Typography className={`"count" ${classes.pos}`} color="textSecondary">
+          <div className={classes.countBlock}><IconButton className={`"btn_remove_item" ${classes.countButton}`} onClick={(event) => this.onRemoveItem(event, ic.id, ic.count)}><RemoveCircleIcon/></IconButton>{ic.count}<IconButton className={`"btn_remove_item" ${classes.countButton}`} onClick={(event) => this.onAddItem(event, ic.id, ic.count)}><AddCircleIcon/></IconButton></div>
+          </Typography>
+          <Typography className={classes.count}variant="body2" component="p">
+            {/* <div className={classes.countBlock}>{ic.count}<IconButton className="btn_remove_item" onClick={(event) => this.onRemoveItem(event, ic.id, ic.count)}><RemoveIcon/></IconButton></div> */}
+          </Typography>
+        </CardContent>
+      </Card>
+
+
       );
     }) : null);
 
@@ -116,9 +219,9 @@ class ItemContainer extends Component {
             </div>
           </Container>
 
-          <Dialog open={this.state.seen}>
-            <Button onClick={this.onClickCardOff}>X</Button>
-            {itemcounts}
+          <Dialog open={this.state.seen} fullWidth>
+            <Button className={classes.xButton} onClick={this.onClickCardOff}>X</Button>
+            <div overflowY="auto">{itemcounts}</div>
           </Dialog>
         </div>
 
@@ -139,4 +242,4 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(ItemContainer));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withRouter(ItemContainer)));

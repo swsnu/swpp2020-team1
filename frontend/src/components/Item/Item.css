@@ -43,31 +43,30 @@
     color: #E86565;
 }
 
-.count {
-    left: 63px;
-    top: 41px;
-
+/* .count {
     font-family: "Noto Sans KR", sans-serif;
     font-style: normal;
     font-weight: normal;
     font-size: 18px;
     line-height: 24px;
-    /* identical to box height, or 133% */
+
 
     align-items: center;
     text-align: center;
     letter-spacing: 0.3px;
 
     color: #000000;
-}
+} */
 
-.btn_remove_item {
+/* .btn_remove_item {
     height: 20px;
     width: 20px;
     background-color: #E8A065;
     filter: drop-shadow(0px 3px 5px rgba(0,0,0,0.2));
     transition: all 0.5s;
-}
+    margin-left: 5px;
+    margin-right: 5px;
+} */
 
 .Select:hover {
     background-color: #E86565;
@@ -92,5 +91,5 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-
+    justify-content: center;
 }
