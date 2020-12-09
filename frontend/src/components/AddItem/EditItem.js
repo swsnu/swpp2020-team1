@@ -10,8 +10,6 @@ import RemoveIcon from '@material-ui/icons/Remove';
 import AddIcon from '@material-ui/icons/Add';
 
 import axios from 'axios';
-import { connect } from 'react-redux';
-import * as actionCreators from '../../store/actions/index';
 
 import './EditItem.css';
 import { withStyles } from '@material-ui/core/styles';
@@ -57,6 +55,7 @@ class EditItem extends Component {
   }
 
   onCategoryChange = (event, value) => {
+    console.log("onCategoryChange!!!")
     if (value && value.name) { // value is object {id, name}
       console.log("value: " + JSON.stringify(value))
       this.props.onChangeEditItem({
@@ -187,7 +186,7 @@ class EditItem extends Component {
           <div className="EditItemContent">
             <div style={{fontFamily: '"Noto Sans KR", sans-serif', fontSize: 13, color: "#949494"}}>수량</div>
             <div className="Count">
-              <RemoveIcon className="Button" style={{ color: "#FFFFFF" }} 
+              <RemoveIcon id="EditItemMinusButton" className="Button" style={{ color: "#FFFFFF" }} 
                 onClick={() => {if(this.props.item.count > 1) { this.props.onChangeEditItem({ count: (this.props.item.count - 1) })} }} />
               <TextField 
                 value={this.props.item.count}
@@ -197,7 +196,7 @@ class EditItem extends Component {
                 InputProps={{classes: {input: classes.typography} }} 
                 style={style}
                 margin="dense" />
-              <AddIcon className="Button" style={{ color: "#FFFFFF" }} 
+              <AddIcon id="EditItemPlusButton" className="Button" style={{ color: "#FFFFFF" }} 
                 onClick={() => {this.props.onChangeEditItem({ count: (this.props.item.count + 1) })}} />  
             </div>
             <Select 
@@ -210,7 +209,7 @@ class EditItem extends Component {
                 <MenuItem key={c} value={c}>{c}</MenuItem>
               ))}
             </Select>
-            <button disabled={!this.checkValidity(this.props.item.name, this.props.item.expiration_date)} onClick={this.onClickEditItemButton}>완료</button>
+            <button id="FinishEditButton" disabled={!this.checkValidity(this.props.item.name, this.props.item.expiration_date)} onClick={this.onClickEditItemButton}>완료</button>
           </div>
         </div>
       </Fragment>
@@ -218,16 +217,4 @@ class EditItem extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    resultList: state.additem.resultList
-  };
-}
-
-const mapDispatchToProps = dispatch => {
-  return {
-    onUpdateItemList: (id, item) => dispatch(actionCreators.updateItemList(id, item))
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(EditItem));
+export default (withStyles(styles)(EditItem));
