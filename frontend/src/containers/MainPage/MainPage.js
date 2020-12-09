@@ -41,6 +41,7 @@ class MainPage extends Component {
       await this.props.onGetItemCounts(item.id)
     }
 
+    this.getAndBuildNotification(this.user_id)
 
     window.addEventListener("resize", this.resize.bind(this));
     this.resize();
@@ -106,7 +107,8 @@ class MainPage extends Component {
     }
 
     if (itemcountsWithCategory.length !== 0) {
-      let itemId = itemcountsWithCategory[[Math.floor(Math.random() * itemcountsWithCategory.length)]].item_id
+      let array = new Uint8Array(1)
+      let itemId = itemcountsWithCategory[window.crypto.getRandomValues(array)[0] % itemcountsWithCategory.length].item_id
       let item = this.props.items.find(item => item.id === itemId)
       let itemName = item.name
       let category = item.category_id
