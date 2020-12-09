@@ -19,8 +19,7 @@ const stubSignSuccess = {
 }
 
 const stubSignFailure = {
-  status: 'FAILURE',
-  error: 1
+  status: 'FAILURE'
 }
 
 const stubLoginSucess = {
@@ -81,7 +80,6 @@ describe('LoginRoute', () => {
       password: "TEST-PASSWORD",
       nickname : "TEST-NICKNAME"
     };
-    const spyAlert = jest.spyOn(window, 'alert').mockImplementation(() => { return () => {}; });
     const spyAxiosPost = jest.spyOn(axios, 'post')
       .mockImplementation((url, user) => {
         return new Promise((resolve, reject) => {
@@ -94,9 +92,8 @@ describe('LoginRoute', () => {
     
     store.dispatch(userActionCreators.signUpRequest()).then(() => {
       const newState = store.getState();
-      expect(newState.user.register).toEqual(stubSignFailure);
+      expect(newState.user.register.status).toEqual(stubSignFailure.status);
       expect(spyAxiosPost).toHaveBeenCalledTimes(1);
-      expect(spyAlert).toBeCalledTimes(1)
       done();
     });
   })
