@@ -14,10 +14,6 @@ import Dialog from '@material-ui/core/Dialog';
 import { createMount } from '@material-ui/core/test-utils';
 import * as actionTypes from '../../store/actions/actionTypes'; 
 
-function flushPromises() {
-  return new Promise(resolve => setImmediate(resolve));
-}
-
 jest.mock('../../components/Comment/Comment', () => jest.fn())
 
 const stubInitialState = {
@@ -78,19 +74,17 @@ describe('<RecipeDetail />', () => {
   it('should render recipeDetail', async () => {
     const component = mount(recipeDetail).find('RecipeDetail'); // .find('RecipeDetail') needed because of withStyles()
     const wrapper = component.find('.RecipeDetail');
-    await flushPromises();
     expect(wrapper.length).toBe(1);
   });
 
   it('should handle back button', async () => {
     const component = mount(recipeDetail).find('RecipeDetail');
-    await flushPromises();
     const backButton = component.find('.backButton button');
     backButton.simulate('click');
     expect(mockHistory.goBack).toHaveBeenCalled();
   });
 
-  it('should handle rating', () => {
+  it('should handle rating', async () => {
     const component = mount(recipeDetail).find('RecipeDetail');
     const ratingButton = component.find('.ratingButton button');
     ratingButton.simulate('click');
