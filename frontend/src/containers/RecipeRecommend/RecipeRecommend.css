@@ -31,6 +31,12 @@
     font-family: Roboto, sans-serif;
 }
 
+.thumbnail {
+    width: 160px;
+    height: 90px;
+    object-fit: cover;
+}
+
 .title {
     left: 0px;
     top: 8px;
