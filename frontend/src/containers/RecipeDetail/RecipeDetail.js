@@ -4,7 +4,7 @@ import axios from 'axios';
 import * as actionCreators from '../../store/actions/index';
 import Comment from '../../components/Comment/Comment';
 import './RecipeDetail.css';
-import { TextField, Button, IconButton, Typography, Box, Grid, Toolbar, AppBar, Collapse } from '@material-ui/core';
+import { TextField, Button, IconButton, Typography, Box, Grid, Toolbar, AppBar, Collapse, Container } from '@material-ui/core';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import DescriptionIcon from '@material-ui/icons/Description';
@@ -16,17 +16,34 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Rating from '@material-ui/lab/Rating';
 import { withStyles } from '@material-ui/core/styles';
+import { calculatePatchSize } from 'quagga';
 
 const styles = {
+  font: {
+    fontFamily: ["Noto Sans KR", "sans-serif"]
+  },
+
+  RecipeDetail: {
+    maxWidth: 800,
+    flexGrow: 1,
+    alignItems: 'center',
+    justify:'center'
+  },
+
   appbar: {
     background: "#F4F4F4",
     color: "#343434",
     position: "relative",
   },
 
-  typography: {
+  headerTitle: {
     flexGrow: 1,
-    align: "center"
+    fontWeight: 600,
+    fontSize: 28,
+  },
+
+  backButton: {
+    position: 'absolute'
   },
 
   recipeTitle: {
@@ -35,6 +52,9 @@ const styles = {
 
   ratingContainer: {
     margin: 20
+  },
+  ratingToolbar: {
+    paddingRight: 0,
   },
   rating: {
   },
@@ -47,6 +67,7 @@ const styles = {
   ratingButton: {
     marginTop: 2,
     fontWeight: 700,
+
     background: "#7DBF1A",
     color: "#343434",
     '&:hover': {
@@ -63,7 +84,7 @@ const styles = {
     fontSize: 30,
   },
   descriptionLabel: {
-    fontSize: 18,
+    fontSize: 16,
   },
   descriptionText: {
     whiteSpace: 'pre-line', // recognize new line character
@@ -78,11 +99,14 @@ const styles = {
     fontSize: 30,
   },
   commentLabel: {
-    fontSize: 18,
+    fontSize: 16,
   },
   newComment: {
-    margin: 20,
-    width: "80%",
+    marginTop: 20,
+    marginBottom: 20,
+    marginLeft: 0,
+    marginRight: 0,
+    width: "80%"
   },
   createButton: {
     marginTop: 20,
@@ -184,12 +208,13 @@ class RecipeDetail extends Component {
     let alreadyRated = this.props.ratedRecipes && this.props.ratedRecipes.includes(parseInt(this.props.match.params.id));
 
     return this.props.selectedRecipe ? (
-        <div className="RecipeDetail">
+      <Grid container justify="center">
+        <Box className={`${classes.RecipeDetail} RecipeDetail`}>
           {/* Header */}
           <AppBar className={classes.appbar}>
             <Toolbar>
-                <IconButton className="backButton" onClick={this.onClickBackButton}><ArrowBackIcon/></IconButton>
-                <Typography className={classes.typography} variant="h5">Recipe</Typography>
+                <IconButton className={`${classes.backButton} backButton`} onClick={this.onClickBackButton}><ArrowBackIcon/></IconButton>
+                <Typography className={`${classes.headerTitle} ${classes.font}`} variant="h5">Recipe</Typography>
             </Toolbar>
           </AppBar>
 
@@ -205,18 +230,18 @@ class RecipeDetail extends Component {
           </div>
 
           {/* Title */}
-          <Typography variant="h5" align="left" className={classes.recipeTitle}>{this.props.selectedRecipe.title}</Typography>
+          <Typography variant="h5" align="left" className={`${classes.recipeTitle} ${classes.font}`}>{this.props.selectedRecipe.title}</Typography>
 
           {/* Rating */}
           <AppBar className={classes.appbar}>
-            <Toolbar>
+            <Toolbar className={classes.ratingToolbar}>
               <Rating className={classes.rating}
                 value={this.props.selectedRecipe.rating_average}
                 precision={0.1}
                 readOnly
                 name="ratingAverage"/>
               <Box className={classes.ratingText} fontWeight={700}>
-                {this.props.selectedRecipe.rating_average ? this.props.selectedRecipe.rating_average.toFixed(2)+" / 5.0" : "아직 별점이 없어요!"}
+                {this.props.selectedRecipe.rating_average ? this.props.selectedRecipe.rating_average.toFixed(2)+" / 5.0" : "별점이 없어요!"}
               </Box>
               <Button className={`${classes.ratingButton} ratingButton`} onClick={this.onClickRatingButton} disabled={alreadyRated}>
                 {alreadyRated ? "평가 완료" : "별점 주기"}
@@ -251,21 +276,20 @@ class RecipeDetail extends Component {
           <AppBar className={classes.appbar} onClick={()=>this.setState({expandDescription: !this.state.expandDescription})}>
             <Toolbar>
               <DescriptionIcon className={classes.descriptionIcon}/>
-              <Box className={classes.descriptionLabel} fontWeight={900}>Description</Box>
+              <Box className={`${classes.descriptionLabel} ${classes.font}`} fontWeight={900}>Description</Box>
               <IconButton className={classes.expandIcon} ><ExpandMoreIcon/></IconButton>
             </Toolbar>
           </AppBar>
           {/* Collapse */}
           <Collapse in={this.state.expandDescription}>
-            <Typography align="left" className={classes.descriptionText}>{this.props.selectedRecipe.description}</Typography>
+            <Typography align="left" className={`${classes.descriptionText} ${classes.font}`}>{this.props.selectedRecipe.description}</Typography>
           </Collapse>
-
 
           {/* Comment Header */}
           <AppBar className={classes.appbar}>
             <Toolbar>
               <ChatBubbleOutlineIcon className={classes.commentIcon}/>
-              <Box className={classes.commentLabel} fontWeight={900}>Comment</Box>
+              <Box className={`${classes.commentLabel} ${classes.font}`} fontWeight={900}>Comment</Box>
             </Toolbar>
           </AppBar>
           {/* Create new comment */}
@@ -278,8 +302,10 @@ class RecipeDetail extends Component {
             multiline
             rows={3}
             variant="outlined"
+            fullWidth
           />
           <IconButton className={`${classes.createButton} createCommentButton`} onClick={this.onClickCreateButton}><CreateIcon/></IconButton>
+
           {/* Comments */}
           <div>{comments}</div>
           
@@ -309,7 +335,9 @@ class RecipeDetail extends Component {
           </DialogActions>
         </Dialog>
 
-        </div>
+        </Box>
+      </Grid>
+
 
         
     ) : null;

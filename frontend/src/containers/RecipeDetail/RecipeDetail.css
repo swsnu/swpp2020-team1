@@ -1,9 +1,3 @@
-.RecipeDetail {
-    max-width: 800px;
-    min-width: 360px;
-    margin: 0 auto;
-}
-
 .videoContainer {
     position: relative;
     overflow: hidden;
@@ -18,8 +12,4 @@
     right: 0;
     width: 100%;
     height: 100%;
-}
-
-.recipeTitle {
-    margin: 20px;
 }
