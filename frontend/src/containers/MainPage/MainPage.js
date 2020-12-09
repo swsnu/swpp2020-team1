@@ -248,7 +248,9 @@ class MainPage extends Component {
     return (
         <div className="MainPage">
           <div className="title">
-            <Logout/>
+            <div className="btn_logout">
+              <Logout/>
+            </div>
             <div className="titleOrange">Food</div>
             <div className="titleBlack">ify</div>
             <div className="btn_notification" onClick={this.onClickNotiIcon}>

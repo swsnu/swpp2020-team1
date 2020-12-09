@@ -11,8 +11,9 @@ export const signUpRequest = (newUser) => {
             dispatch(push('/signin'));
         })
         .catch( error => {
-            dispatch(signUpFailure(error.data.code));
-            alert('Failed to Sign Up')
+            console.log("error in signUpRequest")
+            console.log(error)
+            dispatch(signUpFailure(error));
         })
     }
 }

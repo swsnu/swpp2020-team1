@@ -86,10 +86,7 @@ describe('LoginRoute', () => {
       .mockImplementation((url, user) => {
         return new Promise((resolve, reject) => {
           const result = {
-            status: 400,
-            data : {
-              code: 1
-            }
+            status: 400
           };
           reject(result);
         });

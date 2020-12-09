@@ -3,6 +3,7 @@ import * as userActionCreators from '../../store/actions/user';
 import {connect } from 'react-redux'
 import {withRouter} from 'react-router'
 import { Button } from '@material-ui/core';
+import LogoutImg from '../../icons/logout.png';
 
 class Logout extends Component {
     onClickLogoutButton = () => {
@@ -13,7 +14,9 @@ class Logout extends Component {
     render () {
         return (
             <div className = 'logout'>
-                <Button size = 'small' id = 'logout'onClick = {() => this.onClickLogoutButton()}>Sign out</Button>
+                <Button size = 'small' id = 'logout'onClick = {() => this.onClickLogoutButton()}>
+                <img src={LogoutImg} width={30} height={30} />
+                    </Button>
             </div>
         )
     }
