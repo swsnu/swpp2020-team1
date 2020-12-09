@@ -288,6 +288,12 @@ def item_user(request, user_id=0):
     if request.method == 'GET':
         # jaeseok: check user existence
         all_item_list = list(Item.objects.filter(user_id=user_id).values())
+        for i in range(len(all_item_list)):
+            curr_category_id = all_item_list[i]['category_id']
+            if curr_category_id:
+                all_item_list[i]['category_name'] = Category.objects.get(id=curr_category_id).name
+            else:
+                all_item_list[i]['category_name'] = None
         return JsonResponse(all_item_list, safe=False)
     else:
         return HttpResponseNotAllowed(['GET'])

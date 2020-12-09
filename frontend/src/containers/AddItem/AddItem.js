@@ -12,15 +12,31 @@ import * as actionCreators from '../../store/actions/index';
 import { Dialog } from '@material-ui/core'
  
 import './AddItem.css';
+import { withStyles } from '@material-ui/core/styles';
 
-const BARCODE_TERM = 'SCAN the barcode'
-const EXPIRATION_TERM = 'MOVE to expiration date and TOUCH the screen'
+const BARCODE_TERM = '바코드를 스캔해주세요'
+const EXPIRATION_TERM = '유통기한을 찍기 위해 화면을 클릭해주세요'
 
-
+const styles = {
+  newPaper: {
+    margin: 0,
+    backgroundColor: "rgba(0, 0, 0, 0)"
+  }
+}
 
 class AddItem extends Component {
   containers = ['freezer', 'fridge', 'shelf'];
   
+  defaultItem = {
+    name: '',
+    container: 'freezer',
+    category_id: 0,
+    category_name: '기타',
+    barcode_num: '',
+    expiration_date: new Date(Date.now()),
+    count: 1
+  }
+
   state = {
     screenShot: null,
     imageSrc: "",
@@ -29,7 +45,9 @@ class AddItem extends Component {
     saveImage: false,
     isBarcodeScanning: false,
     isResultVisible: false,
-    isRetaking: false
+    isRetaking: false,
+    defaultItem: this.defaultItem,
+    currentItem: this.defaultItem
   }
 
   // Used to activate webcam
@@ -40,10 +58,18 @@ class AddItem extends Component {
   handleDetect = (imageText) => {
     console.log("imageText_addCard: ", imageText);
     let ymd = parseDate(imageText);
-    this.props.onUpdateItemList(this.props.resultList.length - 1, { expiration_date: ymd });
-    this.setState((prevState, props) => ({
-      OCRResult: ymd
-    }))
+
+    if(ymd === 'error') {
+      this.setState({
+        OCRResult: ymd, 
+        currentItem: { ...this.state.currentItem, expiration_date: new Date(Date.now()) }
+      })
+    } else {
+      this.setState((prevState, props) => ({
+        OCRResult: ymd,
+        currentItem: {...this.state.currentItem, expiration_date: ymd}
+      }))
+    }
   }
 
   setExpirationDate = (e) => { 
@@ -131,17 +157,21 @@ class AddItem extends Component {
         {
           //console.log(res)
           custom_item = res.data.filter(item => 
-            (item.barcode_id == barcode_num && item.user_id == user_id)
+            (item.barcode_id === barcode_num && item.user_id === user_id)
           )
           //console.log(`custom_item count: ${custom_item.length}`)
           if(custom_item.length>0){
             custom_item = custom_item[custom_item.length - 1];
             console.log('custom_item is:', custom_item);
-            this.props.onUpdateItemList(this.props.resultList.length - 1, 
-              { name: custom_item.name,
+            this.setState({
+              currentItem: {
+                ...this.state.currentItem,
+                name: custom_item.name,
                 category_id: custom_item.category_id,
                 category_name: custom_item.category_name,
-                barcode_num: barcode_num })
+                barcode_num: barcode_num
+              }
+            })
           }
         }
       )
@@ -156,46 +186,76 @@ class AddItem extends Component {
      * key: (barcode_num)
      */
 
-    console.log(custom_item, "custom_item")
+    //console.log(custom_item, "custom_item")
     if(custom_item.length == 0){
       axios.get(`/back/barcode/${barcode_num}/`)
         .then(res => {
           console.log(res.data, "name");
-          this.props.onUpdateItemList(this.props.resultList.length - 1, 
-            { name: res.data.item_name,
+          this.setState({
+            currentItem: {
+              ...this.state.currentItem,
+              name: res.data.item_name,
               category_id: res.data.category_id,
               category_name: res.data.category_name,
-              barcode_num: barcode_num })
+              barcode_num: barcode_num
+            }
+          })
         })
         .catch(err => {
           // Item not found in Barcode DB
-          this.props.onUpdateItemList(this.props.resultList.length - 1, { barcode_num: barcode_num })
+          console.log("currentItemis: ", this.state.currentItem);
+          this.setState({
+            currentItem: {
+              ...this.state.currentItem,
+              barcode_num: barcode_num
+            }
+          })
           console.log("no item on barcode list")
         });
     }
   }
 
   onClickRetakeBarcodeButton = () => {
-    this.setState({ isRetaking: true, isResultVisible: false, isBarcodeScanning: true });
-    this.props.onUpdateItemList(this.props.resultList.length - 1, 
-      { barcode_num: '', 
+    this.setState({ 
+      isRetaking: true, 
+      isResultVisible: false, 
+      isBarcodeScanning: true,
+      currentItem: {
+        ...this.state.currentItem,
+        barcode_num: '', 
         category_id: 0,
-        category_name: '기타'
-      })
+        category_name: '기타'  
+      }});
   }
 
   onClickRetakeExpirationDateButton = () => {
-    this.setState({ isRetaking: true, isResultVisible: false, isBarcodeScanning: false });
-    this.props.onUpdateItemList(this.props.resultList.length - 1, { expiration_date: new Date(Date.now()) });
+    this.setState({ 
+      isRetaking: true, 
+      isResultVisible: false, 
+      isBarcodeScanning: false,
+      currentItem: {
+        ...this.state.currentItem,
+        expiration_date: new Date(Date.now())
+      }});
   }
 
-  onFinishEditItemButton = () => {
-    this.setState((prevState, props) => ({
+  onClickFinishEditItemButton = () => {
+    this.props.onAddNewItem(this.state.currentItem)
+    this.setState({
       screenShot: null,
       imageFile: null,
-      isResultVisible: false
-    }))
-    this.props.onAddNewItem();
+      isResultVisible: false,
+      currentItem: this.state.defaultItem
+    })
+  }
+
+  onChangeEditItemValue = (value) => {
+    this.setState({
+      currentItem: {
+        ...this.state.currentItem,
+        ...value
+      }
+    })
   }
 
   onClickMoveToConfirmButton = () => {
@@ -207,41 +267,43 @@ class AddItem extends Component {
 
   componentDidMount = () => {
     const containerDefault = (this.props.location.state ? this.props.location.state.container : this.containers[0])
-    this.props.onSetDefaultContainer(containerDefault);
-    this.props.onUpdateItemList(0, {container: containerDefault})
+    this.setState({
+      defaultItem: {
+        ...this.state.defaultItem,
+        container: containerDefault
+      },
+      currentItem: {
+        ...this.state.currentItem,
+        container: containerDefault
+      }
+    })
   }
 
   render() {
+    const {classes} = this.props;
     return (
       <div className="AddItem" style={{overflowX: "hidden", overflowY: "hidden"}}>
         <Scanner id="Scanner" onDetected={this._onDetected} onCapture={this.handleOCR} barcode={this.state.isBarcodeScanning} ref="Scanner"/> 
         <div className="StatusTerm">{ this.state.isRetaking ? "Retaking" : (this.state.isBarcodeScanning ? BARCODE_TERM : EXPIRATION_TERM) }</div>
         <div className="Footer">
-          <div id='onClickMoveToConfirmButton' className="ConfirmButton" onClick={this.onClickMoveToConfirmButton} >Confirm</div>
+          <div id='onClickMoveToConfirmButton' className="ConfirmButton" onClick={this.onClickMoveToConfirmButton} >직접 입력</div>
         </div>
-        <Dialog open={this.state.isResultVisible}>
+        <Dialog open={this.state.isResultVisible} classes={{paper: classes.newPaper}}>
           <Result isAddItem={true} onClickRetakeBarcode={this.onClickRetakeBarcodeButton}
-                      onClickRetakeExpirationDate={this.onClickRetakeExpirationDateButton}
-                      onClickEditItem={this.onFinishEditItemButton} />
+                  onClickRetakeExpirationDate={this.onClickRetakeExpirationDateButton}
+                  onClickFinishEditItem={this.onClickFinishEditItemButton}
+                  onChangeEditItem={this.onChangeEditItemValue}
+                  item={this.state.currentItem} />
         </Dialog>
       </div>
     );
   }
 }
 
-
-const mapStateToProps = state => {
-  return {
-    resultList: state.additem.resultList
-  };
-}
-
 const mapDispatchToProps = dispatch => {
   return {
-    onAddNewItem: () => dispatch(actionCreators.addNewItem()),
-    onUpdateItemList: (id, item) => dispatch(actionCreators.updateItemList(id, item)),
-    onSetDefaultContainer: (container) => dispatch(actionCreators.setDefaultContainer(container))
+    onAddNewItem: (item) => dispatch(actionCreators.addNewItem(item))
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(AddItem);
+export default connect(null, mapDispatchToProps)(withStyles(styles)(AddItem));

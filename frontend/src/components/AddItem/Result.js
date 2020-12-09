@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import './Result.css';
 import EditItem from './EditItem';
-import { connect } from 'react-redux';
 
 class Result extends Component {
   render() {
@@ -12,8 +11,9 @@ class Result extends Component {
         <EditItem isAddItem={this.props.isAddItem} 
           onClickRetakeBarcode={this.props.onClickRetakeBarcode} 
           onClickRetakeExpirationDate={this.props.onClickRetakeExpirationDate}
-          onClickEditItem={this.props.onClickEditItem}
-          id={this.props.resultList.length - 1} />
+          onClickFinishEditItem={this.props.onClickFinishEditItem}
+          onChangeEditItem={this.props.onChangeEditItem}
+          item={this.props.item} />
         <div display="flex" flex-direction="row">
         </div>
       </div>
@@ -21,10 +21,4 @@ class Result extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    resultList: state.additem.resultList
-  };
-}
-
-export default connect(mapStateToProps, null)(Result);
+export default (Result);
