@@ -75,7 +75,7 @@ const NotiCard = props => {
   } else if (notiType === 'recipe') {
     notiContent =
       <div style={{flexDirecion: 'row', justifyContent: 'center'}}>
-        <ListItem className='NotiListItem' style={{backgroundColor: '#f9ff80',
+        <ListItem className='NotiListItem' style={{backgroundColor: '#ffffff',
             justifyContent: 'space-between', width: window.innerWidth }}>
           <div style={{width: 50}}>
             <img src={CalendarImg} width={20} height={20} />

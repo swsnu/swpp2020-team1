@@ -83,7 +83,7 @@ const Item = props => {
   const bull = <span className={classes.bullet}>•</span>;
 
   return (
-    <Card style={props.mode === "Selected" ? {backgroundColor: "rgba(232, 160, 101)"} : null} className={`${classes.root} ${props.mode === "normal" ? 'Item' : 'Item Select'}`} onClick={props.mode === "normal" ? () => onClickCard(props.itemcounts) : () => onClickSelectCard(props.id)}>
+    <Card style={props.mode === "Selected" ? {backgroundColor: "#7DBF1A"} : {backgroundColor: "#FFFFFF"}} className={`${classes.root} ${props.mode === "normal" ? 'Item' : 'Item Select'}`} onClick={props.mode === "normal" ? () => onClickCard(props.itemcounts) : () => onClickSelectCard(props.id)}>
       <div className='ItemContents'>
         <div className={`"item-title" ${classes.title}`}>{props.name}</div>
         <div key={itemFastestExpDate.id} className="item">
