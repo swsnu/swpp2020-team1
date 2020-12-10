@@ -9,10 +9,20 @@ import Result from '../../components/AddItem/Result';
 import dataURLtoFile from '../../components/AddItem/URLtoFile';
 import moment from 'moment';
 import * as actionCreators from '../../store/actions/index';
-import { Dialog } from '@material-ui/core'
+import { Dialog, List, Typography, Button } from '@material-ui/core';
  
 import './AddItem.css';
 import { withStyles } from '@material-ui/core/styles';
+import IconButton from '@material-ui/core/IconButton';
+import HelpSharpIcon from '@material-ui/icons/HelpSharp';
+import Paper from '@material-ui/core/Paper';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import ExpireImage from '../../icons/expire.png';
+import BarcodeImage from '../../icons/barcode.png';
+import ConfirmImage from '../../icons/confirm.png';
+
+
 
 const BARCODE_TERM = '바코드를 스캔해주세요'
 const EXPIRATION_TERM = '유통기한을 찍기 위해 화면을 클릭해주세요'
@@ -21,6 +31,13 @@ const styles = {
   newPaper: {
     margin: 0,
     backgroundColor: "rgba(0, 0, 0, 0)"
+  },
+  helpButton:{
+    color: "#7DBF1A",
+  },
+  xButton:{
+    marginTop: 12,
+    marginBottom: 12, 
   }
 }
 
@@ -47,7 +64,9 @@ class AddItem extends Component {
     isResultVisible: false,
     isRetaking: false,
     defaultItem: this.defaultItem,
-    currentItem: this.defaultItem
+    currentItem: this.defaultItem,
+    help: false,
+    helpImage: ExpireImage, 
   }
 
   // Used to activate webcam
@@ -70,6 +89,14 @@ class AddItem extends Component {
         currentItem: {...this.state.currentItem, expiration_date: ymd}
       }))
     }
+  }
+
+  onClickCardOff = () => {
+    this.setState({help: false});
+  }
+
+  onClickHelpButton = () => {
+    this.setState({help: true})
   }
 
   setExpirationDate = (e) => { 
@@ -278,14 +305,31 @@ class AddItem extends Component {
       }
     })
   }
+  helpExpire = () => {
+    this.setState(
+     { helpImage : ExpireImage }
+    )
+  }
+  helpBarcode = () => {
+    this.setState(
+     { helpImage : BarcodeImage }
+    )
+  }
+  helpList = () => {
+    this.setState(
+     { helpImage : ConfirmImage }
+    )
+  }
 
   render() {
     const {classes} = this.props;
+  
     return (
       <div className="AddItem" style={{overflowX: "hidden", overflowY: "hidden"}}>
         <Scanner id="Scanner" onDetected={this._onDetected} onCapture={this.handleOCR} barcode={this.state.isBarcodeScanning} ref="Scanner"/> 
         <div className="StatusTerm">{ this.state.isRetaking ? "Retaking" : (this.state.isBarcodeScanning ? BARCODE_TERM : EXPIRATION_TERM) }</div>
         <div className="Footer">
+          <IconButton className={`${classes.helpButton}`} onClick={this.onClickHelpButton}><HelpSharpIcon fontSize="large"/></IconButton>
           <div id='onClickMoveToConfirmButton' className="ConfirmButton" onClick={this.onClickMoveToConfirmButton} >목록 보기</div>
         </div>
         <Dialog open={this.state.isResultVisible} classes={{paper: classes.newPaper}}>
@@ -295,6 +339,19 @@ class AddItem extends Component {
                   onChangeEditItem={this.onChangeEditItemValue}
                   item={this.state.currentItem} />
         </Dialog>
+        <Dialog open={this.state.help} fullWidth>
+            <Button className={classes.xButton} onClick={this.onClickCardOff}>X</Button>
+            <Tabs
+              indicatorColor="primary"
+              textColor="primary"
+              centered
+            >
+              <Tab label="유통기한 스캔" onClick={this.helpExpire}/>
+              <Tab label="바코드 스캔" onClick={this.helpBarcode}/>
+              <Tab label="목록 보기" onClick={this.helpList}/>
+            </Tabs>
+            <img src = {this.state.helpImage} width="100%"/>
+          </Dialog>
       </div>
     );
   }
