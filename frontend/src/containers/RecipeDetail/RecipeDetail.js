@@ -21,55 +21,75 @@ const styles = {
   font: {
     fontFamily: ["Noto Sans KR", "sans-serif"]
   },
+  root: {
+    backgroundColor: '#f4f4f4',
+  },
 
   RecipeDetail: {
-    maxWidth: 800,
-    flexGrow: 1,
-    alignItems: 'center',
-    justify:'center'
+    backgroundColor: '#ffffff',
+    paddingLeft: 30,
+    paddingRight: 30,
+    paddingTop: 0,
+    paddingBottom: 0,
   },
 
-  appbar: {
-    background: "#F4F4F4",
-    color: "#343434",
-    position: "relative",
+  headerContainer: {
+    marginTop: 20,
+    marginBottom: 20,
   },
-
-  headerTitle: {
-    flexGrow: 1,
-    fontWeight: 600,
-    fontSize: 28,
+  headerTitleGreen: {
+    fontWeight: 900,
+    fontSize: 30,
+    color: '#7DBF1A',
   },
-
+  headerTitleBlack: {
+    fontWeight: 900,
+    fontSize: 30,
+    color: '#000000',
+  },
   backButton: {
-    position: 'absolute'
+    paddingBottom: 3,
   },
 
   recipeTitle: {
-    margin: 20
+    marginLeft: 10,
+    marginTop: 20,
+    marginBottom: 20,
+  },
+
+  ingredientContainer: {
+    margin: 10
+  },
+  ingredientText : {
+    backgroundColor: '#F0F0F0',
+    color: '#333333',
+    margin: 3,
+    paddingTop: 3,
+    paddingBottom: 3,
+    paddingLeft: 6,
+    paddingRight: 6,
   },
 
   ratingContainer: {
-    margin: 20
-  },
-  ratingToolbar: {
-    paddingRight: 0,
-  },
-  ratingContainer: {
     alignItems: 'center',
-    margin: 10,
+    marginLeft: 10,
+    marginTop: 10,
+    marginBottom: 10,
+  },
+  rating: {
+    marginTop:5,
   },
   ratingText: {
     marginLeft: 5,
-    marginTop: 5,
-    marginRight: 20,
-    fontSize: 18,
+    marginTop:5,
+    fontSize: 16,
+    fontWeight: 600,
   },
   ratingButton: {
-    fontWeight: 700,
-
+    marginRight: 20,
+    fontWeight: 500,
     background: "#7DBF1A",
-    color: "#343434",
+    color: "#ffffff",
     '&:hover': {
       backgroundColor: '#6BAD07',
     },
@@ -96,10 +116,8 @@ const styles = {
   },
   descriptionText: {
     whiteSpace: 'pre-line', // recognize new line character
-    // margin: 20,
   },
   expandIcon: {
-    // marginLeft: 'auto',
   },
   expandDescription: {
     marginLeft: 10,
@@ -132,7 +150,11 @@ const styles = {
   },
   createButton: {
     marginTop: 20,
-  }
+  },
+
+  commentsContainer: {
+    marginBottom: 20,
+  },
 };
 
 
@@ -229,24 +251,43 @@ class RecipeDetail extends Component {
     });
 
     let alreadyRated = this.props.ratedRecipes && this.props.ratedRecipes.includes(parseInt(this.props.match.params.id));
+    
 
-    let ingredients = this.props.selectedRecipe.ingredients.map(category_id => {
-      const name = this.props.categories.find(c => c.id === category_id).name;
+    let ingredients = this.props.categories ? this.props.selectedRecipe.ingredients.map(category_id => {
+      const ing = this.props.categories.find(c => c.id === category_id);
+      const name = ing ? ing.name : null;
       return (
-        <Typography variant="h5" align="left" className={`${classes.font}`}>{name}</Typography>
+        <Grid item>
+          <Box className={`${classes.font} ${classes.ingredientText}`} borderRadius="20%">
+            {/* <Typography align="left" className={`${classes.font} ${classes.ingredientText}`}>{name}</Typography> */}
+            {name}
+          </Box>
+        </Grid>
       );
-    });
+    }) : null;
 
     return this.props.selectedRecipe ? (
-      <Grid container justify="center">
-        <Box className={`${classes.RecipeDetail} RecipeDetail`}>
+      <Grid className={classes.root} container justify="center">
+        <Box className={`${classes.RecipeDetail} RecipeDetail`} boxShadow={3}>
           {/* Header */}
-          <AppBar className={classes.appbar}>
-            <Toolbar>
+          <Grid className={classes.headerContainer} container>
+            <Grid item container xs={2} justify="left">
+              <Grid item>
                 <IconButton className={`${classes.backButton} backButton`} onClick={this.onClickBackButton}><ArrowBackIcon/></IconButton>
-                <Typography className={`${classes.headerTitle} ${classes.font}`} variant="h5">Recipe</Typography>
-            </Toolbar>
-          </AppBar>
+              </Grid>
+            </Grid>
+            <Grid item container xs={8} justify="center" alignItems="center">
+              <Grid item >
+                <Typography className={`${classes.font} ${classes.headerTitleGreen}`}>Food</Typography>
+              </Grid>
+              <Grid item>
+                <Typography className={`${classes.font} ${classes.headerTitleBlack}`}>ify</Typography>
+              </Grid>
+            </Grid>
+            <Grid item xs={2}>
+              {/* dummy to divide space into three */}
+            </Grid>
+          </Grid>
 
           {/* Video */}
           <div className="videoContainer">
@@ -263,34 +304,39 @@ class RecipeDetail extends Component {
           <Typography variant="h5" align="left" className={`${classes.recipeTitle} ${classes.font}`}>{this.props.selectedRecipe.title}</Typography>
 
           {/* Ingredients */}
-          {/* {ingredients} */}
+          <Grid className={classes.ingredientContainer} container>
+            {ingredients}
+          </Grid>
 
           {/* Rating */}
-          {/* <AppBar className={classes.appbar}>
-            <Toolbar className={classes.ratingToolbar}> */}
-          <Grid container className={classes.ratingContainer}>
-            <Grid item>
+          <Grid container justify="space-between" className={classes.ratingContainer}>
+            <Grid item container xs={8} alignItems="center">
+              <Grid item>
               <Rating className={classes.rating}
                       value={this.props.selectedRecipe.rating_average}
                       precision={0.1}
                       readOnly
-                      name="ratingAverage"/>
-            </Grid>
-            <Grid item>
-              <Box className={classes.ratingText} fontWeight={700}>
-                  {this.props.selectedRecipe.rating_average ? this.props.selectedRecipe.rating_average.toFixed(2)+" / 5.0" : "별점이 없어요!"}
-              </Box>
+                      name="ratingAverage"
+                      />
+              </Grid>
+              <Grid item>
+              <Typography className={`${classes.font} ${classes.ratingText}`} display="inline">
+                  {this.props.selectedRecipe.rating_average
+                    ? this.props.selectedRecipe.rating_average.toFixed(1)+" / 5" 
+                    : "별점이 없어요!"}
+              </Typography>
+              </Grid>
             </Grid>
 
-            <Grid item>
+            <Grid item container xs={4} justify="flex-end" className={classes.ratingButtonContainer}>
+              <Grid item>
               <Button className={`${classes.ratingButton} ratingButton`} onClick={this.onClickRatingButton} disabled={alreadyRated}>
                   {alreadyRated ? "평가 완료" : "별점 주기"}
               </Button>
+              </Grid>
             </Grid>
           </Grid>
 
-            {/* </Toolbar>
-          </AppBar> */}
 
           {/* Rating Dialog */}
           <Dialog 
@@ -318,8 +364,6 @@ class RecipeDetail extends Component {
           <Divider />
 
           {/* Description */}
-          {/* <AppBar className={classes.appbar} onClick={()=>this.setState({expandDescription: !this.state.expandDescription})}>
-            <Toolbar> */}
           <Grid className={classes.descriptionContainer} container onClick={()=>this.setState({expandDescription: !this.state.expandDescription})}>
             <Grid item>
               <DescriptionIcon className={classes.descriptionIcon}/>
@@ -334,15 +378,10 @@ class RecipeDetail extends Component {
           <Collapse className={classes.expandDescription} in={this.state.expandDescription}>
                 <Typography align="left" className={`${classes.descriptionText} ${classes.font}`}>{this.props.selectedRecipe.description}</Typography>
           </Collapse>
-            {/* </Toolbar>
-          </AppBar> */}
 
           <Divider />
 
-
           {/* Comment Header */}
-          {/* <AppBar className={classes.appbar}>
-            <Toolbar> */}
           <Grid className={classes.commentHeaderContainer}container>
             <Grid item>
               <ChatBubbleOutlineIcon className={classes.commentIcon}/>
@@ -351,8 +390,6 @@ class RecipeDetail extends Component {
               <Box className={`${classes.commentLabel} ${classes.font}`} fontWeight={900}>Comment</Box>
             </Grid>
           </Grid>
-            {/* </Toolbar>
-          </AppBar> */}
           {/* Create new comment */}
           <TextField
             className={`${classes.newComment} newComment`}
@@ -368,7 +405,9 @@ class RecipeDetail extends Component {
           <IconButton className={`${classes.createButton} createCommentButton`} onClick={this.onClickCreateButton}><CreateIcon/></IconButton>
 
           {/* Comments */}
-          <div>{comments}</div>
+          <Box className={classes.commentsContainer}>
+            <div>{comments}</div>
+          </Box>
           
           {/* Edit Dialog */}
           <Dialog 
