@@ -125,9 +125,7 @@ class SignIn extends Component {
               </Button>
               <Grid container>
                 <Grid item xs>
-                  <Link href="#" variant="body2">
-                    Forgot password?
-                  </Link>
+
                 </Grid>
                 <Grid item>
                   <Link id="sign-up" variant="body2" onClick={() => this.handlerSignup()}>
