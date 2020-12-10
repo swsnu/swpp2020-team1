@@ -263,36 +263,39 @@ class MainPage extends Component {
               { this.state.isUnreadNotiExists ? <Circle style={styles.overlay} color="secondary"/> : null }
             </div>
           </div>
-          <ItemContainer 
-            type="freezer"
-            selectedItemIds={this.state.selectedItemIds}
-            onClickSelectItem={(id) => this.onClickSelectItem(id)}
-            currentWidth={this.state.currentWidth}
-            currentHeight={this.state.currentHeight}
-            shouldShowTutorial={!this.props.items || this.props.items.length === 0}
-            items={freezerItems}
-            buildNotification={() => {this.getAndBuildNotification(this.user_id)}}
-            mode={this.state.mode}/>
-          <ItemContainer
-            type="fridge"
-            selectedItemIds={this.state.selectedItemIds}
-            onClickSelectItem={(id) => this.onClickSelectItem(id)}
-            currentWidth={this.state.currentWidth}
-            currentHeight={this.state.currentHeight}
-            shouldShowTutorial={!this.props.items || this.props.items.length === 0}
-            items={fridgeItems}
-            buildNotification={() => {this.getAndBuildNotification(this.user_id)}}
-            mode={this.state.mode}/>
-          <ItemContainer
-            type="shelf"
-            selectedItemIds={this.state.selectedItemIds}
-            onClickSelectItem={(id) => this.onClickSelectItem(id)}
-            currentWidth={this.state.currentWidth}
-            currentHeight={this.state.currentHeight}
-            shouldShowTutorial={!this.props.items || this.props.items.length === 0}
-            items={shelfItems}
-            buildNotification={() => {this.getAndBuildNotification(this.user_id)}}
-            mode={this.state.mode}/>
+
+          <div className="content">
+            <ItemContainer 
+              type="freezer"
+              selectedItemIds={this.state.selectedItemIds}
+              onClickSelectItem={(id) => this.onClickSelectItem(id)}
+              currentWidth={this.state.currentWidth}
+              currentHeight={this.state.currentHeight}
+              shouldShowTutorial={!this.props.items || this.props.items.length === 0}
+              items={freezerItems}
+              buildNotification={() => {this.getAndBuildNotification(this.user_id)}}
+              mode={this.state.mode}/>
+            <ItemContainer
+              type="fridge"
+              selectedItemIds={this.state.selectedItemIds}
+              onClickSelectItem={(id) => this.onClickSelectItem(id)}
+              currentWidth={this.state.currentWidth}
+              currentHeight={this.state.currentHeight}
+              shouldShowTutorial={!this.props.items || this.props.items.length === 0}
+              items={fridgeItems}
+              buildNotification={() => {this.getAndBuildNotification(this.user_id)}}
+              mode={this.state.mode}/>
+            <ItemContainer
+              type="shelf"
+              selectedItemIds={this.state.selectedItemIds}
+              onClickSelectItem={(id) => this.onClickSelectItem(id)}
+              currentWidth={this.state.currentWidth}
+              currentHeight={this.state.currentHeight}
+              shouldShowTutorial={!this.props.items || this.props.items.length === 0}
+              items={shelfItems}
+              buildNotification={() => {this.getAndBuildNotification(this.user_id)}}
+              mode={this.state.mode}/>
+          </div>
           <div className="ItemSelectDiv" onClick={(event)=>this.onClickItemSelectButton(event)}>
             <div className="ItemSelectButton">
               <div className="ItemSelectButtonHeader">
