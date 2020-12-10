@@ -13,7 +13,7 @@ class ItemConfirm extends Component {
 
   defaultItem = {
     name: '',
-    container: 'freezer',
+    container: 'fridge',
     category_id: 0,
     category_name: '기타',
     barcode_num: '',

@@ -299,9 +299,10 @@ class MainPage extends Component {
           <div className="ItemSelectDiv" onClick={(event)=>this.onClickItemSelectButton(event)}>
             <div className="ItemSelectButton">
               <div className="ItemSelectButtonHeader">
-                {this.state.mode !== "normal" ?
-                  this.state.selectedItemIds.length + " Ingredients Selected" :
-                  "SELECT Ingredients"}
+                {this.state.mode === "select" ?
+                  (this.state.selectedItemIds.length === 0 ?
+                    "재료를 선택해주세요" : "레시피 추천받기") :
+                    this.state.mode === "preference" ? "오늘은 무슨 음식을 먹을까?" : "재료 선택하기"}
               </div>
               <div className="ItemSelectButtonMain">
                 <div className="btn_preference Korean" 
@@ -314,7 +315,7 @@ class MainPage extends Component {
                   onClick={() => this.onClickSelectPreference("Western")}>Western</div>
               </div>
               <div className="ItemSelectButtonFooter"
-                onClick={this.onClickRecipeButton}>Move</div>
+                onClick={this.onClickRecipeButton}>검색</div>
             </div>
           </div>
 
