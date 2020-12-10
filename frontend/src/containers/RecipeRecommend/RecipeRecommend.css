@@ -21,14 +21,14 @@
 .RecipeScore {
     color: #818181;
     font-size: 14px;
-    font-family: Roboto, sans-serif;
+    font-family: "Noto Sans KR", sans-serif;
 }
 
 .NoSearchResults {
     color: #343434;
     margin-top: 15px;
     font-size: 15px;
-    font-family: Roboto, sans-serif;
+    font-family: "Noto Sans KR", sans-serif;
 }
 
 .thumbnail {

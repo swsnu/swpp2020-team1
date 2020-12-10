@@ -11,6 +11,10 @@ import axios from 'axios';
 import NotiCard from '../../components/Notification/NotiCard';
 import './MainPage.css';
 import Logout from '../Header/LogOut';
+import KoreanFlag from '../../icons/korean.png'
+import JapaneseFlag from '../../icons/japanese.png'
+import ChineseFlag from '../../icons/chinese.png'
+import ItalianFlag from '../../icons/italian.png'
 
 
 
@@ -227,11 +231,11 @@ class MainPage extends Component {
 
   onClickSelectPreference = (cuisine) => {
     if(this.state.selectedCuisine != null) {
-      document.getElementsByClassName(this.state.selectedCuisine)[0].style.backgroundColor = "#F4F4F4";
+      document.getElementsByClassName(cuisine)[0].style.filter = "brightness(100%)";
     }
     if(this.state.selectedCuisine !== cuisine) {
       this.setState({selectedCuisine: cuisine});
-      document.getElementsByClassName(cuisine)[0].style.backgroundColor = "#989898";
+      document.getElementsByClassName(cuisine)[0].style.filter = "brightness(50%)";
     } else {
       this.setState({selectedCuisine: null});
     }
@@ -305,14 +309,22 @@ class MainPage extends Component {
                     this.state.mode === "preference" ? "오늘은 무슨 음식을 먹을까?" : "재료 선택하기"}
               </div>
               <div className="ItemSelectButtonMain">
-                <div className="btn_preference Korean" 
-                  onClick={() => this.onClickSelectPreference("Korean")}>Korean</div>
-                <div className="btn_preference Japanese"
-                  onClick={() => this.onClickSelectPreference("Japanese")}>Japanese</div>
-                <div className="btn_preference Chinese"
-                  onClick={() => this.onClickSelectPreference("Chinese")}>Chinese</div>
-                <div className="btn_preference Western"
-                  onClick={() => this.onClickSelectPreference("Western")}>Western</div>
+                <img className="btn_preference Korean"
+                  src={KoreanFlag} 
+                  onClick={() => this.onClickSelectPreference("Korean")}>
+                </img>
+                <img className="btn_preference Japanese"
+                  src={JapaneseFlag} 
+                  onClick={() => this.onClickSelectPreference("Japanese")}>
+                </img>
+                <img className="btn_preference Chinese"
+                  src={ChineseFlag} 
+                  onClick={() => this.onClickSelectPreference("Chinese")}>
+                </img>
+                <img className="btn_preference Western"
+                  src={ItalianFlag} 
+                  onClick={() => this.onClickSelectPreference("Western")}>
+                </img>
               </div>
               <div className="ItemSelectButtonFooter"
                 onClick={this.onClickRecipeButton}>검색</div>
