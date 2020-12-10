@@ -4,7 +4,7 @@ import axios from 'axios';
 import * as actionCreators from '../../store/actions/index';
 import Comment from '../../components/Comment/Comment';
 import './RecipeDetail.css';
-import { TextField, Button, IconButton, Typography, Box, Grid, Toolbar, AppBar, Collapse, Container } from '@material-ui/core';
+import { TextField, Button, IconButton, Typography, Box, Grid, Toolbar, AppBar, Collapse, Container, Divider } from '@material-ui/core';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import DescriptionIcon from '@material-ui/icons/Description';
@@ -16,7 +16,6 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Rating from '@material-ui/lab/Rating';
 import { withStyles } from '@material-ui/core/styles';
-import { calculatePatchSize } from 'quagga';
 
 const styles = {
   font: {
@@ -56,7 +55,9 @@ const styles = {
   ratingToolbar: {
     paddingRight: 0,
   },
-  rating: {
+  ratingContainer: {
+    alignItems: 'center',
+    margin: 10,
   },
   ratingText: {
     marginLeft: 5,
@@ -65,7 +66,6 @@ const styles = {
     fontSize: 18,
   },
   ratingButton: {
-    marginTop: 2,
     fontWeight: 700,
 
     background: "#7DBF1A",
@@ -79,27 +79,49 @@ const styles = {
     boxShadow: '0.1rem 0.1rem 0.1rem 0 rgba(201,201,201,.9)',
   },
 
+  descriptionContainer: {
+    marginTop: 10,
+    marginRight: 10,
+    marginLeft: 10,
+    alignItems: 'center'
+  },
   descriptionIcon: {
     marginRight:15,
-    fontSize: 30,
+    fontSize: 25,
   },
   descriptionLabel: {
-    fontSize: 16,
+    fontSize: 20,
+    fontWeight: 600,
+    paddingBottom: 5,
   },
   descriptionText: {
     whiteSpace: 'pre-line', // recognize new line character
-    margin: 20,
+    // margin: 20,
   },
   expandIcon: {
-    marginLeft: 'auto',
+    // marginLeft: 'auto',
+  },
+  expandDescription: {
+    marginLeft: 10,
+    marginRight: 10,
+    marginBottom: 20,
+    marginTop: 0,
   },
 
+  commentHeaderContainer: {
+    marginTop: 10,
+    marginRight: 10,
+    marginLeft: 10,
+    alignItems: 'center'
+  },
   commentIcon: {
     marginRight:15,
-    fontSize: 30,
+    fontSize: 25,
   },
   commentLabel: {
-    fontSize: 16,
+    fontSize: 20,
+    fontWeight: 600,
+    paddingBottom: 10,
   },
   newComment: {
     marginTop: 20,
@@ -129,13 +151,14 @@ class RecipeDetail extends Component {
     ratingWarning: false,
     ratingDialogOpen: false,
 
-    expandDescription: false,
+    expandDescription: true,
   }
 
   async componentDidMount() {
     this.props.getRecipe(this.props.match.params.id);
     this.props.getRatedRecipes();
     this.props.getComments(this.props.match.params.id);
+    this.props.getCategories();
     await axios.get('/back/user/')
       .then(res => this.user_id = res.data.user_id)
       .catch(e => {})
@@ -207,6 +230,13 @@ class RecipeDetail extends Component {
 
     let alreadyRated = this.props.ratedRecipes && this.props.ratedRecipes.includes(parseInt(this.props.match.params.id));
 
+    let ingredients = this.props.selectedRecipe.ingredients.map(category_id => {
+      const name = this.props.categories.find(c => c.id === category_id).name;
+      return (
+        <Typography variant="h5" align="left" className={`${classes.font}`}>{name}</Typography>
+      );
+    });
+
     return this.props.selectedRecipe ? (
       <Grid container justify="center">
         <Box className={`${classes.RecipeDetail} RecipeDetail`}>
@@ -232,22 +262,35 @@ class RecipeDetail extends Component {
           {/* Title */}
           <Typography variant="h5" align="left" className={`${classes.recipeTitle} ${classes.font}`}>{this.props.selectedRecipe.title}</Typography>
 
+          {/* Ingredients */}
+          {/* {ingredients} */}
+
           {/* Rating */}
-          <AppBar className={classes.appbar}>
-            <Toolbar className={classes.ratingToolbar}>
+          {/* <AppBar className={classes.appbar}>
+            <Toolbar className={classes.ratingToolbar}> */}
+          <Grid container className={classes.ratingContainer}>
+            <Grid item>
               <Rating className={classes.rating}
-                value={this.props.selectedRecipe.rating_average}
-                precision={0.1}
-                readOnly
-                name="ratingAverage"/>
+                      value={this.props.selectedRecipe.rating_average}
+                      precision={0.1}
+                      readOnly
+                      name="ratingAverage"/>
+            </Grid>
+            <Grid item>
               <Box className={classes.ratingText} fontWeight={700}>
-                {this.props.selectedRecipe.rating_average ? this.props.selectedRecipe.rating_average.toFixed(2)+" / 5.0" : "별점이 없어요!"}
+                  {this.props.selectedRecipe.rating_average ? this.props.selectedRecipe.rating_average.toFixed(2)+" / 5.0" : "별점이 없어요!"}
               </Box>
+            </Grid>
+
+            <Grid item>
               <Button className={`${classes.ratingButton} ratingButton`} onClick={this.onClickRatingButton} disabled={alreadyRated}>
-                {alreadyRated ? "평가 완료" : "별점 주기"}
+                  {alreadyRated ? "평가 완료" : "별점 주기"}
               </Button>
-            </Toolbar>
-          </AppBar>
+            </Grid>
+          </Grid>
+
+            {/* </Toolbar>
+          </AppBar> */}
 
           {/* Rating Dialog */}
           <Dialog 
@@ -272,26 +315,44 @@ class RecipeDetail extends Component {
           </DialogActions>
           </Dialog>          
 
+          <Divider />
+
           {/* Description */}
-          <AppBar className={classes.appbar} onClick={()=>this.setState({expandDescription: !this.state.expandDescription})}>
-            <Toolbar>
+          {/* <AppBar className={classes.appbar} onClick={()=>this.setState({expandDescription: !this.state.expandDescription})}>
+            <Toolbar> */}
+          <Grid className={classes.descriptionContainer} container onClick={()=>this.setState({expandDescription: !this.state.expandDescription})}>
+            <Grid item>
               <DescriptionIcon className={classes.descriptionIcon}/>
+            </Grid>
+            <Grid item>
               <Box className={`${classes.descriptionLabel} ${classes.font}`} fontWeight={900}>Description</Box>
+            </Grid>
+            <Grid item>
               <IconButton className={classes.expandIcon} ><ExpandMoreIcon/></IconButton>
-            </Toolbar>
-          </AppBar>
-          {/* Collapse */}
-          <Collapse in={this.state.expandDescription}>
-            <Typography align="left" className={`${classes.descriptionText} ${classes.font}`}>{this.props.selectedRecipe.description}</Typography>
+            </Grid>
+          </Grid>
+          <Collapse className={classes.expandDescription} in={this.state.expandDescription}>
+                <Typography align="left" className={`${classes.descriptionText} ${classes.font}`}>{this.props.selectedRecipe.description}</Typography>
           </Collapse>
+            {/* </Toolbar>
+          </AppBar> */}
+
+          <Divider />
+
 
           {/* Comment Header */}
-          <AppBar className={classes.appbar}>
-            <Toolbar>
+          {/* <AppBar className={classes.appbar}>
+            <Toolbar> */}
+          <Grid className={classes.commentHeaderContainer}container>
+            <Grid item>
               <ChatBubbleOutlineIcon className={classes.commentIcon}/>
+            </Grid>
+            <Grid item>
               <Box className={`${classes.commentLabel} ${classes.font}`} fontWeight={900}>Comment</Box>
-            </Toolbar>
-          </AppBar>
+            </Grid>
+          </Grid>
+            {/* </Toolbar>
+          </AppBar> */}
           {/* Create new comment */}
           <TextField
             className={`${classes.newComment} newComment`}
@@ -349,12 +410,14 @@ const mapStateToProps = state => {
     selectedRecipe: state.recipe.selectedRecipe,
     ratedRecipes: state.recipe.ratedRecipes,
     comments: state.comment.comments,
+    categories: state.category.categories,
   };
 }
 
 const mapDispatchToProps = dispatch => {
   return {
     getRecipe: (recipe_id) => dispatch(actionCreators.getRecipe(recipe_id)),
+    getCategories: () => dispatch(actionCreators.getCategories()),
     getRatedRecipes: () => dispatch(actionCreators.getRatedRecipes()),
     giveRating: (recipe_id, rating) => dispatch(actionCreators.putRecipe(recipe_id, rating)),
     getComments: (recipe_id) => dispatch(actionCreators.getComments(recipe_id)),
