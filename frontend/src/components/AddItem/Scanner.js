@@ -10,8 +10,8 @@ class Scanner extends Component {
       inputStream: {
         type : "LiveStream",
         constraints: {
-          width: Math.max(parseInt(window.innerWidth/2), 360),
-          height: Math.max(parseInt(window.innerHeight/2), 640),
+          width: window.innerWidth,
+          height: window.innerHeight,
           facingMode: "environment" // or user
         }
       },
@@ -21,7 +21,8 @@ class Scanner extends Component {
         halfSample: false
       },
 
-      numOfWorkers: 4,
+      numOfWorkers: 2,
+      frequency: 4,
       decoder: {
         readers : [
           "ean_reader",
