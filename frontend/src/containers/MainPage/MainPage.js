@@ -231,7 +231,7 @@ class MainPage extends Component {
 
   onClickSelectPreference = (cuisine) => {
     if(this.state.selectedCuisine != null) {
-      document.getElementsByClassName(cuisine)[0].style.filter = "brightness(100%)";
+      document.getElementsByClassName(this.state.selectedCuisine)[0].style.filter = "brightness(100%)";
     }
     if(this.state.selectedCuisine !== cuisine) {
       this.setState({selectedCuisine: cuisine});
@@ -310,19 +310,19 @@ class MainPage extends Component {
               </div>
               <div className="ItemSelectButtonMain">
                 <img className="btn_preference Korean"
-                  src={KoreanFlag} 
+                  src={KoreanFlag}
                   onClick={() => this.onClickSelectPreference("Korean")}>
                 </img>
                 <img className="btn_preference Japanese"
-                  src={JapaneseFlag} 
+                  src={JapaneseFlag}
                   onClick={() => this.onClickSelectPreference("Japanese")}>
                 </img>
                 <img className="btn_preference Chinese"
-                  src={ChineseFlag} 
+                  src={ChineseFlag}
                   onClick={() => this.onClickSelectPreference("Chinese")}>
                 </img>
                 <img className="btn_preference Western"
-                  src={ItalianFlag} 
+                  src={ItalianFlag}
                   onClick={() => this.onClickSelectPreference("Western")}>
                 </img>
               </div>
