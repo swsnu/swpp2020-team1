@@ -15,6 +15,19 @@ import Grid from '@material-ui/core/Grid';
 import Link from '@material-ui/core/Link';
 import { withStyles } from '@material-ui/core/styles';
 
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#7DBF1A',
+      dark: '#7DBF1A',
+      light: '#7DBF1A',
+      contrastText: "#fff"
+    },
+  },
+});
+
 const styles = (theme) => ({
   '@global': {
     body: {
@@ -29,14 +42,29 @@ const styles = (theme) => ({
   },
   avatar: {
     margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
+    backgroundColor: "#7DBF1A",
   },
   form: {
     width: '100%',
-    marginTop: theme.spacing(1),
+    marginTop: theme.spacing(3),
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
+  },
+  title: {
+    marginTop: 12,
+    color: "#818181",
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontFamily: ['Noto Sans KR', 'sans-serif', 'Roboto'].join(','),
+    fontWeight: 900,
+  },
+  text:{
+    fontFamily: ['Noto Sans KR', 'sans-serif', 'Roboto'].join(','), 
+  },
+  white: {
+    color: "#FFFFFF",
   },
 });
 
@@ -75,15 +103,16 @@ class SignIn extends Component {
       return <Redirect to='/'/>
     }
     return (
+      <MuiThemeProvider theme={theme}>
       <div className="SignIn">
-        <Container component="main" maxWidth="xs">
+        <Container component="main" maxWidth="sm">
           <CssBaseline />
           <div className={classes.paper}>
             <Avatar className={classes.avatar}>
               <LockOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
-              Sign in
+              로그인 
             </Typography>
             <form className={classes.form} noValidate>
               <TextField
@@ -137,6 +166,7 @@ class SignIn extends Component {
           </div>
         </Container>
       </div>
+      </MuiThemeProvider>
     );
   }
 }

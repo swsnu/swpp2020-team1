@@ -18,6 +18,19 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#7DBF1A',
+      dark: '#7DBF1A',
+      light: '#7DBF1A',
+      contrastText: "#fff"
+    },
+  },
+});
+
 const styles = (theme) => ({
   '@global': {
     body: {
@@ -32,7 +45,7 @@ const styles = (theme) => ({
   },
   avatar: {
     margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
+    backgroundColor: "#7DBF1A",
   },
   form: {
     width: '100%',
@@ -40,6 +53,21 @@ const styles = (theme) => ({
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
+  },
+  title: {
+    marginTop: 12,
+    color: "#818181",
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontFamily: ['Noto Sans KR', 'sans-serif', 'Roboto'].join(','),
+    fontWeight: 900,
+  },
+  text:{
+    fontFamily: ['Noto Sans KR', 'sans-serif', 'Roboto'].join(','), 
+  },
+  white: {
+    color: "#FFFFFF",
   },
 });
 
@@ -53,7 +81,7 @@ class SignUp extends Component {
     pw_error: false,
     pw_confirm_error: false
   };
-
+  
   onSignupButtonClick = async (event) => {
     const correctForm = this.credentialChecker(event);
     if (correctForm === true) {
@@ -112,22 +140,25 @@ class SignUp extends Component {
     }
     return (!emailError) && (!passwordError) && (!passwordConfirmError);
   };
+  
 
   render() {
     const { classes } = this.props;
+
     if(this.props.loginState === 'SUCCESS') {
       return <Redirect to='/'/>
     }
     return (
+      <MuiThemeProvider theme={theme}>
       <div className="Signup">
-      <Container component="main" maxWidth="xs">
+      <Container component="main" maxWidth="sm">
         <CssBaseline />
         <div className={classes.paper}>
           <Avatar className={classes.avatar}>
             <LockOutlinedIcon />
           </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign up
+          <Typography component="h1" variant="h5" className={classes.text}>
+            회원 가입
           </Typography>
           <form className={classes.form} noValidate>
             <Grid container spacing={2}>
@@ -204,7 +235,7 @@ class SignUp extends Component {
             </Button>
             <Grid container justify="flex-end">
               <Grid item>
-                <Link href="/signin" variant="body2">
+                <Link href="/signin" variant="body2" className={classes.text}>
                   Already have an account? Log in
                 </Link>
               </Grid>
@@ -213,7 +244,7 @@ class SignUp extends Component {
               open={this.props.registerState==="FAILURE"} 
               fullWidth
               maxWidth="sm">
-            <DialogTitle id="form-dialog-title">이미 사용 중인 이메일입니다.</DialogTitle>
+            <DialogTitle id="form-dialog-title" className={classes.title}>이미 가입된 회원입니다!</DialogTitle>
             <DialogActions>
               <Button className="confirmRatingButton" onClick={this.props.onSignup} color="primary">확인</Button>
             </DialogActions>
@@ -222,6 +253,7 @@ class SignUp extends Component {
         </div>
       </Container>
     </div>
+    </MuiThemeProvider>
     );
   }
 }
