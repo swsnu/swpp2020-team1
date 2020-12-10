@@ -15,7 +15,16 @@ import KoreanFlag from '../../icons/korean.png'
 import JapaneseFlag from '../../icons/japanese.png'
 import ChineseFlag from '../../icons/chinese.png'
 import ItalianFlag from '../../icons/italian.png'
+import Container from '@material-ui/core/Container'
+import BottomNavigation from '@material-ui/core/BottomNavigation';
+import { withStyles } from '@material-ui/core/styles';
+import {withRouter} from 'react-router';
 
+import { makeStyles } from '@material-ui/core/styles';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import IconButton from '@material-ui/core/IconButton';
+import MenuIcon from '@material-ui/icons/Menu';
 
 
 class MainPage extends Component {
@@ -184,6 +193,7 @@ class MainPage extends Component {
         this.setState({ mode: "preference" })
         document.getElementsByClassName("ItemSelectDiv")[0].style.height =
           JSON.stringify(100 + this.state.currentWidth * 0.05 + Math.min(this.state.currentWidth / 5, 100))+"px";
+          
       }
     }
   }
@@ -240,8 +250,21 @@ class MainPage extends Component {
       this.setState({selectedCuisine: null});
     }
   }
+  
+  // classes = {
+  //   root: {
+  //     flexGrow: 1,
+  //   },
+  //   menuButton: {
+  //     // marginRight: theme.spacing(2),
+  //   },
+  //   title: {
+  //     flexGrow: 1,
+  //   },
+  // }
 
   render() {
+
     let items = this.props.items.reduce((result, i) => {
       const ic = this.props.itemcounts.filter(ic => ic.item_id === i.id);
       if (ic.length > 0) result.push({...i, 'itemcounts': ic});
@@ -254,14 +277,19 @@ class MainPage extends Component {
 
     const clickedStyle = { background:'#c4c4c4' } 
     
+
     return (
+      
         <div className="MainPage">
+          <Container component="main" maxWidth="sm" className="main_container">
           <div className="title">
             <div className="btn_logout">
               <Logout/>
             </div>
-            <div className="titleOrange">Food</div>
-            <div className="titleBlack">ify</div>
+            <div>
+            <span className="titleOrange">Food</span>
+            <span className="titleBlack">ify</span>
+            </div>
             <div className="btn_notification" onClick={this.onClickNotiIcon}>
               <NotiIcon className="btn_bell" fontSize="large" />
               { this.state.isUnreadNotiExists ? <Circle style={styles.overlay} color="secondary"/> : null }
@@ -300,6 +328,7 @@ class MainPage extends Component {
               buildNotification={() => {this.getAndBuildNotification(this.user_id)}}
               mode={this.state.mode}/>
           </div>
+
           <div className="ItemSelectDiv" onClick={(event)=>this.onClickItemSelectButton(event)}>
             <div className="ItemSelectButton">
               <div className="ItemSelectButtonHeader">
@@ -330,7 +359,6 @@ class MainPage extends Component {
                 onClick={this.onClickRecipeButton}>검색</div>
             </div>
           </div>
-
           <Dialog open={this.state.openDialog} fullScreen={true}>
             <div>
               <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
@@ -348,6 +376,7 @@ class MainPage extends Component {
               </List>
             </div>
           </Dialog>
+          </Container>
         </div>
     );
   }
@@ -373,9 +402,11 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
+
+
 const styles = {
   overlay: {
-     position: 'absolute',
+    //  position: 'absolute',
      top: '12px',
      right: '0px',
      height: '12px',
@@ -383,4 +414,4 @@ const styles = {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(MainPage);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(MainPage));

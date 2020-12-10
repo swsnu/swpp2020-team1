@@ -8,7 +8,12 @@ export const signUpRequest = (newUser) => {
         return axios.post('/back/signup/', newUser)
         .then( response => {
             dispatch(signUpSuccess());
-            dispatch(push('/signin'));
+            axios.post('/back/signin/', {        
+                username: newUser.email,
+                password: newUser.password})
+            .then(response =>{
+                dispatch(push('/'));
+            })
         })
         .catch( error => {
             console.log("error in signUpRequest")
