@@ -3,6 +3,8 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import { Typography, Container, ListItem, Button } from '@material-ui/core';
 import CalendarImg from '../../icons/calendar.png'
+import ShoppingCartImg from '../../icons/shopping-cart.png'
+import RecipeImg from '../../icons/zap.png'
 
 const NotiCard = props => {
   const { id, notiType, itemName, expirationDate, isRead, category, elapsedDays } = props.noti
@@ -10,8 +12,8 @@ const NotiCard = props => {
   let notiContent = null
   if (notiType === 'expire') {
     let elapsedDaysString = null
-    if (elapsedDays >= 2) elapsedDaysString = `${elapsedDays}일 전`
-    else if (elapsedDays === 1) elapsedDaysString = '어제'
+    if (elapsedDays >= 2) elapsedDaysString = `오늘`
+    else if (elapsedDays === 1) elapsedDaysString = '오늘'
     else if (elapsedDays === 0) elapsedDaysString = '오늘'
     else elapsedDaysString = '방금'
     notiContent =
@@ -39,8 +41,8 @@ const NotiCard = props => {
     let purchaseLink = `https://www.coupang.com/np/search?component=&q=${itemName}&channel=user`
 
     let elapsedDaysString = null
-    if (elapsedDays >= 2) elapsedDaysString = `${elapsedDays}일 전`
-    else if (elapsedDays === 1) elapsedDaysString = '어제'
+    if (elapsedDays >= 2) elapsedDaysString = `오늘`
+    else if (elapsedDays === 1) elapsedDaysString = '오늘'
     else if (elapsedDays === 0) elapsedDaysString = '오늘'
     else elapsedDaysString = '방금'
 
@@ -49,7 +51,7 @@ const NotiCard = props => {
         <ListItem className='NotiListItem' style={{backgroundColor: isRead ? '#ffffff' : 'rgba(125, 191, 26, 0.6)',
             justifyContent: 'space-between', width: window.innerWidth }}>
           <div style={{width: 50}}>
-            <img src={CalendarImg} width={20} height={20} />
+            <img src={ShoppingCartImg} width={20} height={20} />
           </div>
           <div style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
             <div>
@@ -78,7 +80,7 @@ const NotiCard = props => {
         <ListItem className='NotiListItem' style={{backgroundColor: '#ffffff',
             justifyContent: 'space-between', width: window.innerWidth }}>
           <div style={{width: 50}}>
-            <img src={CalendarImg} width={20} height={20} />
+            <img src={RecipeImg} width={20} height={20} />
           </div>
           <div style={{flex: 1}}>
             <Typography style={{fontSize: 14}}>
