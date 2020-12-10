@@ -85,9 +85,6 @@ class ItemContainer extends Component {
     itemcounts: []
   }
   onClickAddItemButton = () => {
-    if (this.props.shouldShowTutorial) {
-      window.alert('*** 아이템 추가 방법 ***\n\n1. 유통기한을 화면을 눌러 촬영해주세요.\n2. 바코드를 인식해주세요.\n3. "목록 보기" 버튼을 통해 추가한 목록을 확인할 수 있습니다.')
-    }
     this.props.history.push('/item/add', {container: this.props.type});
   }
 

@@ -107,6 +107,7 @@
 
 .btn_preference {
     width: 20%;
+    height: 20%;
     max-width: 100px;
     text-align: center;
     display: inline-flex;
