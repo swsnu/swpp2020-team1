@@ -136,19 +136,19 @@ class ItemContainer extends Component {
 
 
   componentDidMount() {
-    let itemGridTiles = document.getElementsByClassName("ItemGridTile")
-    for(let i = 0; i < itemGridTiles.length; i++) {
-      itemGridTiles[i].style.width = (this.props.currentWidth / 3) + "px";
-      itemGridTiles[i].style.height = (this.props.currentHeight * 0.15) + "px";
-    }
+    //let itemGridTiles = document.getElementsByClassName("ItemGridTile")
+    //for(let i = 0; i < itemGridTiles.length; i++) {
+    //  itemGridTiles[i].style.width = (this.props.currentWidth / 3) + "px";
+    //  itemGridTiles[i].style.height = (this.props.currentHeight * 0.15) + "px";
+    //}
   }
 
   componentDidUpdate() {
-    let itemGrid = document.getElementsByClassName("ItemGridTile")
-    for(let i = 0; i < itemGrid.length; i++) {
-      itemGrid[i].style.width = (this.props.currentWidth / 3) + "px";
-      itemGrid[i].style.height = (this.props.currentHeight * 0.15) + "px";
-    }
+    //let itemGrid = document.getElementsByClassName("ItemGridTile")
+    //for(let i = 0; i < itemGrid.length; i++) {
+    //  itemGrid[i].style.width = (this.props.currentWidth / 3) + "px";
+    //  itemGrid[i].style.height = (this.props.currentHeight * 0.15) + "px";
+    //}
   }
 
   onClickCard = (itemcounts) => {
