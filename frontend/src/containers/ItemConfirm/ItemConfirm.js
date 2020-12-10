@@ -76,7 +76,7 @@ class ItemConfirm extends Component {
         finalItem.category_name = "기타";
         finalItem.category_id = 200; // category_id of '기타'
       }
-      if (finalItem.expiration_date === '-') {
+      if (finalItem.expiration_date === null) {
         finalItem.expiration_date = '2099/12/31';
       } else {
         finalItem.expiration_date = moment(finalItem.expiration_date).format('YYYY/MM/DD');
