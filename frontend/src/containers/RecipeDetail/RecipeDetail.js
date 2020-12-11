@@ -29,8 +29,8 @@ const styles = {
     backgroundColor: '#ffffff',
     paddingLeft: 30,
     paddingRight: 30,
-    paddingTop: 0,
-    paddingBottom: 0,
+    paddingTop: 5,
+    paddingBottom: 10,
   },
 
   headerContainer: {
@@ -80,13 +80,18 @@ const styles = {
     marginTop:5,
   },
   ratingText: {
-    marginLeft: 5,
+    paddingLeft: 4,
+    paddingRight: 2,
     marginTop:5,
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: 600,
   },
   ratingButton: {
     marginRight: 20,
+    marginLeft: 0,
+    paddingLeft: 0,
+    paddingRight: 0,
+    fontSize: 13,
     fontWeight: 500,
     background: "#7DBF1A",
     color: "#ffffff",
@@ -268,6 +273,7 @@ class RecipeDetail extends Component {
 
     return this.props.selectedRecipe ? (
       <Grid className={classes.root} container justify="center">
+        <Container className={classes.RecipeDetailContainer} maxWidth="sm">
         <Box className={`${classes.RecipeDetail} RecipeDetail`} boxShadow={3}>
           {/* Header */}
           <Grid className={classes.headerContainer} container>
@@ -436,6 +442,7 @@ class RecipeDetail extends Component {
         </Dialog>
 
         </Box>
+        </Container>
       </Grid>
 
 

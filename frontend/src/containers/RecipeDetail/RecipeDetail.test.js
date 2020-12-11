@@ -70,7 +70,7 @@ describe('<RecipeDetail />', () => {
       <Provider store={mockStore}>
         <BrowserRouter>
         <Switch>
-          <Route path='/' exact render={() => <RecipeDetail default={{editCommentDialogOpen: true}} history={mockHistory} match={mockMatch}/>} />
+          <Route path='/' exact render={() => <RecipeDetail history={mockHistory} match={mockMatch}/>} />
         </Switch>
         </BrowserRouter>
       </Provider>
@@ -93,6 +93,7 @@ describe('<RecipeDetail />', () => {
 
   it('should handle rating', async () => {
     const component = mount(recipeDetail).find('RecipeDetail');
+    const instance = component.instance();
     const ratingButton = component.find('.ratingButton button');
     ratingButton.simulate('click');
     expect(component.state().ratingDialogOpen).toBe(true);
@@ -110,6 +111,22 @@ describe('<RecipeDetail />', () => {
     // const closeRatingButton = component.find('.closeRatingButton button');
     // closeRatingButton.simulate('click');
     // expect(component.state().ratingDialogOpen).toBe(false);
+
+
+    // just call function directly
+    // close dialog
+    instance.onCloseRatingDialog();
+    expect(instance.state.ratingDialogOpen).toBe(false);
+
+    instance.onClickRatingButton();
+    // confirm rating with null
+    instance.setState({newRating: null})
+    instance.onConfirmRating();
+    expect(instance.state.ratingWarning).toBe(true);
+    // confirm rating with right value
+    instance.setState({newRating: 5});
+    instance.onConfirmRating();
+    expect(instance.state.ratingWarning).toBe(false);
   })
 
   it('should handle create comment', () => {
@@ -138,6 +155,27 @@ describe('<RecipeDetail />', () => {
     // const closeEditButton = component.find('.closeEditButton button');
     // closeEditButton.simulate('click');
     // expect(component.state().editCommentDialogOpen).toBe(false);
+
+
+    const instance = component.instance();
+    // cancel edit
+    instance.onCloseEditCommentDialog();
+    expect(instance.state.editCommentDialogOpen).toBe(false);
+
+    instance.onClickEditButton();
+    expect(instance.state.editCommentDialogOpen).toBe(true);
+    // confirm edit
+    instance.onConfirmEdit();
+    expect(instance.state.editCommentDialogOpen).toBe(false);
+
+
+  })
+
+  it('should', () => {
+    const component = mount(recipeDetail).find('RecipeDetail');
+    const instance = component.instance();
+    instance.onConfirmRating()
+
   })
 
 
