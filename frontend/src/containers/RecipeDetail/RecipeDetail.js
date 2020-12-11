@@ -276,7 +276,7 @@ class RecipeDetail extends Component {
 
     return this.props.selectedRecipe ? (
       <Grid className={classes.root} container justify="center">
-        <Container className={classes.RecipeDetailContainer} maxWidth="sm">
+        <Container className={classes.RecipeDetailContainer} maxWidth="md">
         <Box className={`${classes.RecipeDetail} RecipeDetail`} boxShadow={3}>
           {/* Header */}
           <Grid className={classes.headerContainer} container>
