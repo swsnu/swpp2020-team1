@@ -257,7 +257,7 @@ class RecipeDetail extends Component {
       const ing = this.props.categories.find(c => c.id === category_id);
       const name = ing ? ing.name : null;
       return (
-        <Grid item>
+        <Grid item key={category_id}>
           <Box className={`${classes.font} ${classes.ingredientText}`} borderRadius="20%">
             {/* <Typography align="left" className={`${classes.font} ${classes.ingredientText}`}>{name}</Typography> */}
             {name}
@@ -271,7 +271,7 @@ class RecipeDetail extends Component {
         <Box className={`${classes.RecipeDetail} RecipeDetail`} boxShadow={3}>
           {/* Header */}
           <Grid className={classes.headerContainer} container>
-            <Grid item container xs={2} justify="left">
+            <Grid item container xs={2} justify="flex-start">
               <Grid item>
                 <IconButton className={`${classes.backButton} backButton`} onClick={this.onClickBackButton}><ArrowBackIcon/></IconButton>
               </Grid>

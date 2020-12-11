@@ -25,7 +25,7 @@ const stubInitialState = {
       description: "d1", 
       video_url: "u1",  
       cuisine_type: "korean", 
-      ingredients:[1,3],
+      ingredients:[1,2],
       rating_average: 3.0
     },
     ratedRecipes: [],
@@ -36,6 +36,13 @@ const stubInitialState = {
       {id:1, content:"c1", author_id:1, author:"user1", recipe_id:1, date: "2020-11-20"},
       {id:2, content:"c2", author_id:2, author:"user2", recipe_id:1, date: "2020-11-20"},
     ],
+  },
+  
+  category: {
+    categories: [
+      {id: 1, name: 'c1'},
+      {id: 2, name: 'c2'},
+    ]
   }
 };
 
@@ -63,7 +70,7 @@ describe('<RecipeDetail />', () => {
       <Provider store={mockStore}>
         <BrowserRouter>
         <Switch>
-          <Route path='/' exact render={() => <RecipeDetail history={mockHistory} match={mockMatch}/>} />
+          <Route path='/' exact render={() => <RecipeDetail default={{editCommentDialogOpen: true}} history={mockHistory} match={mockMatch}/>} />
         </Switch>
         </BrowserRouter>
       </Provider>
@@ -74,7 +81,7 @@ describe('<RecipeDetail />', () => {
   it('should render recipeDetail', async () => {
     const component = mount(recipeDetail).find('RecipeDetail'); // .find('RecipeDetail') needed because of withStyles()
     const wrapper = component.find('.RecipeDetail');
-    expect(wrapper.length).toBe(1);
+    expect(wrapper.length).toBeGreaterThan(0);
   });
 
   it('should handle back button', async () => {
