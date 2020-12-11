@@ -103,6 +103,9 @@ const styles = {
     },
     boxShadow: '0.1rem 0.1rem 0.1rem 0 rgba(201,201,201,.9)',
   },
+  newRatingText: {
+    marginLeft: 10,
+  },
 
   descriptionContainer: {
     marginTop: 10,
@@ -352,13 +355,21 @@ class RecipeDetail extends Component {
             maxWidth="sm">
           <DialogTitle id="form-dialog-title">별점 주기</DialogTitle>
           <DialogContent>
-            <Rating
-              value={this.state.newRating}
-              precision={0.5}
-              onChange={(event, value) => this.setState({newRating: value})}
-              onChangeActive={(event, hoverValue) => this.setState({hoverRating: hoverValue})}
-              name="newRating"/>
-            {this.state.hoverRating === -1 ? this.state.newRating : this.state.hoverRating}
+            <Grid container>
+              <Grid item>
+                <Rating
+                value={this.state.newRating}
+                precision={0.5}
+                onChange={(event, value) => this.setState({newRating: value})}
+                onChangeActive={(event, hoverValue) => this.setState({hoverRating: hoverValue})}
+                name="newRating"/>
+              </Grid>
+              <Grid item>
+                <Typography className={`${classes.font} ${classes.newRatingText}`}>
+                  {this.state.hoverRating === -1 ? this.state.newRating : this.state.hoverRating}
+                </Typography>
+              </Grid>
+            </Grid>
             <Box display={this.state.ratingWarning ? "" : "none"}><Typography color="error">별점을 입력해주세요!</Typography></Box>
           </DialogContent>
           <DialogActions>
