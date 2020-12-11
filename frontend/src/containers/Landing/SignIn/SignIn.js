@@ -13,9 +13,19 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import Link from '@material-ui/core/Link';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import Slide from '@material-ui/core/Slide';
 import { withStyles } from '@material-ui/core/styles';
-
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 const theme = createMuiTheme({
   palette: {
@@ -162,6 +172,26 @@ class SignIn extends Component {
                   </Link>
                 </Grid>
               </Grid>
+              <Dialog
+                open={this.props.loginState==="FAILURE"}
+                TransitionComponent={Transition}
+                keepMounted
+                onClose={this.props.onSignup}
+                aria-labelledby="alert-dialog-slide-title"
+                aria-describedby="alert-dialog-slide-description"
+              >
+                <DialogTitle id="alert-dialog-slide-title">{"로그인 실패"}</DialogTitle>
+                <DialogContent>
+                  <DialogContentText id="alert-dialog-slide-description">
+                    이메일 및 비밀번호를 확인해주세요!
+                  </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={this.props.onSignin} color="primary">
+                    확인
+                  </Button>
+                </DialogActions>
+              </Dialog> 
             </form>
           </div>
         </Container>
@@ -173,6 +203,7 @@ class SignIn extends Component {
 
 export const mapDispatchToProps = (dispatch) => ({
   onLoginUser: async (user) => { await dispatch(userActionCreators.loginRequest(user)); },
+  onSignin: async (user) => { await dispatch(userActionCreators.login(user)); }, 
 });
 
 const mapStateToProps = (state) => ({
