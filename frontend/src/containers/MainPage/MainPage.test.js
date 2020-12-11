@@ -411,25 +411,15 @@ describe('<MainPage />', () => {
 
   it('should handle onClickSelectItem', async () => {
     const spyGetElementsByClassName = jest.spyOn(document, 'getElementsByClassName')
-    .mockImplementation(() => { return [{style:{
-      backgroundColor: ""
-    }}] });
-    const mockSelectedMainPage= (
-      <Provider store={mockStore}>
-        <ConnectedRouter history={history}>
-          <MainPage default={{
-            openDialog: false,
-            mode: "normal",
-            selectedItemIds: [1, 2, 3]
-            }} {...props}/>
-        </ConnectedRouter>
-      </Provider>
-    );
-    const component = mount(mockSelectedMainPage);
+      .mockImplementation(() => { return [{style:{
+        background: ""
+      }}] });
+    const component = mount(mockMainPage);
     const mainPageInstance = component.find(MainPage.WrappedComponent).instance();
-    mainPageInstance.onClickSelectItem(1);
-    expect(spyGetElementsByClassName).toHaveBeenCalled();
-    expect(mainPageInstance.state["selectedItemIds"]).toEqual([1]); 
+    mainPageInstance.setState({mode: "select"})
+    mainPageInstance.onClickSelectItem(2);
+    console.log(mainPageInstance.state["selectedItemIds"][0])
+    expect(mainPageInstance.state["selectedItemIds"][0]).toBe(2); 
   });
 
   it('should handle buildNotificationInfo', async () => {
