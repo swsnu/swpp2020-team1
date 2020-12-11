@@ -288,7 +288,8 @@ def item_user(request, user_id=0):
     if request.method == 'GET':
         # jaeseok: check user existence
         all_item_list = list(Item.objects.filter(user_id=user_id).values())
-        for i in range(len(all_item_list)):
+        list_len = len(all_item_list)
+        for i in range(list_len):
             curr_category_id = all_item_list[i]['category_id']
             if curr_category_id:
                 all_item_list[i]['category_name'] = Category.objects.get(id=curr_category_id).name

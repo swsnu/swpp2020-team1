@@ -143,12 +143,14 @@ class ApiTestCase(TestCase):
         response = client.post('/back/item/', json.dumps({
             'name': 'aa',
             'container': 'fridge',
-            'category_id': 1,
+            'category_id': 1000,
             'barcode_num': '8801235',
             'expiration_date': '2020/11/28',
             'count': 3,}),
                                 content_type='application/json', HTTP_X_CSRFTOKEN=csrftoken)
         self.assertEqual(response.status_code, 201)
+        response = client.get('/back/item/user/1/')
+        self.assertEqual(response.status_code, 200)
         response = client.post('/back/item/', json.dumps({
             'category_id': 1,
             'barcode_num': '8801234',
@@ -188,11 +190,15 @@ class ApiTestCase(TestCase):
         client = Client()
         response = client.get('/back/token/')
         csrftoken = response.cookies['csrftoken'].value  # Get csrf token from cookie
+        response = client.get('/back/user/')
+        self.assertEqual(response.status_code, 401)
         client.post('/back/signin/', json.dumps({'username': 'swpp', 'password': 'iluvswpp'}),
                                 content_type='application/json', HTTP_X_CSRFTOKEN=csrftoken)
         Barcode.objects.get(barcode_num='8801234').delete()
         response = client.get('/back/user/')
         self.assertEqual(response.status_code, 200)
+        response = client.put('/back/user/')
+        self.assertEqual(response.status_code, 405) 
 
     def test_get_barcode(self):
         client = Client()
@@ -227,6 +233,8 @@ class ApiTestCase(TestCase):
         client = Client()
         response = client.get('/back/token/')
         csrftoken = response.cookies['csrftoken'].value  # Get csrf token from cookie
+        response = client.get('/back/category/')
+        self.assertEqual(response.status_code, 200)
         response = client.get('/back/category/1/')
         self.assertEqual(response.status_code, 200)
         response = client.get('/back/category/2/')
@@ -376,6 +384,12 @@ class ApiTestCase(TestCase):
         client = Client()
         response = client.get('/back/token/')
         csrftoken = response.cookies['csrftoken'].value  # Get csrf token from cookie
+        # not logged in
+        response = client.get('/back/recipe/rating/')
+        self.assertEqual(response.status_code, 401)
+        ### NOT ALLOWED ###
+        response = client.delete('/back/recipe/rating/')
+        self.assertEqual(response.status_code, 405)
         client.post('/back/signin/', json.dumps({'username': 'swpp', 'password': 'iluvswpp'}),
                                 content_type='application/json', HTTP_X_CSRFTOKEN=csrftoken)
         response = client.get('/back/recipe/rating/')
