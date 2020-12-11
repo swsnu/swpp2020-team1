@@ -219,7 +219,7 @@ class ItemContainer extends Component {
             </div>
           </Container>
 
-          <Dialog open={this.state.seen} fullWidth>
+          <Dialog open={this.state.seen} maxWidth="sm">
             <Button className={classes.xButton} onClick={this.onClickCardOff}>X</Button>
             <div overflowY="auto">{itemcounts}</div>
           </Dialog>

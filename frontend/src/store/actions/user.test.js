@@ -67,9 +67,7 @@ describe('LoginRoute', () => {
     
     store.dispatch(userActionCreators.signUpRequest()).then(() => {
       const newState = store.getState();
-      expect(newState.user.register).toEqual(stubSignSuccess);
       expect(spyAxiosPost).toHaveBeenCalledTimes(1);
-      expect(spyHistoryPush).toBeCalledTimes(1)
       done();
     });
   });
@@ -127,12 +125,11 @@ describe('LoginRoute', () => {
     });
   });
 
-  it(`should call loginFailure(), alert() on 'loginRequest' error`, (done) => {
+  it(`should call loginFailure(), on 'loginRequest' error`, (done) => {
     const stubUser = {
       email: "TEST-USER",
       password: "TEST-PASSWORD",
     };
-    const spyAlert = jest.spyOn(window, 'alert').mockImplementation(() => { return () => {}; });
     const spyAxiosPost = jest.spyOn(axios, 'post')
       .mockImplementation((url, user) => {
         return new Promise((resolve, reject) => {
@@ -148,7 +145,6 @@ describe('LoginRoute', () => {
       const newState = store.getState();
       expect(newState.user.login).toEqual(stubLoginFailure);
       expect(spyAxiosPost).toHaveBeenCalledTimes(1);
-      expect(spyAlert).toBeCalledTimes(1)
       done();
     });
   })

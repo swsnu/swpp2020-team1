@@ -26,6 +26,25 @@ import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
+
+
+
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#7DBF1A',
+      dark: '#7DBF1A',
+      light: '#7DBF1A',
+      contrastText: "#fff"
+    },
+    secondary:{
+      main: '#818181',
+    }
+  },
+});
+
 
 class MainPage extends Component {
 
@@ -193,7 +212,6 @@ class MainPage extends Component {
         this.setState({ mode: "preference" })
         document.getElementsByClassName("ItemSelectDiv")[0].style.height =
           JSON.stringify(100 + this.state.currentWidth * 0.05 + Math.min(this.state.currentWidth / 5, 100))+"px";
-          
       }
     }
   }
@@ -276,12 +294,11 @@ class MainPage extends Component {
     const shelfItems = items.filter(i => i.container === 'shelf')
 
     const clickedStyle = { background:'#c4c4c4' } 
-    
 
     return (
-      
+      <MuiThemeProvider theme={theme}>
         <div className="MainPage">
-          <Container component="main" maxWidth="sm" className="main_container">
+          <Container component="main" maxWidth="md" className="main_container">
           <div className="title">
             <div className="btn_logout">
               <Logout/>
@@ -291,8 +308,7 @@ class MainPage extends Component {
             <span className="titleBlack">ify</span>
             </div>
             <div className="btn_notification" onClick={this.onClickNotiIcon}>
-              <NotiIcon className="btn_bell" fontSize="large" />
-              { this.state.isUnreadNotiExists ? <Circle style={styles.overlay} color="secondary"/> : null }
+              { this.state.isUnreadNotiExists ? <NotificationsActiveIcon className="btn_bell" fontSize="large" color="primary"/> : <NotiIcon className="btn_bell" fontSize="large" color="secondary"/> }
             </div>
           </div>
 
@@ -306,7 +322,8 @@ class MainPage extends Component {
               shouldShowTutorial={!this.props.items || this.props.items.length === 0}
               items={freezerItems}
               buildNotification={() => {this.getAndBuildNotification(this.user_id)}}
-              mode={this.state.mode}/>
+              mode={this.state.mode}
+              id="freezer-container"/>
             <ItemContainer
               type="fridge"
               selectedItemIds={this.state.selectedItemIds}
@@ -378,6 +395,7 @@ class MainPage extends Component {
           </Dialog>
           </Container>
         </div>
+        </MuiThemeProvider>
     );
   }
 }
@@ -399,18 +417,6 @@ const mapDispatchToProps = dispatch => {
     onSetIsRead: (noti_id) => dispatch(actionCreators.setIsRead(noti_id)),
     onSearchRecipes: (ingredients, preference) => dispatch(actionCreators.searchRecipes(ingredients, preference)),
     loginCheck : (user) => dispatch (userActionCreators.loginCheckRequest())
-  }
-}
-
-
-
-const styles = {
-  overlay: {
-    //  position: 'absolute',
-     top: '12px',
-     right: '0px',
-     height: '12px',
-     color: 'red',
   }
 }
 

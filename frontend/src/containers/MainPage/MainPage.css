@@ -41,6 +41,9 @@
 
 .ItemSelectDiv {
     position: absolute;
+    left: 50%;
+    transform: translate(-50%, 0%);
+
     width:inherit;
     max-width:inherit;
     height: 55px;
@@ -57,16 +60,57 @@
     line-height: 50px;
     width:inherit;
     max-width:inherit; 
-    height: auto;
+    height: 100%;
     transition: background-color 0.5s;
 
     background: #7DBF1A;
     border-radius: 8px;
     resize: none;
+
+    overflow: hidden;
 }
 
 .ItemSelectButton:hover {
     cursor: pointer;
+}
+
+.ItemSelectButtonHeader {
+    font-family: "Noto Sans KR", "Roboto", sans-serif;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 18px;
+    max-width:inherit;
+    text-align: center;
+    letter-spacing: 0.25px;
+    color: #FFFFFF;
+
+    height: 50px;
+}
+
+.ItemSelectButtonMain {
+    height: calc(100% - (100px));
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.ItemSelectButtonFooter {
+    height: 50px;
+
+    z-index: 15;
+    width: inherit;
+    
+    margin-bottom: 0;
+    background-color: #373645;
+
+    font-family: Roboto, sans-serif;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 20px;
+    color: #FFFFFF;
+    align-content: center;
+    vertical-align: middle;
 }
 .main_container{
     height:100vh; margin:0;
@@ -81,13 +125,6 @@
     cursor: pointer;
 }
 
-.btn_logout{
-    display: inline-block;
-    position: relative;
-    left: 0px;
-    top: 0px; 
-}
-
 .btn_bell {
     vertical-align: middle;
 }
@@ -97,27 +134,30 @@
     background-color: rgba(60, 60, 60, 0.30);
 }
 
-.ItemSelectButtonHeader {
-    font-family: Roboto, sans-serif;
-    font-style: normal;
-    font-weight: 900;
-    font-size: 18px;
-    width:inherit;
-    text-align: center;
-    letter-spacing: 0.25px;
-    color: #FFFFFF;
+
+.btn_logout{
+    display: inline-block;
+    position: relative;
+    left: 0px;
+    top: 0px; 
 }
 
-.ItemSelectButtonMain {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-}
+
 
 .btn_preference {
-    width: 20%;
-    height: 20%;
-    max-width: 100px;
+    /* width: 20%; */
+    
+    width: min(120px, 20vw);
+    height: min(120px, 20vw);
+    /* height: min(20%, 160px); */
+
+    /* width: 100px;
+    height: 100px; */
+
+    /* height: calc(var(width)); */
+    /* height: auto; */
+
+    object-fit: cover;
     text-align: center;
     display: inline-flex;
     align-items: center;
@@ -139,23 +179,6 @@
 .btn_preference:after {
   content: '';
   padding-top: 100%;
-}
-
-.ItemSelectButtonFooter {
-    z-index: 15;
-    width: inherit;
-    height: 50px;
-    bottom: 0px; 
-    background-color: #373645;
-
-    font-family: Roboto, sans-serif;
-    font-style: normal;
-    font-weight: 500;
-    font-size: 20px;
-    color: #FFFFFF;
-
-    align-content: center;
-    vertical-align: middle;
 }
 
 .NotiHeader {
