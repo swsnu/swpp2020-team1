@@ -16,8 +16,6 @@ export const signUpRequest = (newUser) => {
             })
         })
         .catch( error => {
-            console.log("error in signUpRequest")
-            console.log(error)
             dispatch(signUpFailure(error));
         })
     }
@@ -52,7 +50,6 @@ export const loginRequest = (user) => {
         })
         .catch(error => {
             dispatch(loginFailure())
-            alert('login fail')
         })
   }
 }

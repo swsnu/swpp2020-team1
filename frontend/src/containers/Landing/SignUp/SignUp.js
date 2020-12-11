@@ -17,8 +17,16 @@ import { withStyles } from '@material-ui/core/styles';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import Slide from '@material-ui/core/Slide';
 
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
+
 
 const theme = createMuiTheme({
   palette: {
@@ -239,16 +247,27 @@ class SignUp extends Component {
                   Already have an account? Log in
                 </Link>
               </Grid>
-            </Grid>
-            <Dialog 
-              open={this.props.registerState==="FAILURE"} 
-              fullWidth
-              maxWidth="sm">
-            <DialogTitle id="form-dialog-title" className={classes.title}>이미 가입된 회원입니다!</DialogTitle>
-            <DialogActions>
-              <Button className="confirmRatingButton" onClick={this.props.onSignup} color="primary">확인</Button>
-            </DialogActions>
-          </Dialog>   
+            </Grid>          
+      <Dialog
+        open={this.props.registerState==="FAILURE"}
+        TransitionComponent={Transition}
+        keepMounted
+        onClose={this.props.onSignup}
+        aria-labelledby="alert-dialog-slide-title"
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle id="alert-dialog-slide-title">{"회원가입 실패"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-slide-description">
+            이미 가입된 회원입니다. 가입한 이메일로 로그인하거나 새로 가입해주세요.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={this.props.onSignup} color="primary">
+            확인
+          </Button>
+        </DialogActions>
+      </Dialog> 
           </form>
         </div>
       </Container>
