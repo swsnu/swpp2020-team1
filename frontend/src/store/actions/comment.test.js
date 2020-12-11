@@ -10,7 +10,7 @@ describe('store/actions/comment', () => {
   });
 
   it('should handle getComments', async () => {
-    const spyGet = jest.spyOn(axios, 'get')
+    let spyGet = jest.spyOn(axios, 'get')
       .mockImplementation(url => {
         return new Promise((resolve, reject) => {
           resolve({data: {}});
@@ -18,10 +18,21 @@ describe('store/actions/comment', () => {
       })
     await mockStore.dispatch(actionCreators.getComments(1));
     expect(spyGet).toHaveBeenCalled();
+
+    // on error...
+    spyGet = jest.spyOn(axios, 'get')
+    .mockImplementation(url => {
+      return new Promise((resolve, reject) => {
+        reject();
+      });
+    })
+    jest.clearAllMocks();
+    await mockStore.dispatch(actionCreators.getComments(1));
+    expect(spyGet).toHaveBeenCalled();
   });
 
   it('should handle getComment', async () => {
-    const spyGet = jest.spyOn(axios, 'get')
+    let spyGet = jest.spyOn(axios, 'get')
     .mockImplementation(url => {
       return new Promise((resolve, reject) => {
         resolve({data: {}});
@@ -29,10 +40,21 @@ describe('store/actions/comment', () => {
     })
     await mockStore.dispatch(actionCreators.getComment(1));
     expect(spyGet).toHaveBeenCalled();
+
+    // on error...
+    spyGet = jest.spyOn(axios, 'get')
+    .mockImplementation(url => {
+      return new Promise((resolve, reject) => {
+        reject();
+      });
+    })
+    jest.clearAllMocks();
+    await mockStore.dispatch(actionCreators.getComment(1));
+    expect(spyGet).toHaveBeenCalled();
   });
 
   it('should handle createComment', async () => {
-    const spyPost = jest.spyOn(axios, 'post')
+    let spyPost = jest.spyOn(axios, 'post')
     .mockImplementation(url => {
       return new Promise((resolve, reject) => {
         resolve({data: {}});
@@ -40,10 +62,22 @@ describe('store/actions/comment', () => {
     })
     await mockStore.dispatch(actionCreators.createComment(1, {content: 'c'}));
     expect(spyPost).toHaveBeenCalled();
+
+
+    // on error...
+    spyPost = jest.spyOn(axios, 'post')
+    .mockImplementation(url => {
+      return new Promise((resolve, reject) => {
+        reject();
+      });
+    })
+    jest.clearAllMocks();
+    await mockStore.dispatch(actionCreators.createComment(1, {content: 'c'}));
+    expect(spyPost).toHaveBeenCalled();
   });
 
   it('should handle editComment', async () => {
-    const spyPut = jest.spyOn(axios, 'put')
+    let spyPut = jest.spyOn(axios, 'put')
     .mockImplementation(url => {
       return new Promise((resolve, reject) => {
         resolve({data: {}});
@@ -51,15 +85,39 @@ describe('store/actions/comment', () => {
     })
     await mockStore.dispatch(actionCreators.editComment({id:1, content:'c'}));
     expect(spyPut).toHaveBeenCalled();
+
+
+    // on error...
+    spyPut = jest.spyOn(axios, 'put')
+    .mockImplementation(url => {
+      return new Promise((resolve, reject) => {
+        reject();
+      });
+    })
+    jest.clearAllMocks();
+    await mockStore.dispatch(actionCreators.editComment({id:1, content:'c'}));
+    expect(spyPut).toHaveBeenCalled();
   });
 
   it('should handle deleteComment', async () => {
-    const spyDelete = jest.spyOn(axios, 'delete')
+    let spyDelete = jest.spyOn(axios, 'delete')
     .mockImplementation(url => {
       return new Promise((resolve, reject) => {
         resolve({data: {}});
       });
     })
+    await mockStore.dispatch(actionCreators.deleteComment(1));
+    expect(spyDelete).toHaveBeenCalled();
+
+
+    // on error...
+    spyDelete = jest.spyOn(axios, 'delete')
+    .mockImplementation(url => {
+      return new Promise((resolve, reject) => {
+        reject();
+      });
+    })
+    jest.clearAllMocks();
     await mockStore.dispatch(actionCreators.deleteComment(1));
     expect(spyDelete).toHaveBeenCalled();
   });

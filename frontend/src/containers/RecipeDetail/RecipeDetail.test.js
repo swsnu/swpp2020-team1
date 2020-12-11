@@ -25,7 +25,7 @@ const stubInitialState = {
       description: "d1", 
       video_url: "u1",  
       cuisine_type: "korean", 
-      ingredients:[1,3],
+      ingredients:[1,2],
       rating_average: 3.0
     },
     ratedRecipes: [],
@@ -36,6 +36,13 @@ const stubInitialState = {
       {id:1, content:"c1", author_id:1, author:"user1", recipe_id:1, date: "2020-11-20"},
       {id:2, content:"c2", author_id:2, author:"user2", recipe_id:1, date: "2020-11-20"},
     ],
+  },
+  
+  category: {
+    categories: [
+      {id: 1, name: 'c1'},
+      {id: 2, name: 'c2'},
+    ]
   }
 };
 
@@ -74,7 +81,7 @@ describe('<RecipeDetail />', () => {
   it('should render recipeDetail', async () => {
     const component = mount(recipeDetail).find('RecipeDetail'); // .find('RecipeDetail') needed because of withStyles()
     const wrapper = component.find('.RecipeDetail');
-    expect(wrapper.length).toBe(1);
+    expect(wrapper.length).toBeGreaterThan(0);
   });
 
   it('should handle back button', async () => {
@@ -86,6 +93,7 @@ describe('<RecipeDetail />', () => {
 
   it('should handle rating', async () => {
     const component = mount(recipeDetail).find('RecipeDetail');
+    const instance = component.instance();
     const ratingButton = component.find('.ratingButton button');
     ratingButton.simulate('click');
     expect(component.state().ratingDialogOpen).toBe(true);
@@ -103,6 +111,22 @@ describe('<RecipeDetail />', () => {
     // const closeRatingButton = component.find('.closeRatingButton button');
     // closeRatingButton.simulate('click');
     // expect(component.state().ratingDialogOpen).toBe(false);
+
+
+    // just call function directly
+    // close dialog
+    instance.onCloseRatingDialog();
+    expect(instance.state.ratingDialogOpen).toBe(false);
+
+    instance.onClickRatingButton();
+    // confirm rating with null
+    instance.setState({newRating: null})
+    instance.onConfirmRating();
+    expect(instance.state.ratingWarning).toBe(true);
+    // confirm rating with right value
+    instance.setState({newRating: 5});
+    instance.onConfirmRating();
+    expect(instance.state.ratingWarning).toBe(false);
   })
 
   it('should handle create comment', () => {
@@ -131,6 +155,27 @@ describe('<RecipeDetail />', () => {
     // const closeEditButton = component.find('.closeEditButton button');
     // closeEditButton.simulate('click');
     // expect(component.state().editCommentDialogOpen).toBe(false);
+
+
+    const instance = component.instance();
+    // cancel edit
+    instance.onCloseEditCommentDialog();
+    expect(instance.state.editCommentDialogOpen).toBe(false);
+
+    instance.onClickEditButton();
+    expect(instance.state.editCommentDialogOpen).toBe(true);
+    // confirm edit
+    instance.onConfirmEdit();
+    expect(instance.state.editCommentDialogOpen).toBe(false);
+
+
+  })
+
+  it('should', () => {
+    const component = mount(recipeDetail).find('RecipeDetail');
+    const instance = component.instance();
+    instance.onConfirmRating()
+
   })
 
 

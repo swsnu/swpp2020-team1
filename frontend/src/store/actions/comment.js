@@ -9,7 +9,8 @@ export const getComments_ = (comments) => {
 export const getComments = (recipe_id) => {  
     return dispatch => {
         return axios.get(`/back/recipe/${recipe_id}/comment/`)
-                    .then(res => dispatch(getComments_(res.data)));
+                    .then(res => dispatch(getComments_(res.data)))
+                    .catch(e => {});
     }; 
 };
 
@@ -20,7 +21,8 @@ export const getComment_ = (comment) => {
 export const getComment = (comment_id) => {
     return dispatch => {
         return axios.get(`/back/recipe/comment/${comment_id}/`)
-                    .then(res => dispatch(getComment_(res.data)));
+                    .then(res => dispatch(getComment_(res.data)))
+                    .catch(e => {});
     }
 }
 
@@ -32,7 +34,8 @@ export const createComment_ = (comment) => {
 export const createComment = (recipe_id, comment) => {
     return dispatch => {
         return axios.post(`/back/recipe/${recipe_id}/comment/`, comment)
-                    .then(res => dispatch(createComment_(res.data)));
+                    .then(res => dispatch(createComment_(res.data)))
+                    .catch(e => {});
     }
 }
 
@@ -44,7 +47,8 @@ export const editComment_ = (comment) => {
 export const editComment = (comment) => {
     return dispatch => {
         return axios.put(`/back/recipe/comment/${comment.id}/`, comment)
-                    .then(res => dispatch(editComment_(res.data)));
+                    .then(res => dispatch(editComment_(res.data)))
+                    .catch(e => {});
     }
 }
 
@@ -55,6 +59,7 @@ export const deleteComment_ = (comment_id) => {
 export const deleteComment = (comment_id) => {
     return dispatch => {
         return axios.delete(`/back/recipe/comment/${comment_id}/`)
-                    .then(res => dispatch(deleteComment_(comment_id)));
+                    .then(res => dispatch(deleteComment_(comment_id)))
+                    .catch(e => {});
     }
 }

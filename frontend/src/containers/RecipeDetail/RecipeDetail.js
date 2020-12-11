@@ -29,8 +29,8 @@ const styles = {
     backgroundColor: '#ffffff',
     paddingLeft: 30,
     paddingRight: 30,
-    paddingTop: 0,
-    paddingBottom: 0,
+    paddingTop: 5,
+    paddingBottom: 10,
   },
 
   headerContainer: {
@@ -80,13 +80,18 @@ const styles = {
     marginTop:5,
   },
   ratingText: {
-    marginLeft: 5,
+    paddingLeft: 4,
+    paddingRight: 2,
     marginTop:5,
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: 600,
   },
   ratingButton: {
     marginRight: 20,
+    marginLeft: 0,
+    paddingLeft: 0,
+    paddingRight: 0,
+    fontSize: 13,
     fontWeight: 500,
     background: "#7DBF1A",
     color: "#ffffff",
@@ -257,7 +262,7 @@ class RecipeDetail extends Component {
       const ing = this.props.categories.find(c => c.id === category_id);
       const name = ing ? ing.name : null;
       return (
-        <Grid item>
+        <Grid item key={category_id}>
           <Box className={`${classes.font} ${classes.ingredientText}`} borderRadius="20%">
             {/* <Typography align="left" className={`${classes.font} ${classes.ingredientText}`}>{name}</Typography> */}
             {name}
@@ -268,10 +273,11 @@ class RecipeDetail extends Component {
 
     return this.props.selectedRecipe ? (
       <Grid className={classes.root} container justify="center">
+        <Container className={classes.RecipeDetailContainer} maxWidth="sm">
         <Box className={`${classes.RecipeDetail} RecipeDetail`} boxShadow={3}>
           {/* Header */}
           <Grid className={classes.headerContainer} container>
-            <Grid item container xs={2} justify="left">
+            <Grid item container xs={2} justify="flex-start">
               <Grid item>
                 <IconButton className={`${classes.backButton} backButton`} onClick={this.onClickBackButton}><ArrowBackIcon/></IconButton>
               </Grid>
@@ -436,6 +442,7 @@ class RecipeDetail extends Component {
         </Dialog>
 
         </Box>
+        </Container>
       </Grid>
 
 
