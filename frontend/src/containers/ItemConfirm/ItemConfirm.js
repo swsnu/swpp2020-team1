@@ -6,7 +6,38 @@ import ItemCard from '../../components/ItemConfirm/ItemCard';
 import EditItem from '../../components/AddItem/EditItem';
 import Result from '../../components/AddItem/Result';
 import './ItemConfirm.css';
-import moment from 'moment'
+import moment from 'moment';
+import { withStyles } from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
+import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
+import PhotoCamera from '@material-ui/icons/PhotoCamera';
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#7DBF1A',
+      dark: '#7DBF1A',
+      light: '#7DBF1A',
+      contrastText: "#fff"
+    },
+  },
+});
+
+const styles = (theme) => ({
+  root: {
+    flexGrow: 1,
+    overflow: 'hidden',
+    padding: theme.spacing(0, 3),
+  },
+  paper: {
+    margin: `${theme.spacing(1)}px auto`,
+    padding: theme.spacing(2),
+  },
+  button: {
+    margin: theme.spacing(1),
+  }
+});
 
 class ItemConfirm extends Component {
   containers = ['freezer', 'fridge', 'shelf'];
@@ -97,6 +128,7 @@ class ItemConfirm extends Component {
   }
 
   render() {
+    const {classes} = this.props;
     const newItems = this.props.resultList.map((item, idx) => {
       // temporary category name
       if(idx == this.state.editingItemIdx) {
@@ -110,22 +142,42 @@ class ItemConfirm extends Component {
     }).reverse();
 
     return (
+      <MuiThemeProvider theme={theme}>
       <div className="ItemConfirm">
-        <Result isAddItem={false} 
-                item={this.state.currentItem} 
-                onClickFinishEditItem={this.onClickFinishAddItemButton} 
-                onChangeEditItem={this.onChangeAddItemValue} />
+        <Container component="main" maxWidth="md" className="confirm_container">
+            <Result isAddItem={false} 
+                    item={this.state.currentItem} 
+                    onClickFinishEditItem={this.onClickFinishAddItemButton} 
+                    onChangeEditItem={this.onChangeAddItemValue} />
         <div className="HeaderName"></div>
-        
         <div className="Main">
           {newItems}  
         </div>
-        
-        <div className="Footer">
-          <div id='onClickMoveToConfirmButton' className="ConfirmButton" onClick={this.onClickConfirmButton} >완료</div>
-          <div id='onClickMoveToAddItemButton' className="ConfirmButton" onClick={this.onClickMoveToAddItemButton} >카메라</div>
-        </div>
+          <div className="Footer">
+          <Button
+            id="onClickMoveToConfirmButton"
+            variant="contained"
+            color="primary"
+            className={`"ConfirmButton" ${classes.button}`}
+            startIcon={<ShoppingCartIcon />}
+            onClick={this.onClickConfirmButton}
+          >
+            담기 완료
+          </Button>
+          <Button
+            id="onClickMoveToAddItemButton"
+            variant="contained"
+            color="primary"
+            className={`"ConfirmButton" ${classes.button}`}
+            startIcon={<PhotoCamera />}
+            onClick={this.onClickMoveToAddItemButton}
+          >
+            추가 스캔하기
+          </Button>
+          </div>
+        </Container>
       </div>
+      </MuiThemeProvider>
      );
   }
 }
@@ -145,4 +197,4 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ItemConfirm);
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(ItemConfirm));
