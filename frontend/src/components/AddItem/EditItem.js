@@ -9,22 +9,46 @@ import DateFnsUtils from '@date-io/date-fns';
 import RemoveIcon from '@material-ui/icons/Remove';
 import AddIcon from '@material-ui/icons/Add';
 
+import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
+import Button from '@material-ui/core/Button';
+import Card from '@material-ui/core/Card';
+
 import axios from 'axios';
 
 import './EditItem.css';
 import { withStyles } from '@material-ui/core/styles';
-
-const styles = {
-  typography: {
-    fontFamily: `"Noto Sans KR", "Source Code Pro", "Roboto", "Helvetica", "Arial", sans-serif`,
-    fontSize: 14
-  }
-}
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 
 const style = {
   marginTop: "0px", 
   marginBottom: "0px",
 }
+
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#7DBF1A',
+      dark: '#7DBF1A',
+      light: '#7DBF1A',
+      contrastText: "#fff"
+    },
+  },
+});
+
+const styles = (theme) => ({
+  root: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  typography: {
+    fontFamily: ['Noto Sans KR', 'sans-serif', 'Roboto'].join(','), 
+    fontSize: 14,
+  },
+  button: {
+    margin: theme.spacing(1),
+  },
+});
 
 class EditItem extends Component {
   containers = ['freezer', 'fridge', 'shelf'];
@@ -96,7 +120,9 @@ class EditItem extends Component {
   render() {
     const {classes} = this.props;
     return (
-      <Fragment>
+      <MuiThemeProvider theme={theme}>
+        <Card className={classes.root}>
+      {/* <Fragment> */}
         <div className="EditItem">
           <table><tbody>
             <tr>
@@ -209,10 +235,22 @@ class EditItem extends Component {
                 <MenuItem key={c} value={c}>{c}</MenuItem>
               ))}
             </Select>
-            <button id="FinishEditButton" disabled={!this.checkValidity(this.props.item.name, this.props.item.expiration_date)} onClick={this.onClickEditItemButton}>완료</button>
+            <Button
+              id="FinishEditButton"
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              startIcon={<AddShoppingCartIcon />}
+              disabled={!this.checkValidity(this.props.item.name, this.props.item.expiration_date)}
+              onClick={this.onClickEditItemButton}
+            >
+              ADD
+            </Button>
           </div>
         </div>
-      </Fragment>
+      {/* </Fragment> */}
+      </Card>
+      </MuiThemeProvider>
     )
   }
 }

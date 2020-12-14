@@ -4,6 +4,7 @@ import * as actionCreators from '../../store/actions/index';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import './RecipeRecommend.css';
 import { List, ListItem, IconButton } from '@material-ui/core';
+import Container from '@material-ui/core/Container';
 
 class RecipeRecommend extends Component {
 
@@ -59,6 +60,7 @@ class RecipeRecommend extends Component {
     })
     return (
         <div className="RecipeRecommend">
+          <Container component="main" maxWidth="md" className="main_container">
           <div className="title">
             <div className="btn_back" onClick={this.onClickBackButton}>
               <IconButton className="btn_arrow"><ArrowBackIcon/></IconButton>
@@ -73,6 +75,7 @@ class RecipeRecommend extends Component {
               { results }
             </List>
           </div>
+          </Container>
         </div>
     );
   }

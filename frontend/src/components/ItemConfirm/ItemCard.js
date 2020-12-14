@@ -1,8 +1,51 @@
 import '../AddItem/EditItem.css';
 import moment from 'moment';
 
+import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
+import Button from '@material-ui/core/Button';
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
+import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
+import Card from '@material-ui/core/Card'
+
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#7DBF1A',
+      dark: '#7DBF1A',
+      light: '#7DBF1A',
+      contrastText: "#fff"
+    },
+  },
+});
+
+const useStyles = makeStyles((theme) => ({
+  button: {
+    margin: theme.spacing(1),
+  },
+  root: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+}));
+
+const styles = (theme) => ({
+  typography: {
+    fontFamily: ['Noto Sans KR', 'sans-serif', 'Roboto'].join(','), 
+    fontSize: 14,
+  },
+  button: {
+    margin: theme.spacing(1),
+  },
+});
+
 const ItemCard = (props) => {
+  const classes = useStyles();
+
   return (
+    <MuiThemeProvider theme={theme}>
+      <Card className={classes.root}>
     <div className="EditItem">
       <table className="tableItemCard"><tbody>
         <tr>
@@ -38,10 +81,19 @@ const ItemCard = (props) => {
         <div className="CategoryEditItem">
           {props.item.container}
         </div>
-        
-        <button onClick={() => props.onClickEdit(props.id)} >수정</button>
+        <Button
+          variant="contained"
+          color="primary"
+          className={classes.button}
+          startIcon={<EditOutlinedIcon />}
+          onClick={() => props.onClickEdit(props.id)}
+          >
+          EDIT
+        </Button> 
       </div>
     </div>
+    </Card>
+    </MuiThemeProvider>
   )
 };
 

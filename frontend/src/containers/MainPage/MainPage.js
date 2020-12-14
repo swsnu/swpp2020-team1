@@ -15,7 +15,7 @@ import KoreanFlag from '../../icons/korean.png'
 import JapaneseFlag from '../../icons/japanese.png'
 import ChineseFlag from '../../icons/chinese.png'
 import ItalianFlag from '../../icons/italian.png'
-import Container from '@material-ui/core/Container'
+import Container from '@material-ui/core/Container';
 import BottomNavigation from '@material-ui/core/BottomNavigation';
 import { withStyles } from '@material-ui/core/styles';
 import {withRouter} from 'react-router';
