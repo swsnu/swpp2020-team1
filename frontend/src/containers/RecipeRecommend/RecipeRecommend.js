@@ -5,9 +5,26 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import './RecipeRecommend.css';
 import { List, ListItem, IconButton } from '@material-ui/core';
 import Container from '@material-ui/core/Container';
+import { withStyles } from '@material-ui/core/styles';
+import Card from '@material-ui/core/Card';
+import CardActionArea from '@material-ui/core/CardActionArea';
+
+const styles = (theme) => ({
+  root: {
+    flexGrow: 1,
+    overflow: 'hidden',
+    padding: theme.spacing(0, 3),
+  },
+  paper: {
+    margin: `${theme.spacing(1)}px auto`,
+    padding: theme.spacing(2),
+  },
+  button: {
+    margin: theme.spacing(1),
+  }
+});
 
 class RecipeRecommend extends Component {
-
   recipeSample = [
   ]
 
@@ -40,12 +57,19 @@ class RecipeRecommend extends Component {
   }
 
   render() {
+    const {classes} = this.props;
     let results = this.props.searchResults.map(recipe => {
       const videoUrl = recipe.video_url
       const videoKey = videoUrl.substring(videoUrl.lastIndexOf('=') + 1)
       const score = recipe.rating_average
       return (
-        <ListItem className="recipe_detail" button key={recipe.id} onClick={() => this.goToRecipeDetail(recipe.id)}>
+
+        // className="recipe_detail" button key={recipe.id} onClick={() => this.goToRecipeDetail(recipe.id)}
+        <Card className={classes.root}
+              button key={recipe.id} 
+              onClick={() => this.goToRecipeDetail(recipe.id)}>
+        <CardActionArea>
+        <ListItem >
           <div className="thumbnail_wrapper">
             <img className="thumbnail" src={`http://i.ytimg.com/vi/${videoKey}/mqdefault.jpg`}/>
           </div>
@@ -56,6 +80,8 @@ class RecipeRecommend extends Component {
             </div>
           </div>
         </ListItem>
+        </CardActionArea>
+        </Card>
       )
     })
     return (
@@ -92,4 +118,4 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(RecipeRecommend);
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(RecipeRecommend));
