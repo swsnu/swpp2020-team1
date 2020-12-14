@@ -4,7 +4,6 @@
 from django.db import models
 from django.conf import settings
 
-
 class Category(models.Model):
     ''' Category: storing list of food categories '''
     name = models.CharField(max_length=32)
@@ -27,6 +26,7 @@ class Item(models.Model):
     container = models.CharField(max_length=16)
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
+        # get_user_model(),
         on_delete=models.CASCADE,
         related_name='item_set'
     )

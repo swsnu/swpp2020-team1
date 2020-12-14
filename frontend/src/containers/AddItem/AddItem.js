@@ -169,7 +169,6 @@ class AddItem extends Component {
     await axios.get('/back/user/')
       .then(res => user_id = res.data.user_id)
       .catch(e => console.log(e)) 
-    console.log(`user_id: ${user_id}`)
 
     this.setState((prevState, props) => ({isBarcodeScanning: false, isResultVisible: true, 
                                                    isRetaking: false, status: EXPIRATION_TERM }))

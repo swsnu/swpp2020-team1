@@ -4,19 +4,23 @@ import json
 from django.test import TestCase, Client
 from django.contrib.auth import get_user_model
 from .models import Barcode, Category, Item, ItemCount, Notification, Recipe, RecipeComment
+from .init_db import initialize_category, initialize_recipe, initialize_barcode
 
 class ApiTestCase(TestCase):
     def test_csrf(self):
         # By default, csrf checks are disabled in test client
         # To test csrf protection we enforce csrf checks here
         client = Client(enforce_csrf_checks=True)
-        response = client.post('/back/signup/', json.dumps({'username': 'chris', 'password': 'chris'}),
+        response = client.post('/back/signup/', json.dumps({'email': 'chris', 'password': 'chris'}),
                                content_type='application/json')
         self.assertEqual(response.status_code, 403)  # Request without csrf token returns 403
 
         response = client.get('/back/token/')
         csrftoken = response.cookies['csrftoken'].value  # Get csrf token from cookie
 
+        initialize_category()
+        initialize_recipe()
+        initialize_barcode()
         response = client.post('/back/signup/', json.dumps({'email': 'chris@cc.com', 'password': 'chris', 'nickname': 'christmas'}),
                                content_type='application/json', HTTP_X_CSRFTOKEN=csrftoken)
         self.assertEqual(response.status_code, 201)  # Pass csrf protection

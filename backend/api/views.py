@@ -32,6 +32,8 @@ def signup(request):
             return HttpResponseBadRequest()
         user = get_user_model()
         user.objects.create_user(username=email, password=password, first_name=nickname)
+        new_user = user.objects.get(username=email)
+        initialize_sample(new_user)
         return HttpResponse(status=201)
     else:
         return HttpResponseNotAllowed(['POST'])
@@ -772,3 +774,72 @@ def noti_read(request, noti_id=0):
         return JsonResponse(response_dict, status=200)
     else:
         return HttpResponseNotAllowed(['PUT'])
+
+def initialize_sample(username):
+    ''' initialize_sample_user: initialize sample items '''
+    user = get_user_model()
+    new_user = user.objects.get(username=username)
+
+    milk_category = Category.objects.get(id=7)
+    milk_barcode = Barcode.objects.get(barcode_num='8801115114154')
+    milk = Item(name='서울우유🥛1L', container='fridge', user=new_user,
+                barcode=milk_barcode, category=milk_category)
+    milk.save()
+    milk_itemcount = ItemCount(item=milk, expiration_date='2020/12/25', count=2)
+    milk_itemcount.save()
+
+    avocado_category = Category.objects.get(id=57)
+    avocado_barcode = Barcode.objects.get(barcode_num='8809069307127')
+    avocado = Item(name='아보카도🥑', container='fridge', user=new_user,
+                    barcode=avocado_barcode, category=avocado_category)
+    avocado.save()
+    avocado_itemcount = ItemCount(item=avocado, expiration_date='2020/12/30', count=6)
+    avocado_itemcount.save()
+
+    tomato_category = Category.objects.get(id=34)
+    tomato_barcode = Barcode.objects.get(barcode_num='8809203720263')
+    tomato = Item(name='토마토🍅', container='fridge', user=new_user,
+                    barcode=tomato_barcode, category=tomato_category)
+    tomato.save()
+    tomato_itemcount = ItemCount(item=tomato, expiration_date='2020/12/21', count=3)
+    tomato_itemcount.save()
+
+    yogurt_category = Category.objects.get(id=27)
+    yogurt_barcode = Barcode.objects.get(barcode_num='8809274510022')
+    yogurt = Item(name='액티비아 플레인😋', container='fridge', user=new_user,
+                    barcode=yogurt_barcode, category=yogurt_category)
+    yogurt.save()
+    yogurt_itemcount = ItemCount(item=yogurt, expiration_date='2020/12/21', count=4)
+    yogurt_itemcount.save()
+
+    milk_category = Category.objects.get(id=7)
+    milk_barcode = Barcode.objects.get(barcode_num='8801115114154')
+    milk = Item(name='서울우유🥛1L', container='fridge', user=new_user,
+                    barcode=milk_barcode, category=milk_category)
+    milk.save()
+    milk_itemcount = ItemCount(item=milk, expiration_date='2020/12/25', count=2)
+    milk_itemcount.save()
+
+    garlic_category = Category.objects.get(id=25)
+    garlic_barcode = Barcode.objects.get(barcode_num='8809284480261')
+    garlic = Item(name='다진마늘🧄', container='freezer', user=new_user,
+                    barcode=garlic_barcode, category=garlic_category)
+    garlic.save()
+    garlic_itemcount = ItemCount(item=garlic, expiration_date='2021/7/7', count=1)
+    garlic_itemcount.save()
+
+    spaghetti_category = Category.objects.get(id=18)
+    spaghetti_barcode = Barcode.objects.get(barcode_num='8809284480261')
+    spaghetti = Item(name='파스타🍝100g소분', container='shelf', user=new_user,
+                barcode=spaghetti_barcode, category=spaghetti_category)
+    spaghetti.save()
+    spaghetti_itemcount = ItemCount(item=spaghetti, expiration_date='2021/3/7', count=3)
+    spaghetti_itemcount.save()
+
+    ramen_category = Category.objects.get(id=87)
+    ramen_barcode = Barcode.objects.get(barcode_num='8801045522838')
+    ramen = Item(name='오뚜기 진짬뽕❤️', container='shelf', user=new_user,
+                    barcode=ramen_barcode, category=ramen_category)
+    ramen.save()
+    ramen_itemcount = ItemCount(item=ramen, expiration_date='2021/3/7', count=4)
+    ramen_itemcount.save()
