@@ -18,7 +18,7 @@ class Scanner extends Component {
 
       locator: {
         patchSize: "medium",
-        halfSample: false
+        halfSample: false,
       },
 
       numOfWorkers: 2,
@@ -37,13 +37,15 @@ class Scanner extends Component {
       },
       
       multiple: false,
-      locate: true
+      // locate: true
+      locate: false
     }, function(err) {
       if (err) {
         return console.log(err);
       }
       Quagga.start();
     });
+
     Quagga.onDetected(this._onDetected);
   }
 
@@ -55,6 +57,7 @@ class Scanner extends Component {
   _onDetected = (result) => {
     //console.log("_onDetected called in scanner");
     //console.log(result)
+    // alert("Barcode detected and processed : [" + result.codeResult.code + "]")
     this.props.onDetected(result);
   }
 

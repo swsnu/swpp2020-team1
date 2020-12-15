@@ -785,24 +785,61 @@ def initialize_sample(username):
     milk = Item(name='서울우유🥛1L', container='fridge', user=new_user,
                 barcode=milk_barcode, category=milk_category)
     milk.save()
-    milk_itemcount = ItemCount(item=milk, expiration_date='2020/12/25', count=2)
+    milk_itemcount = ItemCount(item=milk, expiration_date='2020/12/17', count=2)
     milk_itemcount.save()
+    milk_noti = Notification(user=new_user, noti_type='expire', item_count=milk_itemcount,
+                                is_read=False, expire_date='2020-12-17')
+    milk_noti.save()
 
-    avocado_category = Category.objects.get(id=57)
-    avocado_barcode = Barcode.objects.get(barcode_num='8809069307127')
-    avocado = Item(name='아보카도🥑', container='fridge', user=new_user,
-                    barcode=avocado_barcode, category=avocado_category)
-    avocado.save()
-    avocado_itemcount = ItemCount(item=avocado, expiration_date='2020/12/30', count=6)
-    avocado_itemcount.save()
+    other_milk_itemcount = ItemCount(item=milk, expiration_date='2020/12/30', count=3)
+    other_milk_itemcount.save()
+    other_milk_noti = Notification(user=new_user, noti_type='expire', item_count=other_milk_itemcount,
+                            is_read=False, expire_date='2020-12-30')
+    other_milk_noti.save()
+
+    pork_category = Category.objects.get(id=13)
+    pork_barcode = Barcode.objects.get(barcode_num='8809604200012')
+    pork = Item(name='삼겹살🐷100g', container='fridge', user=new_user,
+                    barcode=pork_barcode, category=pork_category)
+    pork.save()
+    pork_itemcount = ItemCount(item=pork, expiration_date='2020/12/30', count=4)
+    pork_itemcount.save()
+    pork_noti = Notification(user=new_user, noti_type='expire', item_count=pork_itemcount,
+                            is_read=False, expire_date='2020-12-30')
+    pork_noti.save()
+
+    carrot_category = Category.objects.get(id=20)
+    carrot_barcode = Barcode.objects.get(barcode_num='8801448269996')
+    carrot = Item(name='당근🥕', container='fridge', user=new_user,
+                    barcode=carrot_barcode, category=carrot_category)
+    carrot.save()
+    carrot_itemcount = ItemCount(item=carrot, expiration_date='2020/12/22', count=2)
+    carrot_itemcount.save()
+    carrot_noti = Notification(user=new_user, noti_type='expire', item_count=carrot_itemcount,
+                            is_read=False, expire_date='2020-12-22')
+    carrot_noti.save()
+
+    onion_category = Category.objects.get(id=26)
+    onion_barcode = Barcode.objects.get(barcode_num='8801062286850')
+    onion = Item(name='양파🧅', container='fridge', user=new_user,
+                    barcode=onion_barcode, category=onion_category)
+    onion.save()
+    onion_itemcount = ItemCount(item=onion, expiration_date='2020/12/24', count=2)
+    onion_itemcount.save()
+    onion_noti = Notification(user=new_user, noti_type='expire', item_count=onion_itemcount,
+                            is_read=False, expire_date='2020-12-24')
+    onion_noti.save()
 
     tomato_category = Category.objects.get(id=34)
     tomato_barcode = Barcode.objects.get(barcode_num='8809203720263')
     tomato = Item(name='토마토🍅', container='fridge', user=new_user,
                     barcode=tomato_barcode, category=tomato_category)
     tomato.save()
-    tomato_itemcount = ItemCount(item=tomato, expiration_date='2020/12/21', count=3)
+    tomato_itemcount = ItemCount(item=tomato, expiration_date='2020/12/18', count=3)
     tomato_itemcount.save()
+    tomato_noti = Notification(user=new_user, noti_type='expire', item_count=tomato_itemcount,
+                            is_read=False, expire_date='2020-12-18')
+    tomato_noti.save()
 
     yogurt_category = Category.objects.get(id=27)
     yogurt_barcode = Barcode.objects.get(barcode_num='8809274510022')
@@ -811,14 +848,9 @@ def initialize_sample(username):
     yogurt.save()
     yogurt_itemcount = ItemCount(item=yogurt, expiration_date='2020/12/21', count=4)
     yogurt_itemcount.save()
-
-    milk_category = Category.objects.get(id=7)
-    milk_barcode = Barcode.objects.get(barcode_num='8801115114154')
-    milk = Item(name='서울우유🥛1L', container='fridge', user=new_user,
-                    barcode=milk_barcode, category=milk_category)
-    milk.save()
-    milk_itemcount = ItemCount(item=milk, expiration_date='2020/12/25', count=2)
-    milk_itemcount.save()
+    yogurt_noti = Notification(user=new_user, noti_type='expire', item_count=yogurt_itemcount,
+                            is_read=False, expire_date='2020-12-21')
+    yogurt_noti.save()
 
     garlic_category = Category.objects.get(id=25)
     garlic_barcode = Barcode.objects.get(barcode_num='8809284480261')

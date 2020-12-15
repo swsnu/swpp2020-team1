@@ -124,7 +124,9 @@ class AddItem extends Component {
           console.log(this.responseText);
           var jsonResponse = JSON.parse(this.responseText);
           if(jsonResponse["result"][0].prediction[0]){
-            text = jsonResponse["result"][0].prediction[0].ocr_text; 
+            for (let prediction of jsonResponse["result"][0].prediction) {
+              text += prediction.ocr_text;
+            }
             success_callback(text);
           } else {
             fail_callback();
@@ -221,7 +223,7 @@ class AddItem extends Component {
      * key: (barcode_num)
      */
 
-    //console.log(custom_item, "custom_item")
+    console.log("custom item existence check: ", custom_item)
     if(custom_item.length == 0){
       axios.get(`/back/barcode/${barcode_num}/`)
         .then(res => {
