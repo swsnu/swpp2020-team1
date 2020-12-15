@@ -16,7 +16,7 @@ describe('Scanner()', () => {
     spyInit.mockImplementation((input, errFunction) => {
         return input;
       })
-    const component = mount(<Scanner id="Scanner" onDetected={mockfn} />);
+    const component = mount(<Scanner barcode={false} id="Scanner" onDetected={mockfn} />);
 
     expect(spyInit).toHaveBeenCalledTimes(1);
     expect(spyInit.mock.results[0].value.inputStream.type).toEqual("LiveStream");
@@ -30,7 +30,7 @@ describe('Scanner()', () => {
     spyInit.mockImplementation((input, errFunction) => {
         return errFunction('error occurred');
       })
-    const component = mount(<Scanner id="Scanner" onDetected={mockfn} />);
+    const component = mount(<Scanner barcode={false} id="Scanner" onDetected={mockfn} />);
 
     expect(spyOnConsole.mock.results[0].value).toEqual("error occurred is returned");
     expect(component.find("#interactive").length).toBe(1);
@@ -46,7 +46,7 @@ describe('Scanner()', () => {
         return errFunction();
       })
 
-    const component = mount(<Scanner id="Scanner" onDetected={mockfn} />);
+    const component = mount(<Scanner barcode={false} id="Scanner" onDetected={mockfn} />);
     expect(spyStart.mock.results[0].value).toEqual("starting");
   })
 
@@ -55,7 +55,7 @@ describe('Scanner()', () => {
         return errFunction();
       })
 
-    const component = mount(<Scanner id="Scanner" onDetected={mockfn} />);
+    const component = mount(<Scanner barcode={false} id="Scanner" onDetected={mockfn} />);
     expect(spyInit).toHaveBeenCalledTimes(1);
     
     component.instance()._onDetected("aa");
@@ -64,17 +64,21 @@ describe('Scanner()', () => {
   })
 
   it('should work well with onComponentWillUnmount', () => {
-    const spyUnmount = jest.spyOn(Quagga, 'offDetected')
-    spyUnmount.mockImplementation((func) => {return func})
+    const spyOffDetected = jest.spyOn(Quagga, 'offDetected')
+    spyOffDetected.mockImplementation((func) => {return func})
+
+    const spyStop = jest.spyOn(Quagga, 'stop')
+    spyStop.mockImplementation((func) => {return func})
     
     spyInit.mockImplementation((input, errFunction) => {
         return input;
       })
 
-    const component = mount(<Scanner id="Scanner" onDetected={mockfn} />);
+    const component = mount(<Scanner barcode={true} id="Scanner" onDetected={mockfn} />);
     expect(spyInit).toHaveBeenCalledTimes(1);
     
-    // component.unmount();
-    // expect(spyUnmount).toHaveBeenCalledTimes(1);
+    component.unmount();
+    expect(spyOffDetected).toHaveBeenCalledTimes(1);
+    expect(spyStop).toHaveBeenCalledTimes(1);
   })
 })
