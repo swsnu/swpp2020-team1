@@ -189,6 +189,9 @@ class MainPage extends Component {
   }
 
   switchToNormalMode = () => {
+    if(this.state.selectedCuisine != null) {
+      document.getElementsByClassName(this.state.selectedCuisine)[0].style.filter = "brightness(100%)";
+    }
     this.setState({ mode: "normal", selectedCuisine: null, selectedItemIds: [] });
     document.getElementsByClassName("ItemSelectButton")[0].style.background = "#7DBF1A";
     document.getElementsByClassName("ItemSelectDiv")[0].style.height = "55px";

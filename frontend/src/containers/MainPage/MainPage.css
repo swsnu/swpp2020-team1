@@ -71,10 +71,6 @@
     justify-content: center;
 }
 
-.ItemSelectButtonHeader:hover {
-    cursor: pointer;
-}
-
 .ItemSelectButtonHeader .ButtonPhrase {
     font-family: "Noto Sans KR", "Roboto", sans-serif;
     font-style: normal;
@@ -96,6 +92,10 @@
     color: #ffffff;
 }
 
+.ItemSelectButtonHeader:hover {
+    cursor: pointer;
+}
+
 .ItemSelectButtonMain {
     height: calc(100% - (100px));
 
@@ -113,6 +113,7 @@
     margin-bottom: 0;
     background-color: #373645;
 
+    position: relative;
     font-family: Roboto, sans-serif;
     font-style: normal;
     font-weight: 500;
@@ -121,6 +122,11 @@
     align-content: center;
     vertical-align: middle;
 }
+
+.ItemSelectButtonFooter:hover {
+    cursor: pointer;
+}
+
 .main_container{
     height:100vh; margin:0;
 }
