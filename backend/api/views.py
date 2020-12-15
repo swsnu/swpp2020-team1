@@ -33,6 +33,11 @@ def signup(request):
         user = get_user_model()
         user.objects.create_user(username=email, password=password, first_name=nickname)
         new_user = user.objects.get(username=email)
+        if Category.objects.all().count() == 0 or Recipe.objects.all().count() == 0:
+            initialize_category()
+            initialize_recipe()
+        if Barcode.objects.all().count() == 0:
+            initialize_barcode()
         initialize_sample(new_user)
         return HttpResponse(status=201)
     else:
@@ -79,12 +84,6 @@ def user_info(request):
     user_info:
         GET: sign in:
     '''
-    # INITIALIZING DB (TEMPORARY)
-    if Category.objects.all().count() == 0 or Recipe.objects.all().count() == 0:
-        initialize_category()
-        initialize_recipe()
-    if Barcode.objects.all().count() == 0:
-        initialize_barcode()
     if request.method == 'GET':
         if request.user.is_authenticated:
             username_dic = { 'username' : request.user.username, 'user_id': request.user.id}
