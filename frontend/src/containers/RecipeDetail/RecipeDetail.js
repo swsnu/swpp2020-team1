@@ -16,6 +16,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Rating from '@material-ui/lab/Rating';
 import { withStyles } from '@material-ui/core/styles';
+import FoodifyLogo from '../../icons/Foodify.png';
 
 const styles = {
   font: {
@@ -238,6 +239,10 @@ class RecipeDetail extends Component {
     this.props.deleteComment(comment_id)
   }
 
+  onClickTitleLogo = () => {
+    this.props.history.push('/')
+  }
+
   render() {
     const {classes} = this.props;
 
@@ -280,19 +285,17 @@ class RecipeDetail extends Component {
         <Box className={`${classes.RecipeDetail} RecipeDetail`} boxShadow={3}>
           {/* Header */}
           <Grid className={classes.headerContainer} container>
-            <Grid item container xs={2} justify="flex-start">
+            <Grid item container xs={2} justify="flex-start" alignItems="center">
               <Grid item>
                 <IconButton className={`${classes.backButton} backButton`} onClick={this.onClickBackButton}><ArrowBackIcon/></IconButton>
               </Grid>
             </Grid>
-            <Grid item container xs={8} justify="center" alignItems="center">
-              <Grid item >
-                <Typography className={`${classes.font} ${classes.headerTitleGreen}`}>Food</Typography>
-              </Grid>
+            <Grid item container xs={8} justify="center">
               <Grid item>
-                <Typography className={`${classes.font} ${classes.headerTitleBlack}`}>ify</Typography>
+                <img className="titlelogo" src={FoodifyLogo} onClick={this.onClickTitleLogo}></img>  
               </Grid>
             </Grid>
+            
             <Grid item xs={2}>
               {/* dummy to divide space into three */}
             </Grid>

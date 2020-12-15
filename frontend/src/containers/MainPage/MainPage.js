@@ -15,6 +15,7 @@ import KoreanFlag from '../../icons/korean.png'
 import JapaneseFlag from '../../icons/japanese.png'
 import ChineseFlag from '../../icons/chinese.png'
 import ItalianFlag from '../../icons/italian.png'
+import FoodifyLogo from '../../icons/Foodify.png'
 import Container from '@material-ui/core/Container';
 import BottomNavigation from '@material-ui/core/BottomNavigation';
 import { withStyles } from '@material-ui/core/styles';
@@ -303,10 +304,7 @@ class MainPage extends Component {
             <div className="btn_logout">
               <Logout/>
             </div>
-            <div>
-            <span className="titleOrange">Food</span>
-            <span className="titleBlack">ify</span>
-            </div>
+            <img className="titlelogo" src={FoodifyLogo}></img>
             <div className="btn_notification" onClick={this.onClickNotiIcon}>
               { this.state.isUnreadNotiExists ? <NotificationsActiveIcon className="btn_bell" fontSize="large" color="primary"/> : <NotiIcon className="btn_bell" fontSize="large" color="secondary"/> }
             </div>
@@ -346,13 +344,14 @@ class MainPage extends Component {
               mode={this.state.mode}/>
           </div>
 
-          <div className="ItemSelectDiv" onClick={(event)=>this.onClickItemSelectButton(event)}>
+          <div className="ItemSelectDiv" >
             <div className="ItemSelectButton">
-              <div className="ItemSelectButtonHeader">
-                {this.state.mode === "select" ?
-                  (this.state.selectedItemIds.length === 0 ?
-                    "재료를 선택해주세요" : "레시피 추천받기") :
-                    this.state.mode === "preference" ? "오늘은 무슨 음식을 먹을까?" : "재료 선택하기"}
+              <div className="ItemSelectButtonHeader" onClick={(event)=>this.onClickItemSelectButton(event)}>
+                <div className="ButtonPhrase">{this.state.mode === "select" ?
+                      (this.state.selectedItemIds.length === 0 ? "재료를 선택해주세요" : "레시피 추천받기") :
+                      (this.state.mode === "preference" ? "오늘은 무슨 음식을 먹을까?" : "재료 선택하기")}</div>
+                {this.state.mode === "preference" ?
+                  <div className="QuitButton" onClick={this.switchToNormalMode}>X</div> : null}
               </div>
               <div className="ItemSelectButtonMain">
                 <img className="btn_preference Korean"
@@ -376,6 +375,7 @@ class MainPage extends Component {
                 onClick={this.onClickRecipeButton}>검색</div>
             </div>
           </div>
+
           <Dialog open={this.state.openDialog} fullScreen={true}>
             <div>
               <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>

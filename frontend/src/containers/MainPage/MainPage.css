@@ -7,29 +7,21 @@
     height: 100%;
 }
 
-.MainPage .title {
+.title {
     left: 0px;
     top: 8px;
+    height: 48px;
     width: 100%;
-    font-family: "Source Code Pro", sans-serif;
-    font-style: normal;
-    font-weight: 900;
-    font-size: 36px;
-    line-height: 45px;
-    text-align: center;
     
     display:flex;
+    flex-direction: row;
+    align-items: center;
     justify-content:space-between;
 }
 
-.MainPage .title .titleOrange {
-    color: #7DBF1A;
-    display: inline-block;
-}
-
-.MainPage .title .titleBlack {
-    color: #000000;
-    display: inline-block;
+.titlelogo {
+    height: fit-content;
+    width: auto;
 }
 
 .MainPage .content {
@@ -70,36 +62,53 @@
     overflow: hidden;
 }
 
-.ItemSelectButton:hover {
+.ItemSelectButtonHeader {
+    max-width:inherit;
+    height: 50px;
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    justify-content: center;
+}
+
+.ItemSelectButtonHeader:hover {
     cursor: pointer;
 }
 
-.ItemSelectButtonHeader {
+.ItemSelectButtonHeader .ButtonPhrase {
     font-family: "Noto Sans KR", "Roboto", sans-serif;
     font-style: normal;
     font-weight: 500;
     font-size: 18px;
-    max-width:inherit;
     text-align: center;
     letter-spacing: 0.25px;
     color: #FFFFFF;
+}
 
-    height: 50px;
+.ItemSelectButtonHeader .QuitButton {
+    position: absolute;
+    right: 0px;
+    width: 10%;
+    height: 48px;
+
+    font-family: "Noto Sans KR", sans-serif;
+    line-height: 48px;
+    color: #ffffff;
 }
 
 .ItemSelectButtonMain {
     height: calc(100% - (100px));
 
     display: flex;
+    z-index: 50;
     flex-direction: row;
     justify-content: center;
 }
 
 .ItemSelectButtonFooter {
     height: 50px;
-
-    z-index: 15;
     width: inherit;
+    z-index: 60;
     
     margin-bottom: 0;
     background-color: #373645;
