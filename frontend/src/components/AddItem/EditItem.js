@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from "react";
 
 // material-ui components
-import { TextField, MenuItem, Select, Checkbox } from '@material-ui/core';
+import { TextField, MenuItem, Select, Checkbox, CircularProgress } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { KeyboardDatePicker, MuiPickersUtilsProvider} from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
@@ -61,7 +61,6 @@ class EditItem extends Component {
 
   componentDidMount() {
     const info = this.props.item;
-    //this.checkValidity(info.name, info.expiration_date);
 
     if (info.expiration_date == null) {
       this.setState({disableExpirationField: true})
@@ -106,7 +105,9 @@ class EditItem extends Component {
   }
 
   checkValidity = (name, expiration_date) => {
-    if (name === '' || (!this.state.disableExpirationField && (expiration_date === null || expiration_date == 'Invalid Date'))) {
+    if ((name === '') || 
+        (this.props.expiration_date_loading) ||
+        (!this.state.disableExpirationField && (expiration_date === null || expiration_date == 'Invalid Date'))) {
       return false;
     } else {
       return true;
@@ -160,6 +161,7 @@ class EditItem extends Component {
                   null}
               </td>
             </tr>
+            { this.props.expiration_date_loading ? (<tr><td colspan="4" className="loading"><center><CircularProgress size={20}/></center></td></tr>) : (
             <tr>
               <td className="tableContentName">유통기한</td>
               <td className="tableContent">
@@ -189,7 +191,7 @@ class EditItem extends Component {
                   <div className="retakeButton" onClick={this.props.onClickRetakeExpirationDate}>다시</div> :
                   null}
               </td>
-            </tr>
+            </tr> )}
             <tr>
               <td className="tableContentName">항목</td>
               <td className="tableContent">
