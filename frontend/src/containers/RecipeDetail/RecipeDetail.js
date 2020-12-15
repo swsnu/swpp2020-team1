@@ -49,7 +49,8 @@ const styles = {
     color: '#000000',
   },
   backButton: {
-    paddingBottom: 3,
+    paddingTop: 0,
+    paddingBottom: 6,
   },
 
   recipeTitle: {
