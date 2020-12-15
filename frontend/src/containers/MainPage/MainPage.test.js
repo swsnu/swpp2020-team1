@@ -248,8 +248,8 @@ describe('<MainPage />', () => {
     const component =  mount(mockNormalMainPage);
     const mainPageInstance = component.find(MainPage.WrappedComponent).instance();
   
-    const itemSelectDiv = component.find('.ItemSelectDiv');
-    itemSelectDiv.simulate('click')
+    const itemSelectButtonHeader = component.find('.ItemSelectButtonHeader');
+    itemSelectButtonHeader.simulate('click')
     expect(mainPageInstance.state["mode"]).toEqual("select")
     expect(spyGetElementsByClassName).toHaveBeenCalled();
   });
@@ -272,8 +272,8 @@ describe('<MainPage />', () => {
     const component =  mount(mockNormalMainPage);
     const mainPageInstance = component.find(MainPage.WrappedComponent).instance();
   
-    const itemSelectDiv = component.find('.ItemSelectDiv');
-    itemSelectDiv.simulate('click')
+    const itemSelectButtonHeader = component.find('.ItemSelectButtonHeader');
+    itemSelectButtonHeader.simulate('click')
     expect(mainPageInstance.state["selectedCuisine"]).toEqual(null)
   });
 
@@ -295,8 +295,8 @@ describe('<MainPage />', () => {
       </Provider>
     );
     const component =  mount(mockNormalMainPage);
-    const itemSelectDiv = component.find('.ItemSelectDiv');
-    itemSelectDiv.simulate('click')
+    const itemSelectButtonHeader = component.find('.ItemSelectButtonHeader');
+    itemSelectButtonHeader.simulate('click')
     expect(spyGetElementsByClassName).toHaveBeenCalled();
   });
 
