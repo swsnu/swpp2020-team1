@@ -177,6 +177,7 @@ class SignUp extends Component {
                   variant="outlined"
                   required
                   fullWidth
+                  autoFocus
                   id="email"
                   label="Email Address"
                   name="email"
@@ -223,7 +224,6 @@ class SignUp extends Component {
                   fullWidth
                   id="name"
                   label="Nickname"
-                  autoFocus
                   onChange={(event) => this.setState({ nickname_input: event.target.value })}
                 />
               </Grid>
