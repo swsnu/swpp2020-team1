@@ -214,3 +214,26 @@
 
     color: #818181;
 }
+
+.NotiFade {
+    position: absolute;
+
+    left: 50%;
+    transform: translate(-50%, 0%);
+    width:inherit;
+    max-width:inherit;
+    height: 100vh;
+
+    top: 0px;
+    z-index: 1300;
+}
+
+.NotiListWrapper {
+    position: relative;
+    overflow: scroll;
+}
+
+.NotiList {
+    height: calc(100% - 35px);
+    overflow: scroll;
+}

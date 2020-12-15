@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import ItemContainer from '../ItemContainer/ItemContainer';
 import * as actionCreators from '../../store/actions/index';
 import * as userActionCreators from '../../store/actions/user';
-import { Dialog, List, Typography, Button } from '@material-ui/core';
+import { Button, Card, Fade } from '@material-ui/core';
 import NotiIcon from '@material-ui/icons/Notifications';
 import ArrowBack from '@material-ui/icons/ArrowBack'
 import Circle from '@material-ui/icons/Brightness1'
@@ -29,8 +29,6 @@ import MenuIcon from '@material-ui/icons/Menu';
 
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
-
-
 
 const theme = createMuiTheme({
   palette: {
@@ -378,24 +376,25 @@ class MainPage extends Component {
                 onClick={this.onClickRecipeButton}>검색</div>
             </div>
           </div>
-
-          <Dialog open={this.state.openDialog} fullScreen={true}>
-            <div>
-              <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-                <Button style={{paddingBottom: 5}} onClick={() => { this.setState({ openDialog: false }) }}>
-                  <ArrowBack/>
-                </Button>
-                <div className="NotiHeader">Notifications</div>
+          <Fade className="NotiFade" in={this.state.openDialog}>
+            <div className="NotiListWrapper">
+              <div>
+                <div style={{backgroundColor: '#F4F4F4', display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+                  <Button style={{paddingBottom: 5}} onClick={() => { this.setState({ openDialog: false }) }}>
+                    <ArrowBack/>
+                  </Button>
+                  <div className="NotiHeader">Notifications</div>
+                </div>
+              </div>
+              <div className="NotiList">
+                <Card>
+                  {this.state.notifications.map(noti => (
+                    <NotiCard width='100%' key={noti.id} noti={noti} onRead={this.onReadNotification}/>
+                  ))}
+                </Card>
               </div>
             </div>
-            <div>
-              <List>
-                {this.state.notifications.map(noti => (
-                  <NotiCard key={noti.id} noti={noti} onRead={this.onReadNotification}/>
-                ))}
-              </List>
-            </div>
-          </Dialog>
+          </Fade>
           </Container>
         </div>
         </MuiThemeProvider>
