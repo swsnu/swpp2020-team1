@@ -120,8 +120,8 @@ describe('<NotiCard />', () => {
     const component = shallow(
       <NotiCard 
         noti={noti}/>);
-    const wrapper = component.find('.NotiCardBtn');
-    expect(wrapper.length).toBe(1);
+    const wrapper = component.find('.NotiListItem');
+    expect(wrapper.length).toBe(0);
   })
 
   it('should handle click on NotiCard', () => {
@@ -132,7 +132,7 @@ describe('<NotiCard />', () => {
       <NotiCard
         noti={noti}
         onRead={onReadMock}/>);
-    const wrapper = component.find('.NotiCardBtn');
+    const wrapper = component.find('.NotiListItem');
     expect(wrapper.length).toBe(1);
     wrapper.simulate('click')
     expect(onReadMock).toHaveBeenCalledTimes(1)

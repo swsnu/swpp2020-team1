@@ -220,12 +220,11 @@
 
     left: 50%;
     transform: translate(-50%, 0%);
-    width:inherit;
-    max-width:inherit;
+    width: inherit;
+    max-width: inherit;
     height: 100vh;
-
     top: 0px;
-    z-index: 1300;
+    z-index: 1000;
 }
 
 .NotiListWrapper {
@@ -235,5 +234,34 @@
 
 .NotiList {
     height: calc(100% - 35px);
+    background-color: #f4f4f4;
     overflow: scroll;
+}
+
+.LoadingDialog {
+    position: absolute;
+
+    left: 50%;
+    transform: translate(-50%, 0%);
+    width: inherit;
+    max-width:inherit;
+    height: 100vh;
+    background-color: #000000;
+    opacity: 0.6;
+    top: 0px;
+    z-index: 1300; 
+}
+
+.Circular {
+    position: absolute;
+    left: 47%;
+    top: 44%;
+}
+
+.NotificationEmpty {
+    color: #343434;
+    background-color: #f4f4f4;
+    margin-top: 15px;
+    font-size: 15px;
+    font-family: "Noto Sans KR", sans-serif;
 }
