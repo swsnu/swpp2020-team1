@@ -101,11 +101,11 @@
 }
 
 .NoItem {
-    font-family: Roboto, sans-serif;
+    font-family: "Noto Sans KR", sans-serif;
     font-style: normal;
     font-weight: bold;
     font-size: 13px;
     line-height: 24px;
-    color: black;
+    color: #818181;
     width: max-content;
 }
