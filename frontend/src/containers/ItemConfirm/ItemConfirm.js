@@ -54,14 +54,12 @@ class ItemConfirm extends Component {
 
   state = {
     currentItem: this.defaultItem,
-    editDialogOpen: false,
     editingItemIdx: -1,
     editingItem: null
   }
 
   onClickEditItemButton = (id) => {
     this.setState({ 
-      addResultOpen: true, 
       editingItemIdx: id, 
       editingItem: this.props.resultList[id] 
     });
@@ -124,7 +122,7 @@ class ItemConfirm extends Component {
   }
 
   componentDidMount() {
-    document.getElementsByClassName("Result")[0].style.top = "-25px";
+    //document.getElementsByClassName("Result")[0].style.top = "-25px";
   }
 
   render() {
