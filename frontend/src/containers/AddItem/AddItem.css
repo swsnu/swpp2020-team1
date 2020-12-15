@@ -10,7 +10,7 @@
 .AddItem .StatusTerm {
     position: absolute;
     z-index: 5;
-    top: 25%;
+    top: calc(45% - min(80vw, 400px)/2);
     left: 0%;
     width: 100%;
     align-self: center;
