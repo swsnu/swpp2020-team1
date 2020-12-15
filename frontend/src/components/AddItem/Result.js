@@ -4,7 +4,6 @@ import EditItem from './EditItem';
 
 class Result extends Component {
   render() {
-    const result = this.props.result
     return (
       <div className="Result">
         <div className="Header"></div>

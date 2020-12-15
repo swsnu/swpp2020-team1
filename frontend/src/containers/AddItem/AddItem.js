@@ -21,7 +21,7 @@ import Tab from '@material-ui/core/Tab';
 import ExpireImage from '../../icons/expire.png';
 import BarcodeImage from '../../icons/barcode.png';
 import ConfirmImage from '../../icons/confirm.png';
-
+import PhotoCamera from '@material-ui/icons/PhotoCamera';
 
 
 const BARCODE_TERM = '바코드를 스캔해주세요'
@@ -300,6 +300,33 @@ class AddItem extends Component {
     this.props.history.push('/item/confirm');
   }
 
+  onClickSkipButton = () => {
+    if(this.state.isBarcodeScanning) {
+      this.setState({
+        isBarcodeScanning: false,
+        isResultVisible: true,
+        isRetaking: false,
+        currentItem: {
+          ...this.state.currentItem,
+          name: '',
+          category_id: 0,
+          category_name: '기타',
+          barcode_num: ''
+        }
+      })
+    } else {
+      this.setState({
+        isBarcodeScanning: true,
+        isResultVisible: (this.state.isRetaking ? true : false),
+        isRetaking: false,
+        currentItem: {
+          ...this.state.currentItem,
+          expiration_date: null
+        }
+      })
+    }
+  }
+
   componentDidMount = () => {
     const containerDefault = (this.props.location.state ? this.props.location.state.container : this.containers[0])
     this.setState({
@@ -334,12 +361,31 @@ class AddItem extends Component {
   
     return (
       <div className="AddItem" style={{overflowX: "hidden", overflowY: "hidden"}}>
-        <Scanner id="Scanner" onDetected={this._onDetected} onCapture={this.handleOCR} barcode={this.state.isBarcodeScanning} ref="Scanner"/> 
-        <div className="StatusTerm">{ this.state.isRetaking ? "Retaking" : (this.state.isBarcodeScanning ? BARCODE_TERM : EXPIRATION_TERM) }</div>
+        <Scanner id="Scanner" onDetected={this._onDetected} ref="Scanner"/>
+
+        <div className="StatusTerm">
+          { this.state.isRetaking ? "Retaking" : (this.state.isBarcodeScanning ? BARCODE_TERM : EXPIRATION_TERM) }
+        </div>
+
+        <div className="BarcodeLine">
+          { this.state.isBarcodeScanning === true ? 
+            <hr style={{border: "solid 1px red", width: "350px"}} /> : 
+            null }
+        </div>
+        
+        <div className="SkipAndCaptureButton">
+          <div id='onClickCaptureButton' className="Button" style={{width: "80px"}} onClick={this.onClickSkipButton} >스킵</div>
+          { this.state.isBarcodeScanning === false ? 
+            <div id='onClickCaptureButton' className="Button" style={{width: "180px"}} onClick={this.handleOCR} ><PhotoCamera /><span style={{marginLeft: "10px"}}>촬영</span></div> : 
+            null }
+        </div>
+        
         <div className="Footer">
           <IconButton className={`${classes.helpButton}`} onClick={this.onClickHelpButton}><HelpSharpIcon fontSize="large"/></IconButton>
           <div id='onClickMoveToConfirmButton' className="ConfirmButton" onClick={this.onClickMoveToConfirmButton} >목록 보기</div>
+          
         </div>
+        
         <Dialog open={this.state.isResultVisible} classes={{paper: classes.newPaper}}>
           <Result isAddItem={true} onClickRetakeBarcode={this.onClickRetakeBarcodeButton}
                   onClickRetakeExpirationDate={this.onClickRetakeExpirationDateButton}
@@ -348,19 +394,19 @@ class AddItem extends Component {
                   item={this.state.currentItem}
                   expiration_date_loading={this.state.expiration_date_loading} />
         </Dialog>
+        
         <Dialog open={this.state.help} fullWidth>
-            <Button className={classes.xButton} onClick={this.onClickCardOff}>X</Button>
-            <Tabs
-              indicatorColor="primary"
-              textColor="primary"
-              centered
-            >
-              <Tab label="유통기한 스캔" onClick={this.helpExpire}/>
-              <Tab label="바코드 스캔" onClick={this.helpBarcode}/>
-              <Tab label="목록 보기" onClick={this.helpList}/>
-            </Tabs>
-            <img src = {this.state.helpImage} width="100%"/>
-          </Dialog>
+          <Button className={classes.xButton} onClick={this.onClickCardOff}>X</Button>
+          <Tabs
+            indicatorColor="primary"
+            textColor="primary"
+            centered >
+            <Tab label="유통기한 스캔" onClick={this.helpExpire}/>
+            <Tab label="바코드 스캔" onClick={this.helpBarcode}/>
+            <Tab label="목록 보기" onClick={this.helpList}/>
+          </Tabs>
+          <img src = {this.state.helpImage} width="100%"/>
+        </Dialog>
       </div>
     );
   }

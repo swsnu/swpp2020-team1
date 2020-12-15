@@ -8,6 +8,7 @@ import Container from '@material-ui/core/Container';
 import { withStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
+import FoodifyLogo from '../../icons/Foodify.png';
 
 const styles = (theme) => ({
   root: {
@@ -52,6 +53,10 @@ class RecipeRecommend extends Component {
     this.props.history.goBack()
   }
 
+  onClickTitleLogo = () => {
+    this.props.history.push('/')
+  }
+
   componentWillUnmount() {
     window.removeEventListener("resize", this.resize.bind(this));
   }
@@ -87,12 +92,11 @@ class RecipeRecommend extends Component {
     return (
         <div className="RecipeRecommend">
           <Container component="main" maxWidth="md" className="main_container">
-          <div className="title">
+          <div className="titleRecommend">
             <div className="btn_back" onClick={this.onClickBackButton}>
               <IconButton className="btn_arrow"><ArrowBackIcon/></IconButton>
             </div>
-            <div className="titleOrange">Food</div>
-            <div className="titleBlack">ify</div>
+            <img className="titlelogo" src={FoodifyLogo} onClick={this.onClickTitleLogo}></img>
           </div>
           { this.props && this.props.searchResults[0] && this.props.searchResults[0].num_ingredients === 0 ?
             <div className='NoSearchResults'>검색 결과가 부족하여 인기순으로 표시됩니다.</div> : null }

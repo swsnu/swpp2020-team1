@@ -85,12 +85,12 @@ const Item = props => {
   return (
     <Card style={props.mode === "Selected" ? {backgroundColor: "#7DBF1A"} : {backgroundColor: "#FFFFFF"}} className={`${classes.root} ${props.mode === "normal" ? 'Item' : 'Item Select'}`} onClick={props.mode === "normal" ? () => onClickCard(props.itemcounts) : () => onClickSelectCard(props.id)}>
       <div className='ItemContents'>
-        <div className={`"item-title" ${classes.title}`}>{props.name}</div>
+        <div className={`item-title ${classes.title}`}>{props.name}</div>
         <div key={itemFastestExpDate.id} className="item">
-          <div className={`${classes.expire} "expiration_date"`}>
+          <div className={`${classes.expire} expiration_date`}>
             {itemFastestExpDate.expiration_date === '2099/12/31' ? null : itemFastestExpDate.expiration_date }
           </div>
-          <div className={`"count" ${classes.countBlock}`}>
+          <div className={`count ${classes.countBlock}`}>
             <IconButton className={`btn_remove_item ${classes.countButton}`} onClick={(event) => props.onRemoveItem(event, itemFastestExpDate.id, itemFastestExpDate.count)}><RemoveCircleIcon/></IconButton>
             {itemFastestExpDate.count}
             <IconButton className={`btn_remove_item ${classes.countButton}`} onClick={(event) => props.onAddItem(event, itemFastestExpDate.id, itemFastestExpDate.count)}><AddCircleIcon/></IconButton>

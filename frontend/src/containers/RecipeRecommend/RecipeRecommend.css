@@ -38,17 +38,16 @@
     object-fit: cover;
 }
 
-.title {
+.titleRecommend {
     left: 0px;
     top: 8px;
+    height: 48px;
     width: 100%;
-    font-family: "Source Code Pro", sans-serif;
-    font-style: normal;
-    font-weight: 900;
-    font-size: 36px;
-    line-height: 45px;
-    text-align: center;
-    padding-bottom: 10px;
+    
+    display:flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
 }
 
 .title .titleOrange {

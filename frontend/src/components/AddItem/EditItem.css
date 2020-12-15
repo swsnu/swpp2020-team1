@@ -69,6 +69,11 @@
     line-height: 20px;
 }
 
+.retakeButton:hover {
+    cursor: pointer;
+    background-color: #f4f4f4;
+}
+
 .tableItemCard {
     margin-right: 28px;
 
