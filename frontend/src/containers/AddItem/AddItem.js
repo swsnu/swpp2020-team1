@@ -63,6 +63,7 @@ class AddItem extends Component {
     isBarcodeScanning: false,
     isResultVisible: false,
     isRetaking: false,
+    expiration_date_loading: true,
     defaultItem: this.defaultItem,
     currentItem: this.defaultItem,
     help: false,
@@ -81,12 +82,14 @@ class AddItem extends Component {
     if(ymd === 'error') {
       this.setState({
         OCRResult: ymd, 
-        currentItem: { ...this.state.currentItem, expiration_date: new Date(Date.now()) }
+        currentItem: { ...this.state.currentItem, expiration_date: new Date(Date.now()) },
+        expiration_date_loading: false,
       })
     } else {
       this.setState((prevState, props) => ({
         OCRResult: ymd,
-        currentItem: {...this.state.currentItem, expiration_date: ymd}
+        currentItem: {...this.state.currentItem, expiration_date: ymd},
+        expiration_date_loading: false,
       }))
     }
   }
@@ -103,7 +106,7 @@ class AddItem extends Component {
     this.setState({ OCRResult: e.target.value });
   }
 
-  getExpirationDateFromImage = (e, callback) => {
+  getExpirationDateFromImage = (e, success_callback, fail_callback) => {
     e.preventDefault();
     let file =this.state.imageFile;
     var text = "";
@@ -114,7 +117,6 @@ class AddItem extends Component {
 
     var data = new FormData();
     data.append('file', file);
-
     var xhr = new XMLHttpRequest();
     xhr.addEventListener("readystatechange", function () {
       if (this.readyState === this.DONE) {
@@ -123,7 +125,9 @@ class AddItem extends Component {
           var jsonResponse = JSON.parse(this.responseText);
           if(jsonResponse["result"][0].prediction[0]){
             text = jsonResponse["result"][0].prediction[0].ocr_text; 
-            callback(text)
+            success_callback(text);
+          } else {
+            fail_callback();
           }
         }
       }
@@ -135,6 +139,7 @@ class AddItem extends Component {
 
   handleOCR = async (e) => {
     if(!this.state.isRetaking && this.state.isResultVisible) {
+      // ???
       this.setState((prevState, props) => ({
         screenShot: null,
         imageFile: null
@@ -154,9 +159,13 @@ class AddItem extends Component {
       imageFile: imageFile,
       isBarcodeScanning: (this.state.isRetaking ? false : true),
       isResultVisible: (this.state.isRetaking ? true : false),
-      isRetaking: false
+      isRetaking: false,
+      expiration_date_loading: true,
     }))
-    this.getExpirationDateFromImage(e, data => this.handleDetect(data));
+    this.getExpirationDateFromImage(
+      e, 
+      data => this.handleDetect(data),
+      () => this.setState({expiration_date_loading: false}));
   }
 
   _onDetected = async (result) => {
@@ -382,7 +391,8 @@ class AddItem extends Component {
                   onClickRetakeExpirationDate={this.onClickRetakeExpirationDateButton}
                   onClickFinishEditItem={this.onClickFinishEditItemButton}
                   onChangeEditItem={this.onChangeEditItemValue}
-                  item={this.state.currentItem} />
+                  item={this.state.currentItem}
+                  expiration_date_loading={this.state.expiration_date_loading} />
         </Dialog>
         
         <Dialog open={this.state.help} fullWidth>

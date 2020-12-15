@@ -12,7 +12,8 @@ class Result extends Component {
           onClickRetakeExpirationDate={this.props.onClickRetakeExpirationDate}
           onClickFinishEditItem={this.props.onClickFinishEditItem}
           onChangeEditItem={this.props.onChangeEditItem}
-          item={this.props.item} />
+          item={this.props.item}
+          expiration_date_loading={this.props.expiration_date_loading} />
         <div display="flex" flex-direction="row">
         </div>
       </div>
