@@ -47,7 +47,7 @@ const stubInitialState = {
         "num_ingredients": 1
       },
       {
-        "id": 113,
+        "id": 114,
         "title": "우리집이 휴게소 '소떡어떡'",
         "description": "description2",
         "video_url": "https://www.youtube.com/watch?v=OSYQHa-vbVU",

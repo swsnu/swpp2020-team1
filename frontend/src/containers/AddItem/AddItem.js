@@ -36,8 +36,8 @@ const styles = {
     color: "#7DBF1A",
   },
   xButton:{
-    marginTop: 12,
-    marginBottom: 12, 
+    marginTop: 0,
+    marginBottom: 0, 
   }
 }
 
@@ -68,6 +68,7 @@ class AddItem extends Component {
     currentItem: this.defaultItem,
     help: false,
     helpImage: ExpireImage, 
+    tabValue: 0
   }
 
   // Used to activate webcam
@@ -343,18 +344,32 @@ class AddItem extends Component {
   }
   helpExpire = () => {
     this.setState(
-     { helpImage : ExpireImage }
+     { helpImage : ExpireImage,
+       tabValue: 0 }
     )
   }
   helpBarcode = () => {
     this.setState(
-     { helpImage : BarcodeImage }
+     { helpImage : BarcodeImage,
+       tabValue: 1 }
     )
   }
   helpList = () => {
     this.setState(
-     { helpImage : ConfirmImage }
+     { helpImage : ConfirmImage,
+       tabValue: 2 }
     )
+  }
+
+  a11yProps = (index) => {
+    return {
+      id: `simple-tab-${index}`,
+      'aria-controls': `simple-tabpanel-${index}`,
+    };
+  }
+
+  handleTabValueChange = (event, newValue) => {
+    this.setState({ tabValue: newValue });
   }
 
   render() {
@@ -399,14 +414,17 @@ class AddItem extends Component {
         <Dialog open={this.state.help} fullWidth>
           <Button className={classes.xButton} onClick={this.onClickCardOff}>X</Button>
           <Tabs
+            value={this.state.tabValue}
             indicatorColor="primary"
             textColor="primary"
             centered >
-            <Tab label="유통기한 스캔" onClick={this.helpExpire}/>
-            <Tab label="바코드 스캔" onClick={this.helpBarcode}/>
-            <Tab label="목록 보기" onClick={this.helpList}/>
+            <Tab label="유통기한 스캔" onClick={this.helpExpire} {...this.a11yProps(0)}/>
+            <Tab label="바코드 스캔" onClick={this.helpBarcode} {...this.a11yProps(1)}/>
+            <Tab label="목록 보기" onClick={this.helpList} {...this.a11yProps(2)}/>
           </Tabs>
-          <img src = {this.state.helpImage} width="100%"/>
+          <div style={{height: "400px", display: "flex", justifyContent: "center"}}>
+            <img src={this.state.helpImage} style={{width:"auto", height:"100%"}} /> 
+          </div>
         </Dialog>
       </div>
     );

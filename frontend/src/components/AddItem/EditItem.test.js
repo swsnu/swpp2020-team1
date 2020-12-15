@@ -120,7 +120,7 @@ describe('<EditItem />', () => {
     wrapper2.simulate('click')
     expect(mockonChangeEditItem.mock.calls[mockonChangeEditItem.mock.calls.length - 1][0].count).toEqual(5);
 
-    let wrapper3 = component.find("#FinishEditButton")
+    let wrapper3 = component.find("#FinishEditButton").find('button')
     wrapper3.simulate('click')
     expect(onClickFinishEditItem).toHaveBeenCalledTimes(1)
   })

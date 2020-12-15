@@ -70,8 +70,8 @@ class RecipeRecommend extends Component {
       return (
 
         // className="recipe_detail" button key={recipe.id} onClick={() => this.goToRecipeDetail(recipe.id)}
-        <Card className={classes.root}
-              button key={recipe.id} 
+        <Card className={`recipe_detail ${classes.root}`}
+              button="true" key={recipe.id} 
               onClick={() => this.goToRecipeDetail(recipe.id)}>
         <CardActionArea>
         <ListItem >

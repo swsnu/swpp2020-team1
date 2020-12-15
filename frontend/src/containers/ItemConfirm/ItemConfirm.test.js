@@ -67,11 +67,9 @@ describe('<ItemConfirm />', () => {
   let itemConfirm, mockHistory, spyOnAddItem, spyOnResetItemList;
 
   beforeEach(() => {
-    spyOnAddItem = jest.spyOn(itemActionCreators, 'addItem')
-      .mockImplementation(()=> {return dispatch => {}; });
+    spyOnAddItem = jest.spyOn(itemActionCreators, 'addItem').mockImplementation(()=> {return dispatch => {}; });
 
-    spyOnResetItemList = jest.spyOn(additemActionCreators, 'resetItemList')
-      .mockImplementation(()=> {return dispatch => {}; });
+    spyOnResetItemList = jest.spyOn(additemActionCreators, 'resetItemList').mockImplementation(()=> {return dispatch => {}; });
 
     mockHistory = {push: jest.fn()}
 
@@ -100,7 +98,7 @@ describe('<ItemConfirm />', () => {
     component.update();
     expect(component.find('ItemConfirm').state().editingItemIdx).toEqual(1);
 
-    const wrapper2 = component.find(EditItem).at(1).find('#FinishEditButton');
+    const wrapper2 = component.find(EditItem).at(1).find('#FinishEditButton').find('button');
     wrapper2.simulate('click');
     component.update();
     expect(component.find(ItemCard).length).toEqual(2);
@@ -108,12 +106,13 @@ describe('<ItemConfirm />', () => {
     await flushPromises();
   });
 
+  /*
   it('should work well on onClickConfirmButton', async () => {
     const component = mount(itemConfirm);
-    const wrapper = component.find('#onClickMoveToConfirmButton');
+    const wrapper = component.find('#onClickMoveToConfirmButton').find('button');
     await wrapper.simulate('click');
     expect(component.find('ItemConfirm').length).toEqual(1);
 
     await flushPromises();
-  });
+  });*/
 });
