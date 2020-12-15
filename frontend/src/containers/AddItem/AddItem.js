@@ -322,7 +322,8 @@ class AddItem extends Component {
         currentItem: {
           ...this.state.currentItem,
           expiration_date: null
-        }
+        },
+        expiration_date_loading: false,
       })
     }
   }
