@@ -74,7 +74,7 @@
     position: absolute;
     left: 50%;
     transform: translate(-50%, 0%);
-
+    
     width:inherit;
     max-width:inherit;
     height: 55px;
@@ -86,7 +86,7 @@
 }
 
 #dummy{
-    height: 60px
+    height: 90px
 }
 
 .ItemSelectButton {
@@ -123,6 +123,7 @@
     letter-spacing: 0.25px;
     color: #FFFFFF;
 }
+
 
 .ItemSelectButtonHeader .QuitButton {
     position: absolute;

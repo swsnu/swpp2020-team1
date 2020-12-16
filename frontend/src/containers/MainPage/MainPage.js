@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import { connect } from 'react-redux';
 import ItemContainer from '../ItemContainer/ItemContainer';
 import * as actionCreators from '../../store/actions/index';
@@ -17,7 +17,6 @@ import ChineseFlag from '../../icons/chinese.png'
 import ItalianFlag from '../../icons/italian.png'
 import FoodifyLogo from '../../icons/Foodify.png'
 import Container from '@material-ui/core/Container';
-import BottomNavigation from '@material-ui/core/BottomNavigation';
 import { withStyles } from '@material-ui/core/styles';
 import {withRouter} from 'react-router';
 
@@ -27,9 +26,25 @@ import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import HelpSharpIcon from '@material-ui/icons/HelpSharp';
+import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
+import FavoriteIcon from '@material-ui/icons/Favorite';
+
+import BottomNavigation from '@material-ui/core/BottomNavigation';
+import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
+import Tooltip from '@material-ui/core/Tooltip';
+import AddIcon from '@material-ui/icons/Add';
+import Fab from '@material-ui/core/Fab';
+import Slide from '@material-ui/core/Slide';
+
+import AlarmOnTwoToneIcon from '@material-ui/icons/AlarmOnTwoTone';
+import ThumbUpIcon from '@material-ui/icons/ThumbUp';
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 const theme = createMuiTheme({
   palette: {
@@ -45,6 +60,22 @@ const theme = createMuiTheme({
   },
 });
 
+const styles = (theme) => ({
+  root: {
+    width: '100%',
+  },
+  nav: {
+    height: 55,
+  },
+  fab: {
+    // margin: theme.spacing(2),
+  },
+  absolute: {
+    position: 'absolute',
+    bottom: theme.spacing(3),
+    right: theme.spacing(3),
+  },
+})
 
 class MainPage extends Component {
 
@@ -67,6 +98,7 @@ class MainPage extends Component {
     isLoading: true,
     tutorial: false,
     help: false,
+    recipe: false
   }
 
   // temporary
@@ -109,6 +141,10 @@ class MainPage extends Component {
     let currentHeight = window.innerHeight;
     let currentWidth = window.innerWidth;
     this.setState({currentHeight, currentWidth});
+  }
+
+  onClickAddItemButton = () => {
+    this.props.history.push('/item/add', {container: 'fridge'});
   }
 
   componentWillUnmount() {
@@ -209,6 +245,9 @@ class MainPage extends Component {
   }
 
   switchToNormalMode = () => {
+    this.setState({
+      recipe: false
+    })
     for (let cuisine of Object.keys(this.state.selectedCuisine)) {
       document.getElementsByClassName(cuisine)[0].style.filter = "brightness(100%)";
     }
@@ -293,9 +332,6 @@ class MainPage extends Component {
   }
 
   onClickSelectPreference = (cuisine) => {
-    // for (let cuisine of this.state.selectedCuisineList) {
-    // 
-    // }
     if (this.state.selectedCuisine[cuisine]) { // cuisine already chosen 
       this.setState({selectedCuisine: {...this.state.selectedCuisine, [cuisine]: false}});
       document.getElementsByClassName(cuisine)[0].style.filter = "brightness(100%)";
@@ -308,18 +344,10 @@ class MainPage extends Component {
   onClickHelpButton = () => {
     this.setState({help: true})
   }
-  
-  // classes = {
-  //   root: {
-  //     flexGrow: 1,
-  //   },
-  //   menuButton: {
-  //     // marginRight: theme.spacing(2),
-  //   },
-  //   title: {
-  //     flexGrow: 1,
-  //   },
-  // }
+
+  onClickRecipeNav = () => {
+    this.setState({recipe : true});
+  }
 
   render() {
 
@@ -334,6 +362,8 @@ class MainPage extends Component {
     const shelfItems = items.filter(i => i.container === 'shelf')
 
     const clickedStyle = { background:'#c4c4c4' } 
+    const { classes } = this.props;
+
 
     return (
       <MuiThemeProvider theme={theme}>
@@ -381,37 +411,53 @@ class MainPage extends Component {
               <div id="dummy"></div>
             </div>
             <div className="ItemSelectDiv" >
-              <div className="ItemSelectButton">
-                <div className="ItemSelectButtonHeader" onClick={(event)=>this.onClickItemSelectButton(event)}>
-                  <div className="ButtonPhrase">{this.state.mode === "select" ?
-                        (this.state.selectedItemIds.length === 0 ? "재료를 선택해주세요" : "레시피 추천받기") :
-                        (this.state.mode === "preference" ? "오늘은 무슨 음식을 먹을까?" : "재료 선택하기")}</div>
-                  {this.state.mode === "preference" ?
-                    <div className="QuitButton" onClick={this.switchToNormalMode}>X</div> : null}
-                </div>
-                <div className="ItemSelectButtonMain">
-                  <img className="btn_preference Korean"
-                    src={KoreanFlag}
-                    onClick={() => this.onClickSelectPreference("Korean")}>
-                  </img>
-                  <img className="btn_preference Japanese"
-                    src={JapaneseFlag}
-                    onClick={() => this.onClickSelectPreference("Japanese")}>
-                  </img>
-                  <img className="btn_preference Chinese"
-                    src={ChineseFlag}
-                    onClick={() => this.onClickSelectPreference("Chinese")}>
-                  </img>
-                  <img className="btn_preference Western"
-                    src={ItalianFlag}
-                    onClick={() => this.onClickSelectPreference("Western")}>
-                  </img>
-                </div>
-                <div className="ItemSelectButtonFooter"
-                  onClick={this.onClickRecipeButton}>검색</div>
-              </div>
+                {this.state.recipe ? 
+                  <div className="ItemSelectButton">
+                    <div className="ItemSelectButtonHeader" onClick={(event)=>this.onClickItemSelectButton(event)}>
+                      <div className="ButtonPhrase">{this.state.mode === "select" ?
+                            (this.state.selectedItemIds.length === 0 ? "재료를 선택해주세요" : "레시피 추천받기") :
+                            (this.state.mode === "preference" ? "오늘은 무슨 음식을 먹을까?" : "재료 선택하기")}</div>
+                      {this.state.mode === "preference" ?
+                        <div className="QuitButton" onClick={this.switchToNormalMode}>X</div> : null}
+                      </div>
+                    <div className="ItemSelectButtonMain">
+                      <img className="btn_preference Korean"
+                        src={KoreanFlag}
+                        onClick={() => this.onClickSelectPreference("Korean")}>
+                      </img>
+                      <img className="btn_preference Japanese"
+                        src={JapaneseFlag}
+                        onClick={() => this.onClickSelectPreference("Japanese")}>
+                      </img>
+                      <img className="btn_preference Chinese"
+                        src={ChineseFlag}
+                        onClick={() => this.onClickSelectPreference("Chinese")}>
+                      </img>
+                      <img className="btn_preference Western"
+                        src={ItalianFlag}
+                        onClick={() => this.onClickSelectPreference("Western")}>
+                      </img>
+                    </div>
+                    <div className="ItemSelectButtonFooter"
+                      onClick={this.onClickRecipeButton}>검색</div>
+                  </div>
+                :
+                  <BottomNavigation
+                  showLabels
+                  className={classes.root}
+                >
+                  <BottomNavigationAction label="레시피 추천" icon={<ThumbUpIcon />} onClick={this.onClickRecipeNav} className={classes.nav}/>
+                  <Tooltip title="Add" aria-label="add" onClick={this.onClickAddItemButton}>
+                    <Fab color="primary" className={classes.fab}>
+                      <AddIcon />
+                    </Fab>
+                  </Tooltip>
+                  <BottomNavigationAction label="마감 임박" icon={<NotificationsActiveIcon />} onClick={this.onClickNotiIcon} className={`${classes.nav} btn_notification`}/>
+                  </BottomNavigation> }
             </div>
-            <Fade className="NotiFade" in={this.state.openDialog}>
+
+
+            <Fade className="NotiFade" in={this.state.openDialog} >
               <div className="NotiListWrapper">
                 <div>
                   <div style={{backgroundColor: '#F4F4F4', display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
@@ -482,4 +528,4 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(MainPage));
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(withStyles(styles)(MainPage)));
