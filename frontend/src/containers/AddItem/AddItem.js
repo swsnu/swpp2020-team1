@@ -46,7 +46,7 @@ class AddItem extends Component {
   
   defaultItem = {
     name: '',
-    container: 'freezer',
+    container: 'fridge',
     category_id: 0,
     category_name: '기타',
     barcode_num: '',
@@ -300,7 +300,7 @@ class AddItem extends Component {
     if(this.state.isResultVisible) {
       this.props.onAddNewItem();
     }
-    this.props.history.push('/item/confirm');
+    this.props.history.push('/item/confirm', {container: this.state.defaultItem.container});
   }
 
   onClickSkipButton = () => {
@@ -332,7 +332,7 @@ class AddItem extends Component {
   }
 
   componentDidMount = () => {
-    const containerDefault = (this.props.location.state ? this.props.location.state.container : this.containers[0])
+    const containerDefault = (this.props.location.state ? this.props.location.state.container : this.state.currentItem.container)
     this.setState({
       defaultItem: {
         ...this.state.defaultItem,

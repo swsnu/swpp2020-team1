@@ -44,7 +44,7 @@ class ItemConfirm extends Component {
 
   defaultItem = {
     name: '',
-    container: 'fridge',
+    container: (this.props.location.state ? this.props.location.state.container : 'fridge'),
     category_id: 0,
     category_name: '기타',
     barcode_num: '',
@@ -118,7 +118,7 @@ class ItemConfirm extends Component {
   }
 
   onClickMoveToAddItemButton = () => {
-    this.props.history.push('/item/add');
+    this.props.history.push('/item/add', {container: this.defaultItem.container});
   }
 
   componentDidMount() {

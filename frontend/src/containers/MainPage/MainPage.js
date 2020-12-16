@@ -70,6 +70,7 @@ class MainPage extends Component {
   user_id = 1;
 
   async componentDidMount() {
+    this.props.resetItemList();
     this.setState({isLoading: true})
     await axios.get('/back/user/')
       .then(res => this.user_id = res.data.user_id)
@@ -443,7 +444,8 @@ const mapDispatchToProps = dispatch => {
     onGetUserNotiList: (user_id) => dispatch(actionCreators.getUserNotiList(user_id)),
     onSetIsRead: (noti_id) => dispatch(actionCreators.setIsRead(noti_id)),
     onSearchRecipes: (ingredients, preference) => dispatch(actionCreators.searchRecipes(ingredients, preference)),
-    loginCheck : (user) => dispatch (userActionCreators.loginCheckRequest())
+    loginCheck : (user) => dispatch (userActionCreators.loginCheckRequest()),
+    resetItemList: () => dispatch(actionCreators.resetItemList())
   }
 }
 
