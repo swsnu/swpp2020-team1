@@ -248,7 +248,9 @@ class MainPage extends Component {
       document.getElementsByClassName(cuisine)[0].style.background = "#F4F4F4";
     }
     if (selectedCuisineList.length === 0) { // if nothing is selected
-      selectedCuisineList = Object.keys(this.state.selectedCuisine)
+      for (let cuisine of Object.keys(this.state.selectedCuisine)) {
+        selectedCuisineList.push(cuisine.toLowerCase())
+      }
     }
     let categoryList = this.getCategoryList(this.state.selectedItemIds);
     this.props.onSearchRecipes(categoryList, selectedCuisineList);
