@@ -330,7 +330,7 @@ class MainPage extends Component {
                 { this.state.isUnreadNotiExists ? <NotificationsActiveIcon className="btn_bell" fontSize="large" color="primary"/> : <NotiIcon className="btn_bell" fontSize="large" color="secondary"/> }
               </div>
             </div>
-             <div className="content">
+            <div className="content">
               <ItemContainer 
                 type="freezer"
                 selectedItemIds={this.state.selectedItemIds}
@@ -362,7 +362,7 @@ class MainPage extends Component {
                 items={shelfItems}
                 buildNotification={() => {this.getAndBuildNotification(this.user_id)}}
                 mode={this.state.mode}/>
-            <div id="dummy"></div>
+              <div id="dummy"></div>
             </div>
             <div className="ItemSelectDiv" >
               <div className="ItemSelectButton">

@@ -32,6 +32,10 @@
     overflow-y: scroll;
 }
 
+.content::-webkit-scrollbar {
+    display: none;
+}
+
 
 .ItemSelectDiv {
     position: absolute;
@@ -140,6 +144,7 @@
 .btn_notification {
     display: inline-block;
     margin-right: 0;
+    margin: 1px 14px;
 }
 
 .btn_notification:hover {
