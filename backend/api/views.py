@@ -33,6 +33,11 @@ def signup(request):
         user = get_user_model()
         user.objects.create_user(username=email, password=password, first_name=nickname)
         new_user = user.objects.get(username=email)
+        if Category.objects.all().count() == 0 or Recipe.objects.all().count() == 0:
+            initialize_category()
+            initialize_recipe()
+        if Barcode.objects.all().count() == 0:
+            initialize_barcode()
         initialize_sample(new_user)
         return HttpResponse(status=201)
     else:
@@ -79,12 +84,6 @@ def user_info(request):
     user_info:
         GET: sign in:
     '''
-    # INITIALIZING DB (TEMPORARY)
-    if Category.objects.all().count() == 0 or Recipe.objects.all().count() == 0:
-        initialize_category()
-        initialize_recipe()
-    if Barcode.objects.all().count() == 0:
-        initialize_barcode()
     if request.method == 'GET':
         if request.user.is_authenticated:
             username_dic = { 'username' : request.user.username, 'user_id': request.user.id}
@@ -859,6 +858,9 @@ def initialize_sample(username):
     garlic.save()
     garlic_itemcount = ItemCount(item=garlic, expiration_date='2021/7/7', count=1)
     garlic_itemcount.save()
+    garlic_noti = Notification(user=new_user, noti_type='expire', item_count=garlic_itemcount,
+                            is_read=False, expire_date='2021-7-7')
+    garlic_noti.save()
 
     spaghetti_category = Category.objects.get(id=18)
     spaghetti_barcode = Barcode.objects.get(barcode_num='8809284480261')
@@ -867,11 +869,17 @@ def initialize_sample(username):
     spaghetti.save()
     spaghetti_itemcount = ItemCount(item=spaghetti, expiration_date='2021/3/7', count=3)
     spaghetti_itemcount.save()
+    spaghetti_noti = Notification(user=new_user, noti_type='expire', item_count=spaghetti_itemcount,
+                            is_read=False, expire_date='2021-3-7')
+    spaghetti_noti.save()
 
     ramen_category = Category.objects.get(id=87)
     ramen_barcode = Barcode.objects.get(barcode_num='8801045522838')
     ramen = Item(name='오뚜기 진짬뽕❤️', container='shelf', user=new_user,
                     barcode=ramen_barcode, category=ramen_category)
     ramen.save()
-    ramen_itemcount = ItemCount(item=ramen, expiration_date='2021/3/7', count=4)
+    ramen_itemcount = ItemCount(item=ramen, expiration_date='2022/4/2', count=4)
     ramen_itemcount.save()
+    ramen_noti = Notification(user=new_user, noti_type='expire', item_count=ramen_itemcount,
+                            is_read=False, expire_date='2022-4-2')
+    ramen_noti.save()

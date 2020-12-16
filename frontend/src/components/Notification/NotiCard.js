@@ -18,8 +18,8 @@ const NotiCard = props => {
     else elapsedDaysString = '방금'
     notiContent =
       <div style={{flexDirecion: 'row', justifyContent: 'center'}}>
-        <ListItem className='NotiListItem' style={{backgroundColor: isRead ? '#ffffff' :  'rgba(125, 191, 26, 0.6)',
-            justifyContent: 'space-between', width: window.innerWidth }}>
+        <ListItem button className='NotiListItem' width='100%' onClick={() => {props.onRead(id, notiType, category)}}
+            style={{backgroundColor: isRead ? '#ffffff' :  'rgba(125, 191, 26, 0.6)', justifyContent: 'space-between'}}>
           <div style={{width: 50}}>
             <img src={CalendarImg} width={20} height={20} />
           </div>
@@ -38,7 +38,9 @@ const NotiCard = props => {
         </ListItem>
       </div>
   } else if (notiType === 'buy_item') {
-    let purchaseLink = `https://www.coupang.com/np/search?component=&q=${itemName}&channel=user`
+    // CHECK
+    let temp = itemName.substring(0,itemName.length-1);
+    let purchaseLink = `https://www.coupang.com/np/search?component=&q=${temp}&channel=user`
 
     let elapsedDaysString = null
     if (elapsedDays >= 2) elapsedDaysString = `오늘`
@@ -48,8 +50,8 @@ const NotiCard = props => {
 
     notiContent =
       <div>
-        <ListItem className='NotiListItem' style={{backgroundColor: isRead ? '#ffffff' : 'rgba(125, 191, 26, 0.6)',
-            justifyContent: 'space-between', width: window.innerWidth }}>
+        <ListItem button className='NotiListItem' width='100%' onClick={() => {props.onRead(id, notiType, category)}} 
+            style={{backgroundColor: isRead ? '#ffffff' : 'rgba(125, 191, 26, 0.6)', justifyContent: 'space-between'}}>
           <div style={{width: 50}}>
             <img src={ShoppingCartImg} width={20} height={20} />
           </div>
@@ -77,8 +79,8 @@ const NotiCard = props => {
   } else if (notiType === 'recipe') {
     notiContent =
       <div style={{flexDirecion: 'row', justifyContent: 'center'}}>
-        <ListItem className='NotiListItem' style={{backgroundColor: '#ffffff',
-            justifyContent: 'space-between', width: window.innerWidth }}>
+        <ListItem button className='NotiListItem' width='100%' onClick={() => {props.onRead(id, notiType, category)}} 
+            style={{backgroundColor: '#ffffff', justifyContent: 'space-between'}}>
           <div style={{width: 50}}>
             <img src={RecipeImg} width={20} height={20} />
           </div>
@@ -99,9 +101,7 @@ const NotiCard = props => {
     console.log(`Noti type ${notiType} is not supported.`)
   }
   return (
-    <Button className='NotiCardBtn' style={{padding: 0}} onClick={() => props.onRead(id, notiType, category)}>
-      { notiContent }
-    </Button>
+    notiContent
   )
 }
 

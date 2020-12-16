@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import ItemContainer from '../ItemContainer/ItemContainer';
 import * as actionCreators from '../../store/actions/index';
 import * as userActionCreators from '../../store/actions/user';
-import { Dialog, List, Typography, Button } from '@material-ui/core';
+import { Button, Card, Fade, CircularProgress } from '@material-ui/core';
 import NotiIcon from '@material-ui/icons/Notifications';
 import ArrowBack from '@material-ui/icons/ArrowBack'
 import Circle from '@material-ui/icons/Brightness1'
@@ -30,8 +30,6 @@ import MenuIcon from '@material-ui/icons/Menu';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
 
-
-
 const theme = createMuiTheme({
   palette: {
     primary: {
@@ -57,14 +55,17 @@ class MainPage extends Component {
     notifications: [],
     selectedItemIds: [],
     selectedCuisine: null,
+    // selectedCuisineList: [],
     mode: "normal",
-    clicked: false
+    clicked: false,
+    isLoading: true,
   }
 
   // temporary
   user_id = 1;
 
-  async componentDidMount() { 
+  async componentDidMount() {
+    this.setState({isLoading: true})
     await axios.get('/back/user/')
       .then(res => this.user_id = res.data.user_id)
       .catch(e => console.log(e)) 
@@ -75,7 +76,7 @@ class MainPage extends Component {
     }
 
     this.getAndBuildNotification(this.user_id)
-
+    this.setState({isLoading: false})
     window.addEventListener("resize", this.resize.bind(this));
     this.resize();
   }
@@ -189,6 +190,9 @@ class MainPage extends Component {
   }
 
   switchToNormalMode = () => {
+    if(this.state.selectedCuisine != null) {
+      document.getElementsByClassName(this.state.selectedCuisine)[0].style.filter = "brightness(100%)";
+    }
     this.setState({ mode: "normal", selectedCuisine: null, selectedItemIds: [] });
     document.getElementsByClassName("ItemSelectButton")[0].style.background = "#7DBF1A";
     document.getElementsByClassName("ItemSelectDiv")[0].style.height = "55px";
@@ -259,8 +263,12 @@ class MainPage extends Component {
   }
 
   onClickSelectPreference = (cuisine) => {
+    // for (let cuisine of this.state.selectedCuisineList) {
+    // 
+    // }
     if(this.state.selectedCuisine != null) {
       document.getElementsByClassName(this.state.selectedCuisine)[0].style.filter = "brightness(100%)";
+      // this.state.selectedCuisineList.filter(c => c !== cuisine)
     }
     if(this.state.selectedCuisine !== cuisine) {
       this.setState({selectedCuisine: cuisine});
@@ -300,100 +308,107 @@ class MainPage extends Component {
       <MuiThemeProvider theme={theme}>
         <div className="MainPage">
           <Container component="main" maxWidth="md" className="main_container">
-          <div className="title">
-            <div className="btn_logout">
-              <Logout/>
-            </div>
-            <img className="titlelogo" src={FoodifyLogo}></img>
-            <div className="btn_notification" onClick={this.onClickNotiIcon}>
-              { this.state.isUnreadNotiExists ? <NotificationsActiveIcon className="btn_bell" fontSize="large" color="primary"/> : <NotiIcon className="btn_bell" fontSize="large" color="secondary"/> }
-            </div>
-          </div>
-
-          <div className="content">
-            <ItemContainer 
-              type="freezer"
-              selectedItemIds={this.state.selectedItemIds}
-              onClickSelectItem={(id) => this.onClickSelectItem(id)}
-              currentWidth={this.state.currentWidth}
-              currentHeight={this.state.currentHeight}
-              shouldShowTutorial={!this.props.items || this.props.items.length === 0}
-              items={freezerItems}
-              buildNotification={() => {this.getAndBuildNotification(this.user_id)}}
-              mode={this.state.mode}
-              id="freezer-container"/>
-            <ItemContainer
-              type="fridge"
-              selectedItemIds={this.state.selectedItemIds}
-              onClickSelectItem={(id) => this.onClickSelectItem(id)}
-              currentWidth={this.state.currentWidth}
-              currentHeight={this.state.currentHeight}
-              shouldShowTutorial={!this.props.items || this.props.items.length === 0}
-              items={fridgeItems}
-              buildNotification={() => {this.getAndBuildNotification(this.user_id)}}
-              mode={this.state.mode}/>
-            <ItemContainer
-              type="shelf"
-              selectedItemIds={this.state.selectedItemIds}
-              onClickSelectItem={(id) => this.onClickSelectItem(id)}
-              currentWidth={this.state.currentWidth}
-              currentHeight={this.state.currentHeight}
-              shouldShowTutorial={!this.props.items || this.props.items.length === 0}
-              items={shelfItems}
-              buildNotification={() => {this.getAndBuildNotification(this.user_id)}}
-              mode={this.state.mode}/>
-          </div>
-
-          <div className="ItemSelectDiv" >
-            <div className="ItemSelectButton">
-              <div className="ItemSelectButtonHeader" onClick={(event)=>this.onClickItemSelectButton(event)}>
-                <div className="ButtonPhrase">{this.state.mode === "select" ?
-                      (this.state.selectedItemIds.length === 0 ? "재료를 선택해주세요" : "레시피 추천받기") :
-                      (this.state.mode === "preference" ? "오늘은 무슨 음식을 먹을까?" : "재료 선택하기")}</div>
-                {this.state.mode === "preference" ?
-                  <div className="QuitButton" onClick={this.switchToNormalMode}>X</div> : null}
+            <div className="title">
+              <div className="btn_logout">
+                <Logout/>
               </div>
-              <div className="ItemSelectButtonMain">
-                <img className="btn_preference Korean"
-                  src={KoreanFlag}
-                  onClick={() => this.onClickSelectPreference("Korean")}>
-                </img>
-                <img className="btn_preference Japanese"
-                  src={JapaneseFlag}
-                  onClick={() => this.onClickSelectPreference("Japanese")}>
-                </img>
-                <img className="btn_preference Chinese"
-                  src={ChineseFlag}
-                  onClick={() => this.onClickSelectPreference("Chinese")}>
-                </img>
-                <img className="btn_preference Western"
-                  src={ItalianFlag}
-                  onClick={() => this.onClickSelectPreference("Western")}>
-                </img>
-              </div>
-              <div className="ItemSelectButtonFooter"
-                onClick={this.onClickRecipeButton}>검색</div>
-            </div>
-          </div>
-
-          <Dialog open={this.state.openDialog} fullScreen={true}>
-            <div>
-              <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-                <Button style={{paddingBottom: 5}} onClick={() => { this.setState({ openDialog: false }) }}>
-                  <ArrowBack/>
-                </Button>
-                <div className="NotiHeader">Notifications</div>
+              <img className="titlelogo" src={FoodifyLogo}></img>
+              <div className="btn_notification" onClick={this.onClickNotiIcon}>
+                { this.state.isUnreadNotiExists ? <NotificationsActiveIcon className="btn_bell" fontSize="large" color="primary"/> : <NotiIcon className="btn_bell" fontSize="large" color="secondary"/> }
               </div>
             </div>
-            <div>
-              <List>
-                {this.state.notifications.map(noti => (
-                  <NotiCard key={noti.id} noti={noti} onRead={this.onReadNotification}/>
-                ))}
-              </List>
+             <div className="content">
+              <ItemContainer 
+                type="freezer"
+                selectedItemIds={this.state.selectedItemIds}
+                onClickSelectItem={(id) => this.onClickSelectItem(id)}
+                currentWidth={this.state.currentWidth}
+                currentHeight={this.state.currentHeight}
+                shouldShowTutorial={!this.props.items || this.props.items.length === 0}
+                items={freezerItems}
+                buildNotification={() => {this.getAndBuildNotification(this.user_id)}}
+                mode={this.state.mode}
+                id="freezer-container"/>
+              <ItemContainer
+                type="fridge"
+                selectedItemIds={this.state.selectedItemIds}
+                onClickSelectItem={(id) => this.onClickSelectItem(id)}
+                currentWidth={this.state.currentWidth}
+                currentHeight={this.state.currentHeight}
+                shouldShowTutorial={!this.props.items || this.props.items.length === 0}
+                items={fridgeItems}
+                buildNotification={() => {this.getAndBuildNotification(this.user_id)}}
+                mode={this.state.mode}/>
+              <ItemContainer
+                type="shelf"
+                selectedItemIds={this.state.selectedItemIds}
+                onClickSelectItem={(id) => this.onClickSelectItem(id)}
+                currentWidth={this.state.currentWidth}
+                currentHeight={this.state.currentHeight}
+                shouldShowTutorial={!this.props.items || this.props.items.length === 0}
+                items={shelfItems}
+                buildNotification={() => {this.getAndBuildNotification(this.user_id)}}
+                mode={this.state.mode}/>
+            <div id="dummy">
             </div>
-          </Dialog>
+            </div>
+            <div className="ItemSelectDiv" >
+              <div className="ItemSelectButton">
+                <div className="ItemSelectButtonHeader" onClick={(event)=>this.onClickItemSelectButton(event)}>
+                  <div className="ButtonPhrase">{this.state.mode === "select" ?
+                        (this.state.selectedItemIds.length === 0 ? "재료를 선택해주세요" : "레시피 추천받기") :
+                        (this.state.mode === "preference" ? "오늘은 무슨 음식을 먹을까?" : "재료 선택하기")}</div>
+                  {this.state.mode === "preference" ?
+                    <div className="QuitButton" onClick={this.switchToNormalMode}>X</div> : null}
+                </div>
+                <div className="ItemSelectButtonMain">
+                  <img className="btn_preference Korean"
+                    src={KoreanFlag}
+                    onClick={() => this.onClickSelectPreference("Korean")}>
+                  </img>
+                  <img className="btn_preference Japanese"
+                    src={JapaneseFlag}
+                    onClick={() => this.onClickSelectPreference("Japanese")}>
+                  </img>
+                  <img className="btn_preference Chinese"
+                    src={ChineseFlag}
+                    onClick={() => this.onClickSelectPreference("Chinese")}>
+                  </img>
+                  <img className="btn_preference Western"
+                    src={ItalianFlag}
+                    onClick={() => this.onClickSelectPreference("Western")}>
+                  </img>
+                </div>
+                <div className="ItemSelectButtonFooter"
+                  onClick={this.onClickRecipeButton}>검색</div>
+              </div>
+            </div>
+            <Fade className="NotiFade" in={this.state.openDialog}>
+              <div className="NotiListWrapper">
+                <div>
+                  <div style={{backgroundColor: '#F4F4F4', display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+                    <Button style={{paddingBottom: 5}} onClick={() => { this.setState({ openDialog: false }) }}>
+                      <ArrowBack/>
+                    </Button>
+                    <div className="NotiHeader">Notifications</div>
+                  </div>
+                </div>
+                <div className="NotiList">
+                  { this.state.notifications.length > 0 ?
+                  <Card>
+                    { this.state.notifications.map(noti => (
+                      <NotiCard width='100%' key={noti.id} noti={noti} onRead={this.onReadNotification}/>
+                    ))}
+                  </Card> : <div className='NotificationEmpty'>아직 알림이 없습니다.</div>}
+
+                </div>
+              </div>
+            </Fade>
           </Container>
+          { this.state.isLoading ? 
+            <div className="LoadingDialog">
+              <CircularProgress className='Circular'></CircularProgress>
+            </div> : null }
         </div>
         </MuiThemeProvider>
     );

@@ -5,6 +5,7 @@
     background-color: #f4f4f4;
     width: 100%;
     height: 100%;
+    overflow: hidden;
 }
 
 .title {
@@ -26,7 +27,8 @@
 
 .MainPage .content {
     width: 100%;
-    height: calc(100% - 8px - 45px - 50px);
+    /* height: 100%; */
+    height: calc(100% - 8px - 100px);
     overflow-y: scroll;
 }
 
@@ -44,6 +46,10 @@
     overflow: hidden;
     z-index: 50;
     transition: all 0.5s;
+}
+
+#dummy{
+    height: 60px
 }
 
 .ItemSelectButton {
@@ -71,10 +77,6 @@
     justify-content: center;
 }
 
-.ItemSelectButtonHeader:hover {
-    cursor: pointer;
-}
-
 .ItemSelectButtonHeader .ButtonPhrase {
     font-family: "Noto Sans KR", "Roboto", sans-serif;
     font-style: normal;
@@ -96,6 +98,10 @@
     color: #ffffff;
 }
 
+.ItemSelectButtonHeader:hover {
+    cursor: pointer;
+}
+
 .ItemSelectButtonMain {
     height: calc(100% - (100px));
 
@@ -113,6 +119,7 @@
     margin-bottom: 0;
     background-color: #373645;
 
+    position: relative;
     font-family: Roboto, sans-serif;
     font-style: normal;
     font-weight: 500;
@@ -121,6 +128,11 @@
     align-content: center;
     vertical-align: middle;
 }
+
+.ItemSelectButtonFooter:hover {
+    cursor: pointer;
+}
+
 .main_container{
     height:100vh; margin:0;
 }
@@ -207,4 +219,55 @@
     letter-spacing: 0.25px;
 
     color: #818181;
+}
+
+.NotiFade {
+    position: absolute;
+
+    left: 50%;
+    transform: translate(-50%, 0%);
+    width: inherit;
+    max-width: inherit;
+    height: 100vh;
+    top: 0px;
+    z-index: 1000;
+}
+
+.NotiListWrapper {
+    position: relative;
+    overflow: scroll;
+}
+
+.NotiList {
+    height: calc(100% - 35px);
+    background-color: #f4f4f4;
+    overflow: scroll;
+}
+
+.LoadingDialog {
+    position: absolute;
+
+    left: 50%;
+    transform: translate(-50%, 0%);
+    width: inherit;
+    max-width:inherit;
+    height: 100vh;
+    background-color: #000000;
+    opacity: 0.6;
+    top: 0px;
+    z-index: 1300; 
+}
+
+.Circular {
+    position: absolute;
+    left: 47%;
+    top: 44%;
+}
+
+.NotificationEmpty {
+    color: #343434;
+    background-color: #f4f4f4;
+    margin-top: 15px;
+    font-size: 15px;
+    font-family: "Noto Sans KR", sans-serif;
 }
