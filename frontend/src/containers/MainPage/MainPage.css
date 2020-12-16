@@ -36,6 +36,18 @@
     height: 36px;
 }
 
+.iosWarning {
+    font-family: "Noto Sans KR", "Roboto", sans-serif;
+    text-align: center;
+    color: #343434;
+    word-break: keep-all;
+    background-color: #dddddd;
+    line-height: 15px;
+    font-size: 15px;
+    width: 100%;
+    height: 30px;
+}
+
 .video {
     position: absolute;
     top: 0;

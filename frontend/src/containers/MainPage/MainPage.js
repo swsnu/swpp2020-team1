@@ -425,10 +425,13 @@ class MainPage extends Component {
                 </div>
               </div>
             </Fade>
-            <Dialog open={this.state.help} fullWidth>
+            <Dialog open={this.state.help} fullWidth maxWidth='xl'>
               <div className="helpHeader">
                 Foodify Tutorial
                 <Button style={{position: 'absolute', right: 0}} onClick={this.onClickHelpOff}>X</Button>
+              </div>
+              <div className="iosWarning">
+                아이폰의 경우 사파리 브라우저에서 접속해주세요!
               </div>
               <div className="videoContainer">
                 <iframe 

@@ -77,7 +77,7 @@ describe('<ItemConfirm />', () => {
       <Provider store={mockStore}>
         <BrowserRouter>
         <Switch>
-          <Route path='/' exact render={() => <ItemConfirm history={mockHistory} />} />
+          <Route path='/' exact render={() => <ItemConfirm history={mockHistory} location={{state: null}}/>} />
         </Switch>
         </BrowserRouter>
       </Provider>
