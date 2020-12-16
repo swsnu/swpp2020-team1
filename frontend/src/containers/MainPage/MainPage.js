@@ -349,8 +349,7 @@ class MainPage extends Component {
                 items={shelfItems}
                 buildNotification={() => {this.getAndBuildNotification(this.user_id)}}
                 mode={this.state.mode}/>
-            <div id="dummy">
-            </div>
+            <div id="dummy"></div>
             </div>
             <div className="ItemSelectDiv" >
               <div className="ItemSelectButton">
