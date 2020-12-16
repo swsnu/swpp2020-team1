@@ -8,6 +8,15 @@ body {
     padding-top: 56.25%;
 }
 
+.titlelogo {
+    height: fit-content;
+    width: auto;
+}
+
+.titlelogo:hover {
+    cursor: pointer;
+}
+
 .video {
     position: absolute;
     top: 0;

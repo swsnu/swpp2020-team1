@@ -20,9 +20,30 @@
     justify-content:space-between;
 }
 
-.titlelogo {
+.titlelogoMain {
     height: fit-content;
     width: auto;
+}
+
+.helpHeader {
+    font-family: "Noto Sans KR", "Roboto", sans-serif;
+    text-align: center;
+    color: #343434;
+    font-weight: 500;
+    background-color: #dddddd;
+    line-height: 36px;
+    width: 100%;
+    height: 36px;
+}
+
+.video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
 }
 
 .MainPage .content {
