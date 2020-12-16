@@ -171,7 +171,8 @@
 }
 
 .main_container{
-    height:100vh; margin:0;
+    height:100vh; 
+    margin:20px 0 0 0;
 }
 
 .btn_notification {
