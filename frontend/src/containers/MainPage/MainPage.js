@@ -425,7 +425,7 @@ class MainPage extends Component {
                 </div>
               </div>
             </Fade>
-            <Dialog open={this.state.help} fullWidth maxWidth='xl'>
+            <Dialog open={this.state.help} fullWidth maxWidth='xl' onBackdropClick={()=>this.setState({help: false})}>
               <div className="helpHeader">
                 Foodify Tutorial
                 <Button style={{position: 'absolute', right: 0}} onClick={this.onClickHelpOff}>X</Button>
