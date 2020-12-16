@@ -858,6 +858,9 @@ def initialize_sample(username):
     garlic.save()
     garlic_itemcount = ItemCount(item=garlic, expiration_date='2021/7/7', count=1)
     garlic_itemcount.save()
+    garlic_noti = Notification(user=new_user, noti_type='expire', item_count=garlic_itemcount,
+                            is_read=False, expire_date='2021-7-7')
+    garlic_noti.save()
 
     spaghetti_category = Category.objects.get(id=18)
     spaghetti_barcode = Barcode.objects.get(barcode_num='8809284480261')
@@ -866,11 +869,17 @@ def initialize_sample(username):
     spaghetti.save()
     spaghetti_itemcount = ItemCount(item=spaghetti, expiration_date='2021/3/7', count=3)
     spaghetti_itemcount.save()
+    spaghetti_noti = Notification(user=new_user, noti_type='expire', item_count=spaghetti_itemcount,
+                            is_read=False, expire_date='2021-3-7')
+    spaghetti_noti.save()
 
     ramen_category = Category.objects.get(id=87)
     ramen_barcode = Barcode.objects.get(barcode_num='8801045522838')
     ramen = Item(name='오뚜기 진짬뽕❤️', container='shelf', user=new_user,
                     barcode=ramen_barcode, category=ramen_category)
     ramen.save()
-    ramen_itemcount = ItemCount(item=ramen, expiration_date='2021/3/7', count=4)
+    ramen_itemcount = ItemCount(item=ramen, expiration_date='2022/4/2', count=4)
     ramen_itemcount.save()
+    ramen_noti = Notification(user=new_user, noti_type='expire', item_count=ramen_itemcount,
+                            is_read=False, expire_date='2022-4-2')
+    ramen_noti.save()

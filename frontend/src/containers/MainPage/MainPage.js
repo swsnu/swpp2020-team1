@@ -55,6 +55,7 @@ class MainPage extends Component {
     notifications: [],
     selectedItemIds: [],
     selectedCuisine: null,
+    // selectedCuisineList: [],
     mode: "normal",
     clicked: false,
     isLoading: true,
@@ -262,8 +263,12 @@ class MainPage extends Component {
   }
 
   onClickSelectPreference = (cuisine) => {
+    // for (let cuisine of this.state.selectedCuisineList) {
+    // 
+    // }
     if(this.state.selectedCuisine != null) {
       document.getElementsByClassName(this.state.selectedCuisine)[0].style.filter = "brightness(100%)";
+      // this.state.selectedCuisineList.filter(c => c !== cuisine)
     }
     if(this.state.selectedCuisine !== cuisine) {
       this.setState({selectedCuisine: cuisine});
@@ -312,8 +317,7 @@ class MainPage extends Component {
                 { this.state.isUnreadNotiExists ? <NotificationsActiveIcon className="btn_bell" fontSize="large" color="primary"/> : <NotiIcon className="btn_bell" fontSize="large" color="secondary"/> }
               </div>
             </div>
-
-            <div className="content">
+             <div className="content">
               <ItemContainer 
                 type="freezer"
                 selectedItemIds={this.state.selectedItemIds}
@@ -345,8 +349,8 @@ class MainPage extends Component {
                 items={shelfItems}
                 buildNotification={() => {this.getAndBuildNotification(this.user_id)}}
                 mode={this.state.mode}/>
+            <div id="dummy"></div>
             </div>
-
             <div className="ItemSelectDiv" >
               <div className="ItemSelectButton">
                 <div className="ItemSelectButtonHeader" onClick={(event)=>this.onClickItemSelectButton(event)}>

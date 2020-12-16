@@ -38,7 +38,9 @@ const NotiCard = props => {
         </ListItem>
       </div>
   } else if (notiType === 'buy_item') {
-    let purchaseLink = `https://www.coupang.com/np/search?component=&q=${itemName}&channel=user`
+    // CHECK
+    let temp = itemName.substring(0,itemName.length-1);
+    let purchaseLink = `https://www.coupang.com/np/search?component=&q=${temp}&channel=user`
 
     let elapsedDaysString = null
     if (elapsedDays >= 2) elapsedDaysString = `오늘`

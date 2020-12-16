@@ -112,8 +112,8 @@ class AddItem extends Component {
     let file =this.state.imageFile;
     var text = "";
     
-    const modelId = 'eeed51f3-682e-450b-95c9-d4f23e6c7792';
-    const apiKey = 'cRceuIjMuF9DAvHuC7lTOLnJxnhB0hs1';
+    const modelId = '2e26250c-8e50-4314-baa6-2e840f045a74';
+    const apiKey = 'eeCu_SGIiIeQ1ECh-EzH3SqVWcBwaX5z';
     let url = `/api/v2/OCR/Model/${modelId}/LabelFile/`; 
 
     var data = new FormData();
