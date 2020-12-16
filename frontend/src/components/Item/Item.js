@@ -26,6 +26,15 @@ const useStyles = makeStyles({
     fontFamily: ['Noto Sans KR', 'sans-serif', 'Roboto'].join(','),
     fontSize: 14,
     fontWeight: 500,
+    color: "#343434",
+  },
+  expireUrgent: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontFamily: ['Noto Sans KR', 'sans-serif', 'Roboto'].join(','),
+    fontSize: 14,
+    fontWeight: 500,
     color: "#E86565",
   },
   bullet: {
@@ -44,13 +53,15 @@ const useStyles = makeStyles({
     fontSize: 14,
   },
   countBlock:{
-    fontWeight: 900,
+    fontWeight: 700,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     fontFamily: ['Noto Sans KR', 'sans-serif', 'Roboto'].join(','),
-    fontSize: 14,
-    marginBottom: 3,
+    fontSize: 16,
+    height: 44,
+    marginBottom: 4,
+    width: 124,
   },
   countButton:{
     marginLeft: 5,
@@ -58,7 +69,16 @@ const useStyles = makeStyles({
   },
 });
 
+const isExpireUrgent = (dateString) => {
+  let expireTimestamp = Date.parse(dateString)
+  let currentTimestamp = new Date();
+  let elapsedDays = Math.floor((expireTimestamp - currentTimestamp) / (24 * 60 * 60 * 1000))
+  return elapsedDays < 3
+}
+
 const Item = props => {
+  let itemCountSum = 0;
+  props.itemcounts.forEach(elem => {itemCountSum += elem.count})
   const itemFastestExpDate = props.itemcounts.sort((a, b) => {
     if(new Date(a.expiration_date) > new Date(b.expiration_date)) {
       return 1;
@@ -87,13 +107,11 @@ const Item = props => {
       <div className='ItemContents'>
         <div className={`item-title ${classes.title}`}>{props.name}</div>
         <div key={itemFastestExpDate.id} className="item">
-          <div className={`${classes.expire} expiration_date`}>
+          <div className={`${isExpireUrgent(itemFastestExpDate.expiration_date) ? classes.expireUrgent : classes.expire} expiration_date`}>
             {itemFastestExpDate.expiration_date === '2099/12/31' ? null : itemFastestExpDate.expiration_date }
           </div>
           <div className={`count ${classes.countBlock}`}>
-            <IconButton className={`btn_remove_item ${classes.countButton}`} onClick={(event) => props.onRemoveItem(event, itemFastestExpDate.id, itemFastestExpDate.count)}><RemoveCircleIcon/></IconButton>
-            {itemFastestExpDate.count}
-            <IconButton className={`btn_remove_item ${classes.countButton}`} onClick={(event) => props.onAddItem(event, itemFastestExpDate.id, itemFastestExpDate.count)}><AddCircleIcon/></IconButton>
+            {itemCountSum}
           </div>
         </div>
       </div>

@@ -28,7 +28,7 @@ describe('<Item />', () => {
   it('should render correctly', () => {
     let component = mount(<Item mode="Selected" {...props}/>)
     let wrapper = component.find(".ItemContents");
-    expect(wrapper.find(".count").text()).toEqual(JSON.stringify(1));
+    expect(wrapper.find(".count")).toEqual({});
 
     let wrapper2 = component.find(Card);
     wrapper2.simulate('click');
@@ -59,16 +59,5 @@ describe('<Item />', () => {
     let wrapper2 = component.find(Card);
     wrapper2.simulate('click');
     expect(mockOnClickCard.mock.calls[0][0]).toEqual(props.itemcounts)
-  })
-
-  it('should handle minus and plus button correctly', () => {
-    let component = mount(<Item mode="normal" {...props}/>)
-
-    component.find(IconButton).at(0).simulate('click');
-    expect(mockOnRemoveItem).toHaveBeenCalledTimes(1);
-
-    component.find(IconButton).at(1).simulate('click');
-    expect(mockOnAddItem).toHaveBeenCalledTimes(1);
-    //expect(mockOnRemoveItem.mock.calls[0][0].count).toEqual(props.count)
   })
 })

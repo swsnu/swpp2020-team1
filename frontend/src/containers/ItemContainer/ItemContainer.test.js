@@ -107,8 +107,13 @@ describe('<ItemContainer />', () => {
     itemContainerInstance.setState({
       itemcounts: [{"id": 1, "expiration_date": "2020/11/30", "count": 1, "item_id": 1}],
     })
-    const removeItemButton = component.find('.btn_remove_item').at(0);
-    removeItemButton.simulate('click');
+    itemContainerInstance.onAddItem({cancelBubble: false}, 1, 1)
+    itemContainerInstance.setState({
+      itemcounts: [{"id": 1, "expiration_date": "2020/11/30", "count": 1, "item_id": 1},
+          {"id": 2, "expiration_date": "2020/11/20", "count": 1, "item_id": 1}],
+      seen: true,
+    })
+    itemContainerInstance.onAddItem({cancelBubble: false}, 1, 1)
   });
 
   // it('should handle click item', () => {
@@ -127,8 +132,20 @@ describe('<ItemContainer />', () => {
  
 
     const component = mount(itemContainer);
-    const removeItemButton = component.find('.btn_remove_item button').at(0);
-    removeItemButton.simulate('click');
+    const itemContainerInstance = component.find(ItemContainer.WrappedComponent).instance();
+    itemContainerInstance.setState({
+      itemcounts: [{"id": 1, "expiration_date": "2020/11/30", "count": 1, "item_id": 1}],
+    })
+    itemContainerInstance.onRemoveItem({cancelBubble: false}, 1, 1)
+    itemContainerInstance.setState({
+      itemcounts: [{"id": 1, "expiration_date": "2020/11/30", "count": 1, "item_id": 1}, 
+            {"id": 2, "expiration_date": "2020/11/20", "count": 1, "item_id": 1}],
+      seen: true,
+    })
+    itemContainerInstance.onRemoveItem({cancelBubble: false}, 1, 1)
+    itemContainerInstance.onClickCard([{"id": 1, "expiration_date": "2020/11/30", "count": 1, "item_id": 1}, 
+    {"id": 2, "expiration_date": "2020/11/20", "count": 1, "item_id": 1}])
+    itemContainerInstance.onClickCardOff();
     expect(spyEditItemCount).toHaveBeenCalled();
   });
 

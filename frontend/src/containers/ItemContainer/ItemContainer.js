@@ -48,6 +48,16 @@ const styles = (theme) => ({
     fontFamily: ['Noto Sans KR', 'sans-serif', 'Roboto'].join(','),
     fontSize: 14,
     fontWeight: 500,
+    color: '#343434',
+    marginBottom: 5,
+  },
+  expireUrgent: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontFamily: ['Noto Sans KR', 'sans-serif', 'Roboto'].join(','),
+    fontSize: 14,
+    fontWeight: 500,
     color: theme.palette.error.main,
     marginBottom: 5,
   },
@@ -74,7 +84,6 @@ const styles = (theme) => ({
     marginBottom: 12,
   },
   xButton:{
-    marginTop: 12,
     marginBottom: 12, 
   }
 });
@@ -130,7 +139,12 @@ class ItemContainer extends Component {
     })
   }
 
-
+  isExpireUrgent = (dateString) => {
+    let expireTimestamp = Date.parse(dateString)
+    let currentTimestamp = new Date();
+    let elapsedDays = Math.floor((expireTimestamp - currentTimestamp) / (24 * 60 * 60 * 1000))
+    return elapsedDays < 3
+  }
 
   componentDidMount() {
     //let itemGridTiles = document.getElementsByClassName("ItemGridTile")
@@ -172,8 +186,8 @@ class ItemContainer extends Component {
               className="Item"
               onClickCard={(itemcounts) => this.onClickCard(itemcounts)}
               onClickSelectItem={(id) => this.props.onClickSelectItem(id)}
-              onAddItem={(e, ic_id, count) => this.onAddItem(e, ic_id, count)} 
-              onRemoveItem={(e, ic_id, count) => this.onRemoveItem(e, ic_id, count)}
+              // onAddItem={(e, ic_id, count) => this.onAddItem(e, ic_id, count)} 
+              // onRemoveItem={(e, ic_id, count) => this.onRemoveItem(e, ic_id, count)}
               mode={(this.props.selectedItemIds.filter(id => id === i.id).length > 0 ? "Selected" : this.props.mode)}
             />
           </div>
@@ -189,7 +203,7 @@ class ItemContainer extends Component {
           <Typography className={classes.title} color="textSecondary">
             Expiration Date
           </Typography>
-          <Typography className={`"expiration_date" ${classes.expire}`} variant="h5" component="h2">
+          <Typography className={`"expiration_date" ${this.isExpireUrgent(ic.expiration_date) ? classes.expireUrgent : classes.expire}`} variant="h5" component="h2">
           {ic.expiration_date === '2099/12/31' ? null : ic.expiration_date}
           </Typography>
           <Typography className={`"count" ${classes.pos}`} color="textSecondary">
@@ -220,7 +234,7 @@ class ItemContainer extends Component {
           </Container>
 
           <Dialog open={this.state.seen} maxWidth="sm" onBackdropClick={()=>this.setState({seen: false})}>
-            <Button className={classes.xButton} onClick={this.onClickCardOff}>X</Button>
+            <Button className={classes.xButton} style={{position: 'absolute', right: 0}} onClick={this.onClickCardOff}>X</Button>
             <div overflowY="auto">{itemcounts}</div>
           </Dialog>
         </div>
