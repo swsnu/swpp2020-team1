@@ -25,7 +25,7 @@ import PhotoCamera from '@material-ui/icons/PhotoCamera';
 
 
 const BARCODE_TERM = '바코드를 스캔해주세요'
-const EXPIRATION_TERM = '유통기한을 찍기 위해 화면을 클릭해주세요'
+const EXPIRATION_TERM = '유통기한을 촬영해주세요 (예) 2020/12/25'
 
 const styles = {
   newPaper: {
