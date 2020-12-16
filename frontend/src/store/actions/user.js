@@ -12,7 +12,7 @@ export const signUpRequest = (newUser) => {
                 username: newUser.email,
                 password: newUser.password})
             .then(response =>{
-                dispatch(push('/'));
+                dispatch(push('/', {fromSignUp: true}));
             })
         })
         .catch( error => {

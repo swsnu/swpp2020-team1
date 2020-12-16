@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import ItemContainer from '../ItemContainer/ItemContainer';
 import * as actionCreators from '../../store/actions/index';
 import * as userActionCreators from '../../store/actions/user';
-import { Button, Card, Fade, CircularProgress } from '@material-ui/core';
+import { Button, Card, Fade, CircularProgress, Dialog } from '@material-ui/core';
 import NotiIcon from '@material-ui/icons/Notifications';
 import ArrowBack from '@material-ui/icons/ArrowBack'
 import Circle from '@material-ui/icons/Brightness1'
@@ -64,12 +64,16 @@ class MainPage extends Component {
     mode: "normal",
     clicked: false,
     isLoading: true,
+    help: false,
   }
 
   // temporary
   user_id = 1;
 
   async componentDidMount() {
+    if (this.props.location.state && this.props.location.state.fromSignUp) {
+      this.setState({help: true})
+    }
     this.setState({isLoading: true})
     await axios.get('/back/user/')
       .then(res => this.user_id = res.data.user_id)
@@ -89,6 +93,10 @@ class MainPage extends Component {
   componentDidUpdate = () => {
     if(this.state.mode === "preference")
       document.getElementsByClassName("ItemSelectDiv")[0].style.height = JSON.stringify(105 + this.state.currentWidth * 0.05 + Math.min(this.state.currentWidth / 5, 100))+"px";
+  }
+
+  onClickHelpOff = () => {
+    this.setState({help: false});
   }
 
   resize = () => {
@@ -179,11 +187,11 @@ class MainPage extends Component {
 
   onReadNotification = async (notiId, notiType, category) => {
     if (notiType === 'recipe') {
-      this.props.onSearchRecipes([category], 'all');
+      this.props.onSearchRecipes([category], ['korean', 'japanese', 'chinese', 'western']);
       this.props.history.push('/recipes')
     } else if (notiType === 'expire') {
       await this.props.onSetIsRead(notiId);
-      this.props.onSearchRecipes([category], 'all');
+      this.props.onSearchRecipes([category], ['korean', 'japanese', 'chinese', 'western']);
       this.props.history.push('/recipes')
     } else if (notiType === 'buy_item') {
       await this.props.onSetIsRead(notiId);
@@ -325,7 +333,7 @@ class MainPage extends Component {
               <div className="btn_logout">
                 <Logout/>
               </div>
-              <img className="titlelogo" src={FoodifyLogo}></img>
+              <img className="titlelogoMain" src={FoodifyLogo}></img>
               <div className="btn_notification" onClick={this.onClickNotiIcon}>
                 { this.state.isUnreadNotiExists ? <NotificationsActiveIcon className="btn_bell" fontSize="large" color="primary"/> : <NotiIcon className="btn_bell" fontSize="large" color="secondary"/> }
               </div>
@@ -416,6 +424,21 @@ class MainPage extends Component {
                 </div>
               </div>
             </Fade>
+            <Dialog open={this.state.help} fullWidth>
+              <div className="helpHeader">
+                Foodify Tutorial
+                <Button style={{position: 'absolute', right: 0}} onClick={this.onClickHelpOff}>X</Button>
+              </div>
+              <div className="videoContainer">
+                <iframe 
+                  className={`video`}
+                  src={"https://www.youtube.com/embed/yP69wYmFtm8"}
+                  frameBorder="0" 
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                  allowFullScreen>
+                </iframe>
+              </div>
+            </Dialog>
           </Container>
           { this.state.isLoading ? 
             <div className="LoadingDialog">
