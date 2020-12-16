@@ -274,7 +274,8 @@ describe('<MainPage />', () => {
   
     const itemSelectButtonHeader = component.find('.ItemSelectButtonHeader');
     itemSelectButtonHeader.simulate('click')
-    expect(mainPageInstance.state["selectedCuisine"]).toEqual(null)
+    expect(mainPageInstance.state["selectedCuisine"]).toEqual(
+      {"Chinese": false, "Japanese": false, "Korean": false, "Western": false})
   });
 
   it('should handle onClickItemSelectButton in select mode with item selected', async () => {
@@ -365,9 +366,11 @@ describe('<MainPage />', () => {
     const cuisineSelectButtionFooter = component.find('.Korean');
     await cuisineSelectButtionFooter.simulate('click');
     expect(spyGetElementsByClassName).toHaveBeenCalled();
-    expect(mainPageInstance.state["selectedCuisine"]).toEqual("Korean");
+    expect(mainPageInstance.state["selectedCuisine"]).toEqual(
+      {"Chinese": false, "Japanese": false, "Korean": true, "Western": false});
     await cuisineSelectButtionFooter.simulate('click');
-    expect(mainPageInstance.state["selectedCuisine"]).toEqual(null); 
+    expect(mainPageInstance.state["selectedCuisine"]).toEqual(
+      {"Chinese": false, "Japanese": false, "Korean": false, "Western": false}); 
   });
 
   it('should handle onClickSelectPreference with clicking japanese', async () => {
@@ -380,7 +383,8 @@ describe('<MainPage />', () => {
     const cuisineSelectButtionFooter = component.find('.Japanese');
     await cuisineSelectButtionFooter.simulate('click');
     expect(spyGetElementsByClassName).toHaveBeenCalled();
-    expect(mainPageInstance.state["selectedCuisine"]).toEqual("Japanese");
+    expect(mainPageInstance.state["selectedCuisine"]).toEqual(
+      {"Chinese": false, "Japanese": true, "Korean": false, "Western": false});
   });
 
   it('should handle onClickSelectPreference with clicking Chinese', async () => {
@@ -393,7 +397,8 @@ describe('<MainPage />', () => {
     const cuisineSelectButtionFooter = component.find('.Chinese');
     await cuisineSelectButtionFooter.simulate('click');
     expect(spyGetElementsByClassName).toHaveBeenCalled();
-    expect(mainPageInstance.state["selectedCuisine"]).toEqual("Chinese");
+    expect(mainPageInstance.state["selectedCuisine"]).toEqual(
+      {"Chinese": true, "Japanese": false, "Korean": false, "Western": false});
   });
 
   it('should handle onClickSelectPreference with clicking Western', async () => {
@@ -406,7 +411,8 @@ describe('<MainPage />', () => {
     const cuisineSelectButtionFooter = component.find('.Western');
     await cuisineSelectButtionFooter.simulate('click');
     expect(spyGetElementsByClassName).toHaveBeenCalled();
-    expect(mainPageInstance.state["selectedCuisine"]).toEqual("Western");
+    expect(mainPageInstance.state["selectedCuisine"]).toEqual(
+      {"Chinese": false, "Japanese": false, "Korean": false, "Western": true});
   });
 
   it('should handle onClickSelectItem', async () => {

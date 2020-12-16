@@ -500,11 +500,10 @@ def recipe_search(request):
             print(error)
             return HttpResponseBadRequest()
         ingredients_set = set(ingredients)
-        recipe_queryset = None
-        if preference == 'all':
-            recipe_queryset = Recipe.objects.all()
-        else:
-            recipe_queryset = Recipe.objects.filter(cuisine_type=preference)
+        recipe_queryset = Recipe.objects.none()
+        for one_preference in preference:
+            recipe_queryset = recipe_queryset.union(
+                Recipe.objects.filter(cuisine_type=one_preference))
         recipes = [
             {
                 'id': recipe.id,
@@ -792,8 +791,8 @@ def initialize_sample(username):
 
     other_milk_itemcount = ItemCount(item=milk, expiration_date='2020/12/30', count=3)
     other_milk_itemcount.save()
-    other_milk_noti = Notification(user=new_user, noti_type='expire', item_count=other_milk_itemcount,
-                            is_read=False, expire_date='2020-12-30')
+    other_milk_noti = Notification(user=new_user, noti_type='expire',
+                    item_count=other_milk_itemcount, is_read=False, expire_date='2020-12-30')
     other_milk_noti.save()
 
     pork_category = Category.objects.get(id=13)

@@ -54,7 +54,12 @@ class MainPage extends Component {
     currentWidth: 720,
     notifications: [],
     selectedItemIds: [],
-    selectedCuisine: null,
+    selectedCuisine: {
+      Korean: false,
+      Japanese: false,
+      Chinese: false,
+      Western: false,
+    },
     // selectedCuisineList: [],
     mode: "normal",
     clicked: false,
@@ -190,10 +195,14 @@ class MainPage extends Component {
   }
 
   switchToNormalMode = () => {
-    if(this.state.selectedCuisine != null) {
-      document.getElementsByClassName(this.state.selectedCuisine)[0].style.filter = "brightness(100%)";
+    for (let cuisine of Object.keys(this.state.selectedCuisine)) {
+      document.getElementsByClassName(cuisine)[0].style.filter = "brightness(100%)";
     }
-    this.setState({ mode: "normal", selectedCuisine: null, selectedItemIds: [] });
+    this.setState({
+      mode: "normal",
+      selectedCuisine: {Korean: false, Japanese: false, Chinese: false, Western: false},
+      selectedItemIds: []
+    });
     document.getElementsByClassName("ItemSelectButton")[0].style.background = "#7DBF1A";
     document.getElementsByClassName("ItemSelectDiv")[0].style.height = "55px";
     let removeItemButtons = document.getElementsByClassName("btn_remove_item");
@@ -231,13 +240,18 @@ class MainPage extends Component {
   }
 
   onClickRecipeButton = () => {
-    let selectedCuisine = 'all'
-    if (this.state.selectedCuisine) {
-      selectedCuisine = this.state.selectedCuisine.toLowerCase()
-      document.getElementsByClassName(this.state.selectedCuisine)[0].style.background = "#F4F4F4";
+    let selectedCuisineList = []
+    for (let cuisine of Object.keys(this.state.selectedCuisine)) {
+      if (this.state.selectedCuisine[cuisine]) {
+        selectedCuisineList.push(cuisine.toLowerCase())
+      }
+      document.getElementsByClassName(cuisine)[0].style.background = "#F4F4F4";
+    }
+    if (selectedCuisineList.length === 0) { // if nothing is selected
+      selectedCuisineList = Object.keys(this.state.selectedCuisine)
     }
     let categoryList = this.getCategoryList(this.state.selectedItemIds);
-    this.props.onSearchRecipes(categoryList, selectedCuisine);
+    this.props.onSearchRecipes(categoryList, selectedCuisineList);
     this.switchToNormalMode();
     this.props.history.push('/recipes')
   }
@@ -266,15 +280,12 @@ class MainPage extends Component {
     // for (let cuisine of this.state.selectedCuisineList) {
     // 
     // }
-    if(this.state.selectedCuisine != null) {
-      document.getElementsByClassName(this.state.selectedCuisine)[0].style.filter = "brightness(100%)";
-      // this.state.selectedCuisineList.filter(c => c !== cuisine)
-    }
-    if(this.state.selectedCuisine !== cuisine) {
-      this.setState({selectedCuisine: cuisine});
-      document.getElementsByClassName(cuisine)[0].style.filter = "brightness(50%)";
+    if (this.state.selectedCuisine[cuisine]) { // cuisine already chosen 
+      this.setState({selectedCuisine: {...this.state.selectedCuisine, [cuisine]: false}});
+      document.getElementsByClassName(cuisine)[0].style.filter = "brightness(100%)";
     } else {
-      this.setState({selectedCuisine: null});
+      this.setState({selectedCuisine: {...this.state.selectedCuisine, [cuisine]: true}});
+      document.getElementsByClassName(cuisine)[0].style.filter = "brightness(50%)";
     }
   }
   
