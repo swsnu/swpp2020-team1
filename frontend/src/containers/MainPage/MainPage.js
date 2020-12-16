@@ -26,6 +26,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
+import HelpSharpIcon from '@material-ui/icons/HelpSharp';
 
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
@@ -64,6 +65,7 @@ class MainPage extends Component {
     mode: "normal",
     clicked: false,
     isLoading: true,
+    tutorial: false,
     help: false,
   }
 
@@ -73,7 +75,7 @@ class MainPage extends Component {
   async componentDidMount() {
     this.props.resetItemList();
     if (this.props.location.state && this.props.location.state.fromSignUp) {
-      this.setState({help: true})
+      this.setState({tutorial: true})
     }
     this.setState({isLoading: true})
     await axios.get('/back/user/')
@@ -96,8 +98,11 @@ class MainPage extends Component {
       document.getElementsByClassName("ItemSelectDiv")[0].style.height = JSON.stringify(105 + this.state.currentWidth * 0.05 + Math.min(this.state.currentWidth / 5, 100))+"px";
   }
 
-  onClickHelpOff = () => {
-    this.setState({help: false});
+  onClickTutorialOff = () => {
+    this.setState({
+      tutorial: false, 
+      help: false
+    });
   }
 
   resize = () => {
@@ -299,6 +304,10 @@ class MainPage extends Component {
       document.getElementsByClassName(cuisine)[0].style.filter = "brightness(50%)";
     }
   }
+
+  onClickHelpButton = () => {
+    this.setState({help: true})
+  }
   
   // classes = {
   //   root: {
@@ -335,9 +344,7 @@ class MainPage extends Component {
                 <Logout/>
               </div>
               <img className="titlelogoMain" src={FoodifyLogo}></img>
-              <div className="btn_notification" onClick={this.onClickNotiIcon}>
-                { this.state.isUnreadNotiExists ? <NotificationsActiveIcon className="btn_bell" fontSize="large" color="primary"/> : <NotiIcon className="btn_bell" fontSize="large" color="secondary"/> }
-              </div>
+              <IconButton onClick={this.onClickHelpButton}><HelpSharpIcon fontSize="large"/></IconButton>
             </div>
             <div className="content">
               <ItemContainer 
@@ -425,10 +432,10 @@ class MainPage extends Component {
                 </div>
               </div>
             </Fade>
-            <Dialog open={this.state.help} fullWidth maxWidth='xl' onBackdropClick={()=>this.setState({help: false})}>
-              <div className="helpHeader">
+            <Dialog open={this.state.tutorial || this.state.help} fullWidth maxWidth='md' onBackdropClick={()=>this.setState({tutorial: false, help: false})}>
+              <div className="tutorialHeader">
                 Foodify Tutorial
-                <Button style={{position: 'absolute', right: 0}} onClick={this.onClickHelpOff}>X</Button>
+                <Button style={{position: 'absolute', right: 0}} onClick={this.onClickTutorialOff}>X</Button>
               </div>
               <div className="iosWarning">
                 아이폰의 경우 사파리 브라우저에서 접속해주세요!
