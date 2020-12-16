@@ -71,6 +71,7 @@ class MainPage extends Component {
   user_id = 1;
 
   async componentDidMount() {
+    this.props.resetItemList();
     if (this.props.location.state && this.props.location.state.fromSignUp) {
       this.setState({help: true})
     }
@@ -466,7 +467,8 @@ const mapDispatchToProps = dispatch => {
     onGetUserNotiList: (user_id) => dispatch(actionCreators.getUserNotiList(user_id)),
     onSetIsRead: (noti_id) => dispatch(actionCreators.setIsRead(noti_id)),
     onSearchRecipes: (ingredients, preference) => dispatch(actionCreators.searchRecipes(ingredients, preference)),
-    loginCheck : (user) => dispatch (userActionCreators.loginCheckRequest())
+    loginCheck : (user) => dispatch (userActionCreators.loginCheckRequest()),
+    resetItemList: () => dispatch(actionCreators.resetItemList())
   }
 }
 
