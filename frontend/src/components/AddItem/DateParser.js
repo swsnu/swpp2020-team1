@@ -51,10 +51,10 @@ export default function parseDate(text) {
   }
 
   const fastestExpDate = expDates.sort((a, b) => {
-    if(new Date(a.expiration_date) > new Date(b.expiration_date)) {
-      return -1;
-    } else  {
+    if(a < b) {
       return 1;
+    } else  {
+      return -1;
     }
   })[0];
 

@@ -10,5 +10,6 @@ describe('parseDate()', () => {
     expect(parseDate("유통기한: 11/14////")).toBe("2020/11/14")
     expect(parseDate("유통기한: 10/35////")).toBe("error")
     expect(parseDate("유통기한: 12/31.....11/30////")).toBe("2020/12/31")
+    expect(parseDate("2020.11.04 2021.08.03")).toBe("2021/08/03")
   })
 })
