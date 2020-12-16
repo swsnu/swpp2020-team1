@@ -5,15 +5,36 @@ import { Button } from '@material-ui/core';
 import './Scanner.css';
 
 class Scanner extends Component {
-  componentDidMount() {
+  async componentDidMount() {
+
+//	  alert(`window.innerHeight: ${window.innerHeight}, window.innerWidth: ${window.innerWidth}`);
+	let constraint;
+	if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ){
+		constraint = {
+			width: window.innerHeight,
+			height: window.innerWidth,
+			facingMode: "environment"
+		}
+
+	}else if((window.innerWidth>=600)||(window.innerWidth >  window.innerHeight)){
+		constraint = {
+			width: window.innerWidth,
+			height: window.innerHeight
+		}
+	}else{
+		constraint = {
+			width: window.innerHeight,
+			height: window.innerWidth,
+			facingMode: "environment"
+		}
+	}
+
+
+
     Quagga.init({
       inputStream: {
         type : "LiveStream",
-        constraints: {
-          width: window.innerHeight,
-          height: window.innerWidth,
-          facingMode: "environment" // or user
-        }
+        constraints : constraint
       },
 
       locator: {
@@ -45,7 +66,6 @@ class Scanner extends Component {
       }
       Quagga.start();
     });
-
     Quagga.onDetected(this._onDetected);
   }
 
@@ -55,9 +75,7 @@ class Scanner extends Component {
   }
 
   _onDetected = (result) => {
-    //console.log("_onDetected called in scanner");
-    //console.log(result)
-    // alert("Barcode detected and processed : [" + result.codeResult.code + "]")
+  const video =document.querySelector("#video");
     this.props.onDetected(result);
   }
 
