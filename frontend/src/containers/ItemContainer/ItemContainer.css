@@ -109,3 +109,7 @@
     color: #818181;
     width: max-content;
 }
+
+#ItemDummy {
+    height: 20px;
+}

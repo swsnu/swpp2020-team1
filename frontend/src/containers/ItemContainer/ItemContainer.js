@@ -215,7 +215,7 @@ class ItemContainer extends Component {
             </div>
             <div className={this.props.type === "fridge" ? "ItemGrid ItemGridFridge" : "ItemGrid"}>
               {items}
-              {(this.props.items.length < 1 ? <div className="NoItem">등록된 재료가 없습니다. ADD 버튼을 클릭해 재료를 추가해주세요</div> : null)}
+              {(this.props.items.length < 1 ? <div><div id="ItemDummy"></div><div className="NoItem">등록된 재료가 없습니다. ADD 버튼을 클릭해 재료를 추가해주세요</div><div id="ItemDummy"></div></div> : null)}
             </div>
           </Container>
 
