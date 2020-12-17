@@ -10,7 +10,7 @@
 .AddItem .StatusTerm {
     position: absolute;
     z-index: 5;
-    top: calc(45% - min(80vw, 400px)/2);
+    top: calc(45% - min(80vw, 400px) / 2);
     left: 0%;
     width: 100%;
     align-self: center;
@@ -34,7 +34,7 @@
 .AddItem .SkipAndCaptureButton {
     position: absolute;
     z-index: 5;
-    top: calc(55% + min(80vw, 400px)/2);
+    top: calc(55% + min(80vw, 400px) / 2);
     left: 0%;
     width: 100%;
     
