@@ -13,7 +13,10 @@ const styles = {
     margin: 10,
   },
   comment: {
-    margin:10,
+    marginTop:10,
+    marginBotton:10,
+    marginLeft:20,
+    marginRight:20,
   },
   author: {
     marginBottom: 5,

@@ -126,11 +126,12 @@ const styles = {
   },
   descriptionText: {
     whiteSpace: 'pre-line', // recognize new line character
+    marginLeft: 20,
   },
   expandIcon: {
   },
   expandDescription: {
-    marginLeft: 10,
+    marginLeft: 20,
     marginRight: 10,
     marginBottom: 20,
     marginTop: 0,
@@ -163,6 +164,8 @@ const styles = {
   },
 
   commentsContainer: {
+    // marginLeft: 10,
+    marginRight: 10,
     marginBottom: 20,
   },
 };
