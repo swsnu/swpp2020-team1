@@ -30,6 +30,7 @@ describe('Scanner()', () => {
     spyInit.mockImplementation((input, errFunction) => {
         return errFunction('error occurred');
       })
+
     const component = mount(<Scanner barcode={false} id="Scanner" onDetected={mockfn} />);
 
     expect(spyOnConsole.mock.results[0].value).toEqual("error occurred is returned");
@@ -80,5 +81,41 @@ describe('Scanner()', () => {
     component.unmount();
     expect(spyOffDetected).toHaveBeenCalledTimes(1);
     expect(spyStop).toHaveBeenCalledTimes(1);
+  })
+
+  it('should check the value constraint well', () => {
+    Object.defineProperty(navigator, "userAgent", { 
+        get: function () { 
+            return "Android"; // customized user agent
+        },
+        configurable: true
+    });
+    const component = mount(<Scanner barcode={false} id="Scanner" onDetected={mockfn} />);
+
+    expect(component.find("#interactive").length).toBe(1);
+  })
+
+  it('should check the innerWidth and innerHeight well', () => {
+    Object.defineProperty(navigator, "userAgent", { 
+        get: function () { 
+            return "custom"; // customized user agent
+        },
+        configurable: true
+    });
+    
+    Object.defineProperty(window, "innerWidth", { 
+      configurable: true,
+      writable: true,
+      value: 500
+    })
+
+    Object.defineProperty(window, "innerHeight", { 
+      configurable: true,
+      writable: true,
+      value: 500
+    })
+    
+    const component = mount(<Scanner barcode={false} id="Scanner" onDetected={mockfn} />);
+    expect(component.find("#interactive").length).toBe(1);
   })
 })

@@ -207,7 +207,15 @@ class ItemContainer extends Component {
           {ic.expiration_date === '2099/12/31' ? null : ic.expiration_date}
           </Typography>
           <Typography className={`"count" ${classes.pos}`} color="textSecondary">
-          <div className={classes.countBlock}><IconButton className={`"btn_remove_item" ${classes.countButton}`} onClick={(event) => this.onRemoveItem(event, ic.id, ic.count)}><RemoveCircleIcon/></IconButton>{ic.count}<IconButton className={`"btn_remove_item" ${classes.countButton}`} onClick={(event) => this.onAddItem(event, ic.id, ic.count)}><AddCircleIcon/></IconButton></div>
+          <div className={classes.countBlock}>
+            <IconButton className={`"btn_remove_item" ${classes.countButton}`} onClick={(event) => this.onRemoveItem(event, ic.id, ic.count)}>
+              <RemoveCircleIcon/>
+            </IconButton>
+            {ic.count}
+            <IconButton className={`"btn_remove_item" ${classes.countButton}`} onClick={(event) => this.onAddItem(event, ic.id, ic.count)}>
+              <AddCircleIcon/>
+            </IconButton>
+          </div>
           </Typography>
           <Typography className={classes.count}variant="body2" component="p">
             {/* <div className={classes.countBlock}>{ic.count}<IconButton className="btn_remove_item" onClick={(event) => this.onRemoveItem(event, ic.id, ic.count)}><RemoveIcon/></IconButton></div> */}
