@@ -8,9 +8,12 @@ describe('<NotiCard />', () => {
       expirationDate: '2021/12/27', isRead: false, noneed: '1' } 
     const component = mount(
       <NotiCard
-        noti={noti}/>);
+        noti={noti}
+        onRead={jest.fn()}/>);
     const wrapper = component.find(NotiCard);
     expect(wrapper.length).toBe(1)
+    const wrapper2 = component.find('.NotiListItem').at(0);
+    wrapper2.simulate('click')
   });
   
   it('should render without errors (buy_item)', () => {

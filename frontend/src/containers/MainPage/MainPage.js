@@ -430,13 +430,13 @@ class MainPage extends Component {
                   <BottomNavigation
                   showLabels
                   className={classes.root} >
-                  <BottomNavigationAction label="레시피 추천" icon={<ThumbUpIcon />} onClick={this.onClickItemSelectButton} className={classes.nav}/>
+                  <BottomNavigationAction label="레시피 추천" icon={<ThumbUpIcon />} onClick={this.onClickItemSelectButton} className={`${classes.nav}`}/>
                   <Tooltip title="Add" aria-label="add" onClick={this.onClickAddItemButton}>
                     <Fab color="primary" className={classes.fab}>
                       <AddIcon />
                     </Fab>
                   </Tooltip>
-                  <BottomNavigationAction label="마감 임박" icon={notiIcon} onClick={this.onClickNotiIcon} className={classes.nav}/>
+                  <BottomNavigationAction label="마감 임박" icon={notiIcon} onClick={this.onClickNotiIcon} className={`${classes.nav} btn_notification`}/>
                   </BottomNavigation>
                    }
             </div>

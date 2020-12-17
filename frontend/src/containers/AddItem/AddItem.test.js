@@ -91,6 +91,36 @@ describe('<AddItem />', () => {
     expect(wrapper.length).toBe(1);
   });
 
+  it('should click photo button', async () => {
+    const component = mount(addItem).find('.AddItem');
+    const wrapper = component.find('#onClickCaptureButton').at(1)
+    wrapper.simulate('click')
+  });
+
+  it('should click skip button', async () => {
+    const component = mount(addItem).find('.AddItem');
+    const wrapper = component.find('#onClickCaptureButton').at(0)
+    wrapper.simulate('click')
+  });
+
+  it('should click back button', async () => {
+    const component = mount(addItem).find('.AddItem');
+    const wrapper = component.find('.backButton').find('button')
+    wrapper.simulate('click')
+  });
+
+  it('should click help button', async () => {
+    const component = mount(addItem).find('.AddItem');
+    const wrapper = component.find('.helpButton').find('button')
+    wrapper.simulate('click')
+  });
+
+  it('should click confirm button', async () => {
+    const component = mount(addItem).find('.AddItem');
+    const wrapper = component.find('.ConfirmButton')
+    wrapper.simulate('click')
+    expect(mockHistory.push).toHaveBeenCalledTimes(1);
+  });
 
 
 

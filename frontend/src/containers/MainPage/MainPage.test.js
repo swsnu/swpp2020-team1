@@ -1,8 +1,8 @@
 import React from 'react';
 import axios from 'axios';
-import { shallow, mount } from 'enzyme';
-import { ConnectedRouter } from 'connected-react-router';
 import { Provider } from 'react-redux';
+import { Route, Switch, BrowserRouter } from 'react-router-dom';
+
 import { createMount } from '@material-ui/core/test-utils';
 
 import MainPage from './MainPage';
@@ -11,13 +11,11 @@ import { history } from '../../store/store';
 
 
 import ItemContainer from '../ItemContainer/ItemContainer';
-import * as actionCreators from '../../store/actions/index';
 import * as userActionCreators from '../../store/actions/user';
 import * as itemActionCreators from '../../store/actions/item';
 import * as itemcountActionCreators from '../../store/actions/itemcount';
 import * as notiActionCreators from '../../store/actions/notification';
 import * as recipeActionCreators from '../../store/actions/recipe';
-import Logout from '../Header/LogOut';
 import Item from '../../components/Item/Item';
 
 jest.mock('../ItemContainer/ItemContainer', () => jest.fn())
@@ -107,7 +105,7 @@ describe('<MainPage />', () => {
   afterEach(() => {jest.clearAllMocks()})
   let props;
   let mocked = jest.fn();
-  let mockMainPage;
+  let mockMainPage, mockHistory;
   let spyOnGetUserItems, spyOnGetItemCounts, spyOnGetUserNotiList, spyOnSetIsRead, spyOnSearchRecipes, spyOnLoginCheck; 
   beforeEach(async () => {
     ItemContainer.mockImplementation(props => {
@@ -117,6 +115,7 @@ describe('<MainPage />', () => {
       );
     })
 
+    mockHistory = {push: jest.fn(), goBack: jest.fn()};
     Item.mockImplementation(props => {
       return (
         <div className="spyItem">
@@ -132,10 +131,9 @@ describe('<MainPage />', () => {
       notifications: [],
       selectedItemIds: [],
       selectedCuisine: null,
-      mode: "normal",
+      mode: "select",
       clicked: false,
-      history: history,
-      recipe: true,
+      history: history
     }
     window.alert = mocked;
 
@@ -161,54 +159,53 @@ describe('<MainPage />', () => {
 
     mockMainPage = (
       <Provider store={mockStore}>
-      <ConnectedRouter history={history}>
-        <MainPage {...props}/>
-      </ConnectedRouter>
-    </Provider>
+        <BrowserRouter>
+        <Switch>
+          <Route path='/' exact render={() => <MainPage history={mockHistory}/>} />
+        </Switch>
+        </BrowserRouter>
+      </Provider>
     );
   })
 
   it('should render well', async () => {
     const spyAxiosGet = jest.spyOn(axios, 'get')
-    .mockImplementation((url, user) => {
-      return new Promise((resolve, reject) => {
-        const result = {
-          status: 400,
-          data : {
-            username: 'TEST-USER'
-          }
-        };
-        reject(result);
-      });
-    })
-
-    const component = mount(mockMainPage);
-    const mainPage = component.find('.MainPage');
+    const component = mount(mockMainPage).find('MainPage');
+    const wrapper = component.find('.MainPage');
+    expect(wrapper.length).toBeGreaterThan(0)
     await flushPromises();
     expect(component.find('.MainPage').length).toBe(1);
-    expect(mainPage.length).toBe(1);
     expect(spyAxiosGet).toHaveBeenCalled();
-    expect(spyOnGetUserItems).toHaveBeenCalled();
-    expect(spyOnGetItemCounts).toHaveBeenCalled();
   })
 
-  /*
   it('should handle onClickNotiIcon', async () => {
-    const component = mount(mockMainPage);
-    const notiButton = component.find('.btn_notification');
+    const component = mount(mockMainPage).find('MainPage');
+    const notiButton = component.find('.btn_notification').find('button')
     notiButton.simulate('click');
-    const mainPageInstance = component.find(MainPage.WrappedComponent).instance();
-    expect(mainPageInstance.state["openDialog"]).toEqual(true)
+    expect(component.state().openDialog).toEqual(true)
   });
-
+/*
   it('should handle onClickRecipeButton with no cuisine selected', async () => {
-    const component = mount(mockMainPage);
-    const mainPageInstance = component.find(MainPage.WrappedComponent).instance();
+    const selectState = {...stubInitialState, mode: 'preference'}    
+    const selectMockStore = getMockStore(selectState);
+    const selectMainPage = (
+      <Provider store={selectMockStore}>
+        <BrowserRouter>
+        <Switch>
+          <Route path='/' exact render={() => <MainPage history={mockHistory}/>} />
+        </Switch>
+        </BrowserRouter>
+      </Provider>
+    );
+    const component = mount(selectMainPage).find('MainPage');
+    component.setState({mode: 'select'})
+    component.forceUpdate()
+    console.log(component.state())
+    console.log(component.debug())
     const itemSelectButtonFooter = component.find('.ItemSelectButtonFooter');
-    await itemSelectButtonFooter.simulate('click');
+    itemSelectButtonFooter.simulate('click');
     expect(spyOnSearchRecipes).toHaveBeenCalled()
   });
-
 
   it('should handle onClickRecipeButton with cuisine selected', async () => {
     const spyGetElementsByClassName = jest.spyOn(document, 'getElementsByClassName')
@@ -302,34 +299,40 @@ describe('<MainPage />', () => {
     const itemSelectButtonHeader = component.find('.ItemSelectButtonHeader');
     itemSelectButtonHeader.simulate('click')
     expect(spyGetElementsByClassName).toHaveBeenCalled();
-  });
+  }); */
 
   it('should handle getAndBuildNotification', async () => {
-    const component = mount(mockMainPage);
-    const mainPageInstance = component.find(MainPage.WrappedComponent).instance();
+    const component = mount(mockMainPage).find('MainPage')
+    const mainPageInstance = component.instance();
     mainPageInstance.getAndBuildNotification();
     expect(spyOnGetUserNotiList).toHaveBeenCalled();
   });
 
   it('should handle getCategoryList', async () => {
-    const component = mount(mockMainPage);
-    const mainPageInstance = component.find(MainPage.WrappedComponent).instance();
+    const component = mount(mockMainPage).find('MainPage')
+    const mainPageInstance = component.instance();
     mainPageInstance.getCategoryList([1,2]);
   });
 
   it('should handle onReadNotification on recipe type noti', async () => {
-    const component = mount(mockMainPage);
-    const mainPageInstance = component.find(MainPage.WrappedComponent).instance();
+    const component = mount(mockMainPage).find('MainPage');
+    const mainPageInstance = component.instance();
     let notiId = 1;
     let notiType = "recipe";
     let category = "";
     mainPageInstance.onReadNotification(notiId, notiType, category);
     expect(spyOnSearchRecipes).toHaveBeenCalled();
+    notiType = "expire";
+    mainPageInstance.onReadNotification(notiId, notiType, category);
+    expect(spyOnSetIsRead).toHaveBeenCalled();
+    notiType = "buy_item"
+    mainPageInstance.onReadNotification(notiId, notiType, category);
+    expect(spyOnSetIsRead).toHaveBeenCalled();
   });
-
+/*
   it('should handle onReadNotification on expire type noti', async () => {
-    const component = mount(mockMainPage);
-    const mainPageInstance = component.find(MainPage.WrappedComponent).instance();
+    const component = mount(mockMainPage).find('MainPage');
+    const mainPageInstance = component.instance();
     let notiId = 1;
     let notiType = "expire";
     let category = "";
@@ -339,8 +342,8 @@ describe('<MainPage />', () => {
   });
 
   it('should handle onReadNotification on buy_item type noti', async () => {
-    const component = mount(mockMainPage);
-    const mainPageInstance = component.find(MainPage.WrappedComponent).instance();
+    const component = mount(mockMainPage).find('MainPage');
+    const mainPageInstance = component.instance();
     let notiId = 1;
     let notiType = "buy_item";
     let category = "";
@@ -436,9 +439,7 @@ describe('<MainPage />', () => {
     const mainPageInstance = component.find(MainPage.WrappedComponent).instance();
     mainPageInstance.buildNotificationInfo();
     expect(mainPageInstance.state["isUnreadNotiExists"]).toEqual(false); 
-  });
-
-  */
+  }); */
 });
 
 

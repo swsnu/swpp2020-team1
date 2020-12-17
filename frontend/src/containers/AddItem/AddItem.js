@@ -74,11 +74,6 @@ class AddItem extends Component {
     tabValue: 0
   }
 
-  // Used to activate webcam
-  setWebcamRef = (webcam) => {
-    this.webcam = webcam;
-  }
-
   handleDetect = (imageText) => {
     let ymd = parseDate(imageText);
 
@@ -408,7 +403,7 @@ class AddItem extends Component {
         </div>
         
         <div className="Footer">
-          <IconButton className={`${classes.helpButton}`} onClick={this.onClickHelpButton}><HelpSharpIcon fontSize="large"/></IconButton>
+          <IconButton className={`${classes.helpButton} helpButton`} onClick={this.onClickHelpButton}><HelpSharpIcon fontSize="large"/></IconButton>
           <div id='onClickMoveToConfirmButton' className="ConfirmButton" onClick={this.onClickMoveToConfirmButton} >목록 보기</div>
           
         </div>

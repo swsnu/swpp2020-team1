@@ -166,6 +166,26 @@ describe('<RecipeDetail />', () => {
 
   })
 
+  it('should handle delete comment', () => {
+    
+    const component = mount(recipeDetail).find('RecipeDetail');
+    const deleteCommentButton = component.find('.deleteCommentButton').at(0);
+    deleteCommentButton.simulate('click');
+    const instance = component.instance();
+
+    instance.onClickDeleteButton();
+
+
+  })
+
+  it('should handle titlelogo comment', () => {
+    
+    const component = mount(recipeDetail).find('RecipeDetail');
+    const titleLogo = component.find('.titlelogo')
+    titleLogo.simulate('click');
+    expect(mockHistory.push).toHaveBeenCalledTimes(1);
+  })
+
   it('should', () => {
     const component = mount(recipeDetail).find('RecipeDetail');
     const instance = component.instance();

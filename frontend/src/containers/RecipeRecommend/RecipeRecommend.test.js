@@ -102,6 +102,13 @@ describe('<RecipeRecommend />', () => {
     expect(mockHistory.goBack).toHaveBeenCalledTimes(1);
   })
 
+  it('should handle titleLogo button', () => {
+    const component = mount(recipeRecommend);
+    const wrapper = component.find('.titlelogo');
+    wrapper.simulate('click');
+    expect(mockHistory.push).toHaveBeenCalledTimes(1);
+  })
+
   it('should handle goToRecipe', () => {
     const component = mount(recipeRecommend);
     const wrapper = component.find('.recipe_detail').at(0);
