@@ -67,7 +67,7 @@ const ItemCard = (props) => {
           </td>
         </tr>
         <tr>
-          <td className="tableContentName">항목</td>
+          <td className="tableContentName">카테고리</td>
           <td className="tableContentItemCard2">
             {props.item.category_name}
           </td>

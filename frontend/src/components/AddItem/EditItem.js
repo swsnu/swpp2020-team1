@@ -193,7 +193,7 @@ class EditItem extends Component {
               </td>
             </tr> )}
             <tr>
-              <td className="tableContentName">항목</td>
+              <td className="tableContentName">카테고리</td>
               <td className="tableContent">
                 <Autocomplete style={style} fullWidth={true}
                   value={this.props.item.category_name}
