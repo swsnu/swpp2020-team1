@@ -1,6 +1,6 @@
 import React from 'react';
 import "./Comment.css";
-import { Card, CardContent, Typography, IconButton, Box, Divider, Grid } from '@material-ui/core';
+import { Typography, IconButton, Box, Divider, Grid } from '@material-ui/core';
 import CreateIcon from '@material-ui/icons/Create';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { withStyles } from '@material-ui/core/styles';

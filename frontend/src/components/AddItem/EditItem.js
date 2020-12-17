@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 
 // material-ui components
 import { TextField, MenuItem, Select, Checkbox, CircularProgress } from '@material-ui/core';
@@ -105,7 +105,7 @@ class EditItem extends Component {
   checkValidity = (name, expiration_date) => {
     if ((name === '') || 
         (this.props.expiration_date_loading) ||
-        (!this.state.disableExpirationField && (expiration_date === null || expiration_date == 'Invalid Date'))) {
+        (!this.state.disableExpirationField && (expiration_date === null || expiration_date === 'Invalid Date'))) {
       return false;
     } else {
       return true;

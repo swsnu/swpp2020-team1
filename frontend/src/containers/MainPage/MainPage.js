@@ -29,7 +29,6 @@ import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
 import Tooltip from '@material-ui/core/Tooltip';
 import AddIcon from '@material-ui/icons/Add';
 import Fab from '@material-ui/core/Fab';
-import Slide from '@material-ui/core/Slide';
 
 import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 
@@ -254,7 +253,7 @@ class MainPage extends Component {
       removeItemButtons[i].style.visibility = "visible";
     }
   }
-
+ 
   onClickItemSelectButton = (e) => {
     if(this.state.mode === "normal") {
       this.setState({ mode: "select" });
@@ -347,7 +346,6 @@ class MainPage extends Component {
     const fridgeItems = items.filter(i => i.container === 'fridge')
     const shelfItems = items.filter(i => i.container === 'shelf')
 
-    const clickedStyle = { background:'#c4c4c4' } 
     const { classes } = this.props;
 
     const notiIcon = this.state.isUnreadNotiExists ? <NotificationsActiveIcon color="primary"/> : <NotificationsActiveIcon /> ;
@@ -360,7 +358,7 @@ class MainPage extends Component {
               <div className="btn_logout">
                 <Logout/>
               </div>
-              <img className="titlelogoMain" src={FoodifyLogo}></img>
+              <img alt="" className="titlelogoMain" src={FoodifyLogo}></img>
               <IconButton onClick={this.onClickHelpButton}><HelpSharpIcon fontSize="large"/></IconButton>
             </div>
             <div className="content">
@@ -408,19 +406,19 @@ class MainPage extends Component {
                         <div className="QuitButton" onClick={this.switchToNormalMode}>X</div> : null}
                       </div>
                     <div className="ItemSelectButtonMain">
-                      <img className="btn_preference Korean"
+                      <img alt="" className="btn_preference Korean"
                         src={KoreanFlag}
                         onClick={() => this.onClickSelectPreference("Korean")}>
                       </img>
-                      <img className="btn_preference Japanese"
+                      <img alt="" className="btn_preference Japanese"
                         src={JapaneseFlag}
                         onClick={() => this.onClickSelectPreference("Japanese")}>
                       </img>
-                      <img className="btn_preference Chinese"
+                      <img alt="" className="btn_preference Chinese"
                         src={ChineseFlag}
                         onClick={() => this.onClickSelectPreference("Chinese")}>
                       </img>
-                      <img className="btn_preference Western"
+                      <img alt="" className="btn_preference Western"
                         src={ItalianFlag}
                         onClick={() => this.onClickSelectPreference("Western")}>
                       </img>
@@ -475,6 +473,7 @@ class MainPage extends Component {
               </div>
               <div className="videoContainer">
                 <iframe 
+                  title="video"
                   className={`video`}
                   src={"https://www.youtube.com/embed/yP69wYmFtm8"}
                   frameBorder="0" 

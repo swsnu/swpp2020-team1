@@ -1,7 +1,6 @@
 import React from 'react';
 import { shallow, mount } from 'enzyme';
 import NotiCard from './NotiCard';
-import { ListItem, Typography } from '@material-ui/core';
 
 describe('<NotiCard />', () => {
   it('should render without errors (expire)', () => {
@@ -17,7 +16,6 @@ describe('<NotiCard />', () => {
   it('should render without errors (buy_item)', () => {
     const noti = { id: 1, notiType: 'buy_item', itemName: 'itemName1',
       expirationDate: '2021/12/27', isRead: false, noneed: '1' }
-    let spyOpen = jest.spyOn(window, 'open').mockImplementation(() => { return () => {}; });
     const component = mount(
       <NotiCard
         noti={noti}/>);
@@ -71,47 +69,41 @@ describe('<NotiCard />', () => {
   it('should render date string (buy_item)', () => {
     let noti = { id: 1, notiType: 'buy_item', itemName: 'itemName1',
       expirationDate: '2020/12/25', elapsedDays: 2, isRead: false, noneed: '1' } 
-    let component = mount(
+    mount(
       <NotiCard
         noti={noti}/>);
     noti = { id: 1, notiType: 'buy_item', itemName: 'itemName1',
       expirationDate: '2020/12/25', elapsedDays: 1, isRead: false, noneed: '1' } 
-    component = mount(
+    mount(
       <NotiCard
         noti={noti}/>);
     noti = { id: 1, notiType: 'buy_item', itemName: 'itemName1',
       expirationDate: '2020/12/25', elapsedDays: 0, isRead: false, noneed: '1' } 
-    component = mount(
+    mount(
       <NotiCard
         noti={noti}/>);
     noti = { id: 1, notiType: 'buy_item', itemName: 'itemName1',
       expirationDate: '2020/12/25', elapsedDays: -1, isRead: false, noneed: '1' } 
-    component = mount(
-      <NotiCard
-        noti={noti}/>);
   });
 
   it('should render date string (expire)', () => {
     let noti = { id: 1, notiType: 'expire', itemName: 'itemName1',
       expirationDate: '2020/12/25', elapsedDays: 2, isRead: false, noneed: '1' } 
-    let component = mount(
+    mount(
       <NotiCard
         noti={noti}/>);
     noti = { id: 1, notiType: 'expire', itemName: 'itemName1',
       expirationDate: '2020/12/25', elapsedDays: 1, isRead: false, noneed: '1' } 
-    component = mount(
+    mount(
       <NotiCard
         noti={noti}/>);
     noti = { id: 1, notiType: 'expire', itemName: 'itemName1',
       expirationDate: '2020/12/25', elapsedDays: 0, isRead: false, noneed: '1' } 
-    component = mount(
+    mount(
       <NotiCard
         noti={noti}/>);
     noti = { id: 1, notiType: 'expire', itemName: 'itemName1',
       expirationDate: '2020/12/25', elapsedDays: -1, isRead: false, noneed: '1' } 
-    component = mount(
-      <NotiCard
-        noti={noti}/>);
   });
 
   it('should handle unsupported noti type', () => {

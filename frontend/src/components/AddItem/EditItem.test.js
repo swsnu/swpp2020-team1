@@ -3,7 +3,6 @@ import { mount } from 'enzyme';
 import EditItem from './EditItem';
 import { TextField, Select } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import axios from 'axios';
 
 const itemMock = {
   name: '냉장 서울우유 1L',
@@ -42,13 +41,6 @@ const props = {
 describe('<EditItem />', () => {
   let component;
   beforeEach(() => {
-    let spyAxiosGet = jest.spyOn(axios, 'get')
-    .mockImplementation(url => {
-      return new Promise((resolve, reject) => {
-        resolve({status: 200, data: [{id: 1, name: "우유"}, {id: 2, name: "맥주"}]});
-        reject();
-      });
-    })
 
     component = mount(<EditItem { ...props }/>);
     //component.update();

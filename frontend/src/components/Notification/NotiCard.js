@@ -19,7 +19,7 @@ const NotiCard = props => {
         <ListItem button className='NotiListItem' width='100%' onClick={() => {props.onRead(id, notiType, category)}}
             style={{backgroundColor: isRead ? '#ffffff' :  'rgba(125, 191, 26, 0.6)', justifyContent: 'space-between'}}>
           <div style={{width: 50}}>
-            <img src={CalendarImg} width={20} height={20} />
+            <img alt="" src={CalendarImg} width={20} height={20} />
           </div>
           <div style={{flex: 1}}>
             <Typography style={{fontSize: 14}}>
@@ -51,7 +51,7 @@ const NotiCard = props => {
         <ListItem button className='NotiListItem' width='100%' onClick={() => {props.onRead(id, notiType, category)}} 
             style={{backgroundColor: isRead ? '#ffffff' : 'rgba(125, 191, 26, 0.6)', justifyContent: 'space-between'}}>
           <div style={{width: 50}}>
-            <img src={ShoppingCartImg} width={20} height={20} />
+            <img alt="" src={ShoppingCartImg} width={20} height={20} />
           </div>
           <div style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
             <div>
@@ -80,7 +80,7 @@ const NotiCard = props => {
         <ListItem button className='NotiListItem' width='100%' onClick={() => {props.onRead(id, notiType, category)}} 
             style={{backgroundColor: '#ffffff', justifyContent: 'space-between'}}>
           <div style={{width: 50}}>
-            <img src={RecipeImg} width={20} height={20} />
+            <img alt="" src={RecipeImg} width={20} height={20} />
           </div>
           <div style={{flex: 1}}>
             <Typography style={{fontSize: 14}}>

@@ -224,7 +224,7 @@ class AddItem extends Component {
      */
 
     console.log("custom item existence check: ", custom_item)
-    if(custom_item.length == 0){
+    if(custom_item.length === 0){
       axios.get(`/back/barcode/${barcode_num}/`)
         .then(res => {
           console.log(res.data, "name");
@@ -434,7 +434,7 @@ class AddItem extends Component {
             <Tab label="목록 보기" onClick={this.helpList} {...this.a11yProps(2)}/>
           </Tabs>
           <div style={{height: "400px", display: "flex", justifyContent: "center"}}>
-            <img src={this.state.helpImage} style={{width:"auto", height:"100%"}} /> 
+            <img alt="" src={this.state.helpImage} style={{width:"auto", height:"100%"}} /> 
           </div>
         </Dialog>
       </div>

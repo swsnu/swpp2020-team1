@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import * as actionCreators from '../../store/actions/index';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import './RecipeRecommend.css';
 import { List, ListItem, IconButton } from '@material-ui/core';
@@ -77,7 +76,7 @@ class RecipeRecommend extends Component {
         <CardActionArea>
         <ListItem >
           <div className="thumbnail_wrapper">
-            <img className="thumbnail" src={`http://i.ytimg.com/vi/${videoKey}/mqdefault.jpg`}/>
+            <img alt="" className="thumbnail" src={`http://i.ytimg.com/vi/${videoKey}/mqdefault.jpg`}/>
           </div>
           <div className='RecipeInfo'>
             <div className='RecipeTitle'>{recipe.title}</div>
@@ -100,7 +99,7 @@ class RecipeRecommend extends Component {
                 </div>
               </Grid>
               <Grid item container xs={8} justify="center">
-                <img className="titlelogo" src={FoodifyLogo} onClick={this.onClickTitleLogo}></img>
+                <img alt="" className="titlelogo" src={FoodifyLogo} onClick={this.onClickTitleLogo}></img>
               </Grid>
               <Grid item xs={2}>
                 {/* dummy to divide space into three */}

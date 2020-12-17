@@ -89,7 +89,6 @@ const Item = props => {
     props.onClickCard(itemcounts);
   }
   const classes = useStyles();
-  const bull = <span className={classes.bullet}>•</span>;
 
   return (
     <Card style={props.mode === "Selected" ? {backgroundColor: "#7DBF1A"} : {backgroundColor: "#FFFFFF"}} className={`${classes.root} ${props.mode === "normal" ? 'Item' : 'Item Select'}`} onClick={props.mode === "normal" ? () => onClickCard(props.itemcounts) : () => onClickSelectCard(props.id)}>

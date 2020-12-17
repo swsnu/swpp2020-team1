@@ -1,17 +1,12 @@
 import React from 'react';
-import axios from 'axios';
-import { shallow, mount } from 'enzyme';
+import { mount } from 'enzyme';
 import { Provider } from 'react-redux';
-import { Route, Redirect, Switch, BrowserRouter } from 'react-router-dom';
+import { Route, Switch, BrowserRouter } from 'react-router-dom';
 
 import ItemConfirm from './ItemConfirm';
 import { getMockStore } from '../../mock';
 import EditItem from '../../components/AddItem/EditItem';
 import ItemCard from '../../components/ItemConfirm/ItemCard';
-import Result from '../../components/AddItem/Result';
-
-import * as itemActionCreators from '../../store/actions/item';
-import * as additemActionCreators from '../../store/actions/additem';
 
 function flushPromises() {
   return new Promise(resolve => setImmediate(resolve));
@@ -64,13 +59,9 @@ describe('<ItemConfirm />', () => {
 
   afterEach(() => {jest.clearAllMocks()})
 
-  let itemConfirm, mockHistory, spyOnAddItem, spyOnResetItemList;
+  let itemConfirm, mockHistory 
 
   beforeEach(() => {
-    spyOnAddItem = jest.spyOn(itemActionCreators, 'addItem').mockImplementation(()=> {return dispatch => {}; });
-
-    spyOnResetItemList = jest.spyOn(additemActionCreators, 'resetItemList').mockImplementation(()=> {return dispatch => {}; });
-
     mockHistory = {push: jest.fn()}
 
     itemConfirm = (

@@ -1,13 +1,10 @@
 import React from 'react';
-import axios from 'axios';
-import { shallow, mount } from 'enzyme';
+import { mount } from 'enzyme';
 import { Provider } from 'react-redux';
-import { Route, Redirect, Switch, BrowserRouter } from 'react-router-dom';
+import { Route, Switch, BrowserRouter } from 'react-router-dom';
 
 import RecipeRecommend from './RecipeRecommend';
 import { getMockStore } from '../../mock';
-import * as itemActionCreators from '../../store/actions/item';
-import * as itemcountActionCreators from '../../store/actions/itemcount';
 
 
 const stubInitialState = {
@@ -153,6 +150,5 @@ describe('<RecipeRecommend />', () => {
         </BrowserRouter>
       </Provider>
     );
-    const component = mount(recipeRecommend);
   })
 });

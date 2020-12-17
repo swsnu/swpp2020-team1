@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import Quagga from 'quagga';
-import dataURLtoFile from './URLtoFile';
-import { Button } from '@material-ui/core';
 import './Scanner.css';
 
 class Scanner extends Component {
@@ -75,7 +73,6 @@ class Scanner extends Component {
   }
 
   _onDetected = (result) => {
-  const video =document.querySelector("#video");
     this.props.onDetected(result);
   }
 

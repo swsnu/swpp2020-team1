@@ -69,7 +69,6 @@ describe('Signup', () => {
   });
 
   it('should accept signup', () => {
-    const dispatch = jest.fn();
     const component = mount(mockSignup);
 
     const wrapperEmail = component.find({ id: 'email' }).at(1);

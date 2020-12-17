@@ -1,21 +1,11 @@
 import React from 'react';
-import axios from 'axios';
-import { shallow, mount } from 'enzyme';
+import { mount } from 'enzyme';
 import { Provider } from 'react-redux';
-import { Route, Redirect, Switch, BrowserRouter } from 'react-router-dom';
+import { Route, Switch, BrowserRouter } from 'react-router-dom';
 
 import AddItem from './AddItem';
 import { getMockStore } from '../../mock';
-import EditItem from '../../components/AddItem/EditItem';
-import Result from '../../components/AddItem/Result';
-
-import * as itemActionCreators from '../../store/actions/item';
-import * as additemActionCreators from '../../store/actions/additem';
 import Scanner from '../../components/AddItem/Scanner';
-
-function flushPromises() {
-  return new Promise(resolve => setImmediate(resolve));
-}
 
 jest.mock('../../components/AddItem/Scanner', () => jest.fn())
 
@@ -69,7 +59,7 @@ describe('<AddItem />', () => {
 
   afterEach(() => {jest.clearAllMocks()})
 
-  let addItem, mockHistory, spyOnAddItem, spyOnResetItemList;
+  let addItem, mockHistory
 
   beforeEach(() => {
     

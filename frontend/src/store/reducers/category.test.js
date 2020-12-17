@@ -6,10 +6,6 @@ let stubCategories = [
   {"id": 2, "name": "aa"},
 ]
 
-const stubInitialState = {
-  categories: [],
-}
-
 describe('category reducer', () => {
   it('should return initial state', () => {
     const initialState = categoryReducer(undefined, {}); 

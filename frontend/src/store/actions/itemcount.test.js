@@ -1,7 +1,6 @@
 import axios from 'axios';
 import * as actionCreators from './index';
 import { getMockStore } from "../../mock";
-import { createBrowserHistory } from 'history';
 
 const stubArticle = {
   "id": 0,

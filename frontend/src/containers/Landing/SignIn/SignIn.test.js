@@ -116,7 +116,6 @@ describe('SignIn', ()=> {
     })
 
     it('should login when valid username & password is given', ()=>{
-      const dispatch = jest.fn();
       const component = mount(mockLogin);
       const wrapperEmail = component.find({ id: 'email' }).at(1);
       const wrapperPW = component.find({ id: 'password' }).at(1);

@@ -295,7 +295,7 @@ class RecipeDetail extends Component {
             </Grid>
             <Grid item container xs={8} justify="center">
               <Grid item>
-                <img className="titlelogo" src={FoodifyLogo} onClick={this.onClickTitleLogo}></img>  
+                <img alt="" className="titlelogo" src={FoodifyLogo} onClick={this.onClickTitleLogo}></img>  
               </Grid>
             </Grid>
             
@@ -307,6 +307,7 @@ class RecipeDetail extends Component {
           {/* Video */}
           <div className="videoContainer">
             <iframe 
+              title="recipe"
               className={`${classes.video} video`}
               src={this.props.selectedRecipe.video_url.replace("watch?v=", "embed/")} 
               frameBorder="0" 

@@ -64,7 +64,7 @@ describe('LoginRoute', () => {
         </ConnectedRouter>
       </Provider>
     );
-    const component = mount(mockApp);
+    mount(mockApp);
     expect(spyLoginCheck).toBeCalledTimes(1);
   });
 

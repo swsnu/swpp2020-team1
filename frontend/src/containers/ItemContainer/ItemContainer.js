@@ -93,7 +93,7 @@ class ItemContainer extends Component {
   }
 
   onRemoveItem = (e, id, count) => {
-    if (!e) var e = window.event;
+    if (!e) e = window.event;
     e.cancelBubble = true;
     if (e.stopPropagation) e.stopPropagation();
 
@@ -103,7 +103,7 @@ class ItemContainer extends Component {
         if(i.id === id) return { ...i, count: i.count - 1 };
         return i;
       })
-      tmpItemCounts = tmpItemCounts.filter(i => i.count != 0)
+      tmpItemCounts = tmpItemCounts.filter(i => i.count !== 0)
       this.setState({ itemcounts: tmpItemCounts })
       if (tmpItemCounts.length === 0) {
         this.setState({ seen: false })
@@ -117,7 +117,7 @@ class ItemContainer extends Component {
   }
 
   onAddItem = (e, id, count) => {
-    if (!e) var e = window.event;
+    if (!e) e = window.event;
     e.cancelBubble = true;
     if (e.stopPropagation) e.stopPropagation();
 
@@ -127,7 +127,7 @@ class ItemContainer extends Component {
         if(i.id === id) return { ...i, count: i.count + 1 };
         return i;
       })
-      tmpItemCounts = tmpItemCounts.filter(i => i.count != 0)
+      tmpItemCounts = tmpItemCounts.filter(i => i.count !== 0)
       this.setState({ itemcounts: tmpItemCounts })
     }
 

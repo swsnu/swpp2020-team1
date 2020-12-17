@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Typography, Container, Button, TextField, Select, InputLabel, MenuItem, Dialog, DialogTitle, DialogContent, DialogActions, Card, Grid } from "@material-ui/core";
+import { Container, Button, Grid } from "@material-ui/core";
 import * as actionCreators from '../../store/actions/index';
 import ItemCard from '../../components/ItemConfirm/ItemCard';
 import EditItem from '../../components/AddItem/EditItem';
@@ -8,7 +8,6 @@ import Result from '../../components/AddItem/Result';
 import './ItemConfirm.css';
 import moment from 'moment';
 import { withStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import PhotoCamera from '@material-ui/icons/PhotoCamera';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
@@ -139,7 +138,7 @@ class ItemConfirm extends Component {
     const {classes} = this.props;
     const newItems = this.props.resultList.map((item, idx) => {
       // temporary category name
-      if(idx == this.state.editingItemIdx) {
+      if(idx === this.state.editingItemIdx) {
         return <EditItem id={idx} key={idx}
                   item={this.state.editingItem} 
                   onChangeEditItem={this.onChangeEditItemValue} 
@@ -155,7 +154,7 @@ class ItemConfirm extends Component {
         <Container component="main" maxWidth="md" className="confirm_container">
           <Grid container justify="center">
                 <Grid item>
-                  <img className={classes.logo} src={FoodifyLogo} onClick={this.onClickTitleLogo}></img>  
+                  <img alt="" className={classes.logo} src={FoodifyLogo} onClick={this.onClickTitleLogo}></img>  
                 </Grid>
           </Grid>
           <Result isAddItem={false} 

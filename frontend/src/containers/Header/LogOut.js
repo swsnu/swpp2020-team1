@@ -15,7 +15,7 @@ class Logout extends Component {
         return (
             <div className = 'logout'>
                 <Button size = 'small' id = 'logout'onClick = {() => this.onClickLogoutButton()}>
-                <img src={LogoutImg} width={30} height={30} />
+                <img alt="" src={LogoutImg} width={30} height={30} />
                     </Button>
             </div>
         )

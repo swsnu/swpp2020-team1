@@ -1,17 +1,12 @@
 import React from 'react';
-import axios from 'axios';
-import { shallow, mount } from 'enzyme';
+import { mount } from 'enzyme';
 import { Provider } from 'react-redux';
-import { Route, Redirect, Switch, BrowserRouter } from 'react-router-dom';
+import { Route, Switch, BrowserRouter } from 'react-router-dom';
 
 import RecipeDetail from './RecipeDetail';
 import Comment from '../../components/Comment/Comment';
 import { getMockStore } from '../../mock';
 import * as commentActionCreators from '../../store/actions/comment';
-import { history } from '../../store/store';
-import { ConnectedRouter } from 'connected-react-router';
-import Dialog from '@material-ui/core/Dialog';
-import { createMount } from '@material-ui/core/test-utils';
 import * as actionTypes from '../../store/actions/actionTypes'; 
 
 jest.mock('../../components/Comment/Comment', () => jest.fn())

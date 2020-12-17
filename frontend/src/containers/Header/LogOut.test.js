@@ -34,7 +34,7 @@ const stubLoggedInState = {
 const mockStore = getMockStore(stubLoggedInState);
 
 describe('Logout', ()=> {
-    let logout,spyUserLogout, spyAlert
+    let logout,spyUserLogout 
     beforeEach(() => {
         logout = (
             <Provider store = {mockStore}>
@@ -44,7 +44,6 @@ describe('Logout', ()=> {
             </Provider>
         )
         spyUserLogout = jest.spyOn(userActionCreators, 'logoutRequest').mockImplementation(() => { return dispatch => {}; });
-        spyAlert = jest.spyOn(window, 'alert').mockImplementation(() => { return () => {}; });
     }
     )
     afterEach(() => { jest.clearAllMocks() });

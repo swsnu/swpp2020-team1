@@ -1,21 +1,15 @@
 import React from 'react';
-import axios from 'axios';
-import { shallow, mount } from 'enzyme';
+import { mount } from 'enzyme';
 import { Provider } from 'react-redux';
-import { Route, Redirect, Switch, BrowserRouter } from 'react-router-dom';
+import { Switch, BrowserRouter } from 'react-router-dom';
 
 import ItemContainer from './ItemContainer';
 // import Item from '../../components/Item/Item'
 import { getMockStore } from '../../mock';
-import * as itemActionCreators from '../../store/actions/item';
 import * as itemcountActionCreators from '../../store/actions/itemcount';
 
 
 // jest.mock('../../components/Item/Item', () => jest.fn())
-
-function flushPromises() {
-  return new Promise(resolve => setImmediate(resolve));
-}
 
 const stubInitialState = {
   item: {
@@ -92,7 +86,6 @@ describe('<ItemContainer />', () => {
 
   it('should handle add item button', () => {
     const component = mount(itemContainer);
-    const itemContainerInstance = component.find(ItemContainer.WrappedComponent).instance();
 
     const addItemButton = component.find('.AddItemButton');
     addItemButton.simulate('click');

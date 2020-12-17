@@ -1,5 +1,5 @@
 import React from 'react';
-import { shallow, mount } from 'enzyme';
+import { mount } from 'enzyme';
 import Scanner from './Scanner';
 import Quagga from 'quagga';
 
@@ -47,7 +47,7 @@ describe('Scanner()', () => {
         return errFunction();
       })
 
-    const component = mount(<Scanner barcode={false} id="Scanner" onDetected={mockfn} />);
+    mount(<Scanner barcode={false} id="Scanner" onDetected={mockfn} />);
     expect(spyStart.mock.results[0].value).toEqual("starting");
   })
 

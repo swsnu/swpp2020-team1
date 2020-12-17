@@ -28,16 +28,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const styles = (theme) => ({
-  typography: {
-    fontFamily: ['Noto Sans KR', 'sans-serif', 'Roboto'].join(','), 
-    fontSize: 14,
-  },
-  button: {
-    margin: theme.spacing(1),
-  },
-});
-
 const ItemCard = (props) => {
   const classes = useStyles();
 

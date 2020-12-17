@@ -13,11 +13,6 @@ const stubInitState = {
   currentUser: ''
 }
 
-const stubSignSuccess = {
-  status: 'SUCCESS',
-  error: -1
-}
-
 const stubSignFailure = {
   status: 'FAILURE'
 }
@@ -51,8 +46,6 @@ describe('LoginRoute', () => {
       password: "TEST-PASSWORD",
       nickname : "TEST-NICKNAME"
     };
-    const spyHistoryPush = jest.spyOn(history, 'push')
-      .mockImplementation(path => {});
 
     const spyAxiosPost = jest.spyOn(axios, 'post')
       .mockImplementation((url, user) => {
@@ -66,18 +59,12 @@ describe('LoginRoute', () => {
       })
     
     store.dispatch(userActionCreators.signUpRequest()).then(() => {
-      const newState = store.getState();
       expect(spyAxiosPost).toHaveBeenCalledTimes(1);
       done();
     });
   });
 
   it(`should call signUpFailure(), alert() on 'signUpRequest' error`, (done) => {
-    const stubUser = {
-      email: "TEST-USER",
-      password: "TEST-PASSWORD",
-      nickname : "TEST-NICKNAME"
-    };
     const spyAxiosPost = jest.spyOn(axios, 'post')
       .mockImplementation((url, user) => {
         return new Promise((resolve, reject) => {
@@ -126,10 +113,6 @@ describe('LoginRoute', () => {
   });
 
   it(`should call loginFailure(), on 'loginRequest' error`, (done) => {
-    const stubUser = {
-      email: "TEST-USER",
-      password: "TEST-PASSWORD",
-    };
     const spyAxiosPost = jest.spyOn(axios, 'post')
       .mockImplementation((url, user) => {
         return new Promise((resolve, reject) => {
@@ -227,7 +210,6 @@ describe('LoginRoute', () => {
         });
       })
     store.dispatch(userActionCreators.logoutRequest()).then(() => {
-      const newState = store.getState();
       expect(spyAxiosGet).toHaveBeenCalledTimes(1);
       expect(spyAlert).toHaveBeenCalledTimes(1);
       done();
