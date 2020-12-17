@@ -11,10 +11,14 @@ import Result from '../../components/AddItem/Result';
 
 import * as itemActionCreators from '../../store/actions/item';
 import * as additemActionCreators from '../../store/actions/additem';
+import Scanner from '../../components/AddItem/Scanner';
 
 function flushPromises() {
   return new Promise(resolve => setImmediate(resolve));
 }
+
+jest.mock('../../components/AddItem/Scanner', () => jest.fn())
+
 
 const stubExpDate = new Date('2020/12/31')
 
@@ -68,9 +72,15 @@ describe('<AddItem />', () => {
   let addItem, mockHistory, spyOnAddItem, spyOnResetItemList;
 
   beforeEach(() => {
-    spyOnAddItem = jest.spyOn(itemActionCreators, 'addItem').mockImplementation(()=> {return dispatch => {}; });
-
-    spyOnResetItemList = jest.spyOn(additemActionCreators, 'resetItemList').mockImplementation(()=> {return dispatch => {}; });
+    
+      Scanner.mockImplementation(props => {
+        return (
+          <div className="Scanner">
+              Scanner
+          </div>
+        );
+      })
+      
 
     mockHistory = {push: jest.fn()}
 
@@ -89,7 +99,6 @@ describe('<AddItem />', () => {
     const component = mount(addItem);
     const wrapper = component.find('.AddItem');
     expect(wrapper.length).toBe(1);
-    await flushPromises();
   });
 
 
