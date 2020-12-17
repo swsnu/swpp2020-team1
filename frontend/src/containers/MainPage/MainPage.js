@@ -98,7 +98,7 @@ class MainPage extends Component {
     isLoading: true,
     tutorial: false,
     help: false,
-    recipe: false
+    //recipe: false
   }
 
   // temporary
@@ -245,9 +245,9 @@ class MainPage extends Component {
   }
 
   switchToNormalMode = () => {
-    this.setState({
-      recipe: false
-    })
+    //this.setState({
+    //  recipe: false
+    //})
     for (let cuisine of Object.keys(this.state.selectedCuisine)) {
       document.getElementsByClassName(cuisine)[0].style.filter = "brightness(100%)";
     }
@@ -267,7 +267,6 @@ class MainPage extends Component {
   onClickItemSelectButton = (e) => {
     if(this.state.mode === "normal") {
       this.setState({ mode: "select" });
-      document.getElementsByClassName("ItemSelectButton")[0].style.background = "#C4C4C4";
       let removeItemButtons = document.getElementsByClassName("btn_remove_item");
       for(let i = 0; i < removeItemButtons.length; i++) {
         removeItemButtons[i].style.visibility = "hidden";
@@ -345,10 +344,6 @@ class MainPage extends Component {
     this.setState({help: true})
   }
 
-  onClickRecipeNav = () => {
-    this.setState({recipe : true});
-  }
-
   render() {
 
     let items = this.props.items.reduce((result, i) => {
@@ -411,7 +406,7 @@ class MainPage extends Component {
               <div id="dummy"></div>
             </div>
             <div className="ItemSelectDiv" >
-                {this.state.recipe ? 
+                {this.state.mode !== 'normal' ? 
                   <div className="ItemSelectButton">
                     <div className="ItemSelectButtonHeader" onClick={(event)=>this.onClickItemSelectButton(event)}>
                       <div className="ButtonPhrase">{this.state.mode === "select" ?
@@ -444,15 +439,14 @@ class MainPage extends Component {
                 :
                   <BottomNavigation
                   showLabels
-                  className={classes.root}
-                >
-                  <BottomNavigationAction label="레시피 추천" icon={<ThumbUpIcon />} onClick={this.onClickRecipeNav} className={classes.nav}/>
-                  <Tooltip title="Add" aria-label="add" onClick={this.onClickAddItemButton}>
-                    <Fab color="primary" className={classes.fab}>
-                      <AddIcon />
-                    </Fab>
-                  </Tooltip>
-                  <BottomNavigationAction label="마감 임박" icon={<NotificationsActiveIcon />} onClick={this.onClickNotiIcon} className={`${classes.nav} btn_notification`}/>
+                  className={classes.root} >
+                    <BottomNavigationAction label="레시피 추천" icon={<ThumbUpIcon />} onClick={(event) => this.onClickItemSelectButton(event)} className={classes.nav}/>
+                    <Tooltip title="Add" aria-label="add" onClick={this.onClickAddItemButton}>
+                      <Fab color="primary" className={classes.fab}>
+                        <AddIcon />
+                      </Fab>
+                    </Tooltip>
+                    <BottomNavigationAction label="마감 임박" icon={<NotificationsActiveIcon />} onClick={this.onClickNotiIcon} className={`${classes.nav} btn_notification`}/>
                   </BottomNavigation> }
             </div>
 
