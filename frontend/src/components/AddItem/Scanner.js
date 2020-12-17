@@ -8,7 +8,7 @@ class Scanner extends Component {
   async componentDidMount() {
 
 //	  alert(`window.innerHeight: ${window.innerHeight}, window.innerWidth: ${window.innerWidth}`);
-	let constraint;
+  let constraint;
 	if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ){
 		constraint = {
 			width: window.innerHeight,
