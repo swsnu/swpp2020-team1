@@ -9,6 +9,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import FoodifyLogo from '../../icons/Foodify.png';
+import { Grid } from '@material-ui/core';
 
 const styles = (theme) => ({
   root: {
@@ -92,19 +93,26 @@ class RecipeRecommend extends Component {
     return (
         <div className="RecipeRecommend">
           <Container component="main" maxWidth="md" className="main_container">
-          <div className="titleRecommend">
-            <div className="btn_back" onClick={this.onClickBackButton}>
-              <IconButton className="btn_arrow"><ArrowBackIcon/></IconButton>
+            <div className="titleRecommend">
+              <Grid item container xs={2} justify="flex-start" alignItems="center">
+                <div className="btn_back" onClick={this.onClickBackButton}>
+                  <IconButton className="btn_arrow"><ArrowBackIcon/></IconButton>
+                </div>
+              </Grid>
+              <Grid item container xs={8} justify="center">
+                <img className="titlelogo" src={FoodifyLogo} onClick={this.onClickTitleLogo}></img>
+              </Grid>
+              <Grid item xs={2}>
+                {/* dummy to divide space into three */}
+              </Grid>
             </div>
-            <img className="titlelogo" src={FoodifyLogo} onClick={this.onClickTitleLogo}></img>
-          </div>
-          { this.props && this.props.searchResults[0] && this.props.searchResults[0].num_ingredients === 0 ?
-            <div className='NoSearchResults'>검색 결과가 부족하여 인기순으로 표시됩니다.</div> : null }
-          <div>
-            <List style={{backgroundColor: '#f4f4f4'}}>
-              { results }
-            </List>
-          </div>
+            { this.props && this.props.searchResults[0] && this.props.searchResults[0].num_ingredients === 0 ?
+              <div className='NoSearchResults'>검색 결과가 부족하여 인기순으로 표시됩니다.</div> : null }
+            <div>
+              <List style={{backgroundColor: '#f4f4f4'}}>
+                { results }
+              </List>
+            </div>
           </Container>
         </div>
     );
