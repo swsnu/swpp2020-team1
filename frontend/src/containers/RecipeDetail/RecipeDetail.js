@@ -269,7 +269,7 @@ class RecipeDetail extends Component {
 
     let alreadyRated = this.props.ratedRecipes && this.props.ratedRecipes.includes(parseInt(this.props.match.params.id));
     
-    let ingredients = (this.props.ingredients && this.props.categories) ? this.props.selectedRecipe.ingredients.map(category_id => {
+    let ingredients = (this.props.selectedRecipe && this.props.categories) ? this.props.selectedRecipe.ingredients.map(category_id => {
       const ing = this.props.categories.find(c => c.id === category_id);
       const name = ing ? ing.name : null;
       return (
