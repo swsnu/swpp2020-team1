@@ -839,28 +839,6 @@ def initialize_sample(username):
                             is_read=False, expire_date='2020-12-18')
     tomato_noti.save()
 
-    yogurt_category = Category.objects.get(id=27)
-    yogurt_barcode = Barcode.objects.get(barcode_num='8809274510022')
-    yogurt = Item(name='액티비아 플레인😋', container='fridge', user=new_user,
-                    barcode=yogurt_barcode, category=yogurt_category)
-    yogurt.save()
-    yogurt_itemcount = ItemCount(item=yogurt, expiration_date='2020/12/21', count=4)
-    yogurt_itemcount.save()
-    yogurt_noti = Notification(user=new_user, noti_type='expire', item_count=yogurt_itemcount,
-                            is_read=False, expire_date='2020-12-21')
-    yogurt_noti.save()
-
-    garlic_category = Category.objects.get(id=25)
-    garlic_barcode = Barcode.objects.get(barcode_num='8809284480261')
-    garlic = Item(name='다진마늘🧄', container='freezer', user=new_user,
-                    barcode=garlic_barcode, category=garlic_category)
-    garlic.save()
-    garlic_itemcount = ItemCount(item=garlic, expiration_date='2021/7/7', count=1)
-    garlic_itemcount.save()
-    garlic_noti = Notification(user=new_user, noti_type='expire', item_count=garlic_itemcount,
-                            is_read=False, expire_date='2021-7-7')
-    garlic_noti.save()
-
     spaghetti_category = Category.objects.get(id=18)
     spaghetti_barcode = Barcode.objects.get(barcode_num='8809284480261')
     spaghetti = Item(name='파스타🍝100g소분', container='shelf', user=new_user,

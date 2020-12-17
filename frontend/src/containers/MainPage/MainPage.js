@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import ItemContainer from '../ItemContainer/ItemContainer';
 import * as actionCreators from '../../store/actions/index';
 import * as userActionCreators from '../../store/actions/user';
-import { Button, Card, Fade, CircularProgress, Dialog } from '@material-ui/core';
+import { Button, Card, Fade, CircularProgress, Dialog, Grid } from '@material-ui/core';
 import NotiIcon from '@material-ui/icons/Notifications';
 import ArrowBack from '@material-ui/icons/ArrowBack'
 import Circle from '@material-ui/icons/Brightness1'
@@ -65,7 +65,11 @@ const styles = (theme) => ({
     width: '100%',
   },
   nav: {
-    height: 55,
+    // width: '200%',
+    minWidth: '40%',
+    // height: 55,
+    // alignItems: 'center',
+    // textAlign: 'center',
   },
   fab: {
     // margin: theme.spacing(2),
@@ -441,14 +445,15 @@ class MainPage extends Component {
                   <BottomNavigation
                   showLabels
                   className={classes.root} >
-                  <BottomNavigationAction label="레시피 추천" icon={<ThumbUpIcon />} onClick={this.onClickRecipeNav} className={classes.nav}/>
+                  <BottomNavigationAction label="레시피 추천" icon={<ThumbUpIcon />} onClick={this.onClickItemSelectButton} className={classes.nav}/>
                   <Tooltip title="Add" aria-label="add" onClick={this.onClickAddItemButton}>
                     <Fab color="primary" className={classes.fab}>
                       <AddIcon />
                     </Fab>
                   </Tooltip>
-                  <BottomNavigationAction label="마감 임박" icon={notiIcon} onClick={this.onClickNotiIcon} className={`${classes.nav} btn_notification`}/>
-                  </BottomNavigation> }
+                  <BottomNavigationAction label="마감 임박" icon={notiIcon} onClick={this.onClickNotiIcon} className={classes.nav}/>
+                  </BottomNavigation>
+                   }
             </div>
 
 
