@@ -144,7 +144,7 @@ describe('<ItemContainer />', () => {
     })
     itemContainerInstance.onRemoveItem({cancelBubble: false}, 1, 1)
     itemContainerInstance.onClickCard([{"id": 1, "expiration_date": "2020/11/30", "count": 1, "item_id": 1}, 
-    {"id": 2, "expiration_date": "2020/11/20", "count": 1, "item_id": 1}])
+    {"id": 2, "expiration_date": "2020/11/20", "count": 1, "item_id": 1}], "aa")
     itemContainerInstance.onClickCardOff();
     expect(spyEditItemCount).toHaveBeenCalled();
   });

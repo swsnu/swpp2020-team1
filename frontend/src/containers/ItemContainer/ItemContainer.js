@@ -91,6 +91,7 @@ const styles = (theme) => ({
 class ItemContainer extends Component {
   state = {
     seen: false,
+    itemTitle: '',
     itemcounts: []
   }
   onClickAddItemButton = () => {
@@ -162,12 +163,12 @@ class ItemContainer extends Component {
     //}
   }
 
-  onClickCard = (itemcounts) => {
-    this.setState({seen: true, itemcounts});
+  onClickCard = (itemcounts, itemTitle) => {
+    this.setState({seen: true, itemcounts, itemTitle});
   } 
 
   onClickCardOff = () => {
-    this.setState({seen: false, itemcounts: []});
+    this.setState({seen: false, itemcounts: [], itemTitle: ''});
   }
 
   render() {
@@ -184,7 +185,7 @@ class ItemContainer extends Component {
               itemcounts={i.itemcounts}
               unit="temp-unit"
               className="Item"
-              onClickCard={(itemcounts) => this.onClickCard(itemcounts)}
+              onClickCard={(itemcounts) => this.onClickCard(itemcounts, i.name)}
               onClickSelectItem={(id) => this.props.onClickSelectItem(id)}
               // onAddItem={(e, ic_id, count) => this.onAddItem(e, ic_id, count)} 
               // onRemoveItem={(e, ic_id, count) => this.onRemoveItem(e, ic_id, count)}
@@ -242,6 +243,10 @@ class ItemContainer extends Component {
           </Container>
 
           <Dialog open={this.state.seen} maxWidth="sm" onBackdropClick={()=>this.setState({seen: false})}>
+            
+          <div className="itemTitle">
+            {this.state.itemTitle}
+          </div> 
             <Button className={classes.xButton} style={{position: 'absolute', right: 0}} onClick={this.onClickCardOff}>X</Button>
             <div overflowY="auto">{itemcounts}</div>
           </Dialog>
