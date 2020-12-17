@@ -12,6 +12,7 @@ import Paper from '@material-ui/core/Paper';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import PhotoCamera from '@material-ui/icons/PhotoCamera';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import FoodifyLogo from '../../icons/Foodify.png';
 
 const theme = createMuiTheme({
   palette: {
@@ -36,6 +37,9 @@ const styles = (theme) => ({
   },
   button: {
     margin: theme.spacing(1),
+  },
+  logo: {
+    margin: 27,
   }
 });
 
@@ -56,6 +60,10 @@ class ItemConfirm extends Component {
     currentItem: this.defaultItem,
     editingItemIdx: -1,
     editingItem: null
+  }
+
+  componentDidMount() {
+    //document.getElementsByClassName("Result")[0].style.top = "-25px";
   }
 
   onClickEditItemButton = (id) => {
@@ -121,9 +129,11 @@ class ItemConfirm extends Component {
     this.props.history.push('/item/add', {container: this.defaultItem.container});
   }
 
-  componentDidMount() {
-    //document.getElementsByClassName("Result")[0].style.top = "-25px";
+  onClickTitleLogo = () => {
+    this.props.history.push('/')
   }
+
+
 
   render() {
     const {classes} = this.props;
@@ -143,15 +153,30 @@ class ItemConfirm extends Component {
       <MuiThemeProvider theme={theme}>
       <div className="ItemConfirm">
         <Container component="main" maxWidth="md" className="confirm_container">
-            <Result isAddItem={false} 
-                    item={this.state.currentItem} 
-                    onClickFinishEditItem={this.onClickFinishAddItemButton} 
-                    onChangeEditItem={this.onChangeAddItemValue} />
-        <div className="HeaderName"></div>
-        <div className="Main">
-          {newItems}  
-        </div>
+          <Grid container justify="center">
+                <Grid item>
+                  <img className={classes.logo} src={FoodifyLogo} onClick={this.onClickTitleLogo}></img>  
+                </Grid>
+          </Grid>
+          <Result isAddItem={false} 
+                  item={this.state.currentItem} 
+                  onClickFinishEditItem={this.onClickFinishAddItemButton} 
+                  onChangeEditItem={this.onChangeAddItemValue} />
+          <div className="HeaderName"></div>
+          <div className="Main">
+            {newItems}  
+          </div>
           <div className="Footer">
+          <Button
+            id="onClickMoveToAddItemButton"
+            variant="contained"
+            color="primary"
+            className={`"ConfirmButton" ${classes.button}`}
+            startIcon={<PhotoCamera />}
+            onClick={this.onClickMoveToAddItemButton}
+          >
+            추가 스캔
+          </Button>
           <Button
             id="onClickMoveToConfirmButton"
             variant="contained"
@@ -161,16 +186,6 @@ class ItemConfirm extends Component {
             onClick={this.onClickConfirmButton}
           >
             담기 완료
-          </Button>
-          <Button
-            id="onClickMoveToAddItemButton"
-            variant="contained"
-            color="primary"
-            className={`"ConfirmButton" ${classes.button}`}
-            startIcon={<PhotoCamera />}
-            onClick={this.onClickMoveToAddItemButton}
-          >
-            추가 스캔하기
           </Button>
           </div>
         </Container>
