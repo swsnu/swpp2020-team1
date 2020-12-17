@@ -111,6 +111,9 @@ class ItemContainer extends Component {
       })
       tmpItemCounts = tmpItemCounts.filter(i => i.count != 0)
       this.setState({ itemcounts: tmpItemCounts })
+      if (tmpItemCounts.length === 0) {
+        this.setState({ seen: false })
+      }
     }
 
     this.props.onEditItemCount(id, count-1)
@@ -243,10 +246,9 @@ class ItemContainer extends Component {
           </Container>
 
           <Dialog open={this.state.seen} maxWidth="sm" onBackdropClick={()=>this.setState({seen: false})}>
-            
-          <div className="itemTitle">
-            {this.state.itemTitle}
-          </div> 
+            <div className="itemTitle">
+              {this.state.itemTitle}
+            </div>
             <Button className={classes.xButton} style={{position: 'absolute', right: 0}} onClick={this.onClickCardOff}>X</Button>
             <div overflowY="auto">{itemcounts}</div>
           </Dialog>
