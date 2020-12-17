@@ -38,5 +38,7 @@ def initialize_barcode():
     with open('csvfiles/barcode.csv', 'r', encoding='utf8') as barcodes:
         reader = csv.reader(barcodes)
         for line in reader:
+            if len(line)>2:
+                category = Category.objects.get(name=line[2])
             bulk_list.append(Barcode(barcode_num=line[0], item_name=line[1], category=category))
     Barcode.objects.bulk_create(bulk_list)
