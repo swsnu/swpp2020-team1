@@ -359,6 +359,7 @@ class MainPage extends Component {
     const clickedStyle = { background:'#c4c4c4' } 
     const { classes } = this.props;
 
+    const notiIcon = this.state.isUnreadNotiExists ? <NotificationsActiveIcon color="primary"/> : <NotificationsActiveIcon /> ;
 
     return (
       <MuiThemeProvider theme={theme}>
@@ -440,13 +441,13 @@ class MainPage extends Component {
                   <BottomNavigation
                   showLabels
                   className={classes.root} >
-                    <BottomNavigationAction label="레시피 추천" icon={<ThumbUpIcon />} onClick={(event) => this.onClickItemSelectButton(event)} className={classes.nav}/>
-                    <Tooltip title="Add" aria-label="add" onClick={this.onClickAddItemButton}>
-                      <Fab color="primary" className={classes.fab}>
-                        <AddIcon />
-                      </Fab>
-                    </Tooltip>
-                    <BottomNavigationAction label="마감 임박" icon={<NotificationsActiveIcon />} onClick={this.onClickNotiIcon} className={`${classes.nav} btn_notification`}/>
+                  <BottomNavigationAction label="레시피 추천" icon={<ThumbUpIcon />} onClick={this.onClickRecipeNav} className={classes.nav}/>
+                  <Tooltip title="Add" aria-label="add" onClick={this.onClickAddItemButton}>
+                    <Fab color="primary" className={classes.fab}>
+                      <AddIcon />
+                    </Fab>
+                  </Tooltip>
+                  <BottomNavigationAction label="마감 임박" icon={notiIcon} onClick={this.onClickNotiIcon} className={`${classes.nav} btn_notification`}/>
                   </BottomNavigation> }
             </div>
 
