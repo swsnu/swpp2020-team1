@@ -105,3 +105,10 @@
     background: #303030;
     cursor: pointer;
 }
+
+.AddItem .backButtonContainer {
+    z-index: 5;
+    position: absolute;
+    top: 1%;
+    left: 1%;
+}

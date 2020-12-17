@@ -22,6 +22,8 @@ import ExpireImage from '../../icons/expire.png';
 import BarcodeImage from '../../icons/barcode.png';
 import ConfirmImage from '../../icons/confirm.png';
 import PhotoCamera from '@material-ui/icons/PhotoCamera';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+
 
 
 const BARCODE_TERM = '바코드를 스캔해주세요'
@@ -38,6 +40,9 @@ const styles = {
   xButton:{
     marginTop: 0,
     marginBottom: 0, 
+  },
+  backButton: {
+    color: '#FFFFFF',
   }
 }
 
@@ -374,12 +379,22 @@ class AddItem extends Component {
     this.setState({ tabValue: newValue });
   }
 
+  onClickBackButton = () => {
+    this.props.history.push('/')
+  }
+
   render() {
     const {classes} = this.props;
   
     return (
       <div className="AddItem" style={{overflowX: "hidden", overflowY: "hidden"}}>
+
         <Scanner id="Scanner" onDetected={this._onDetected} ref="Scanner"/>
+        
+        <div className="backButtonContainer">
+          <IconButton className={`${classes.backButton} backButton`} onClick={this.onClickBackButton}><ArrowBackIcon/></IconButton>
+        </div>
+
 
         <div className="StatusTerm">
           { this.state.isRetaking ? "Retaking" : (this.state.isBarcodeScanning ? BARCODE_TERM : EXPIRATION_TERM) }
