@@ -4,7 +4,7 @@ import axios from 'axios';
 import * as actionCreators from '../../store/actions/index';
 import Comment from '../../components/Comment/Comment';
 import './RecipeDetail.css';
-import { TextField, Button, IconButton, Typography, Box, Grid, Toolbar, AppBar, Collapse, Container, Divider } from '@material-ui/core';
+import { TextField, Button, IconButton, Typography, Box, Grid, Collapse, Container, Divider } from '@material-ui/core';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import DescriptionIcon from '@material-ui/icons/Description';

@@ -1,12 +1,10 @@
-import React, { Component, useState } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import ItemContainer from '../ItemContainer/ItemContainer';
 import * as actionCreators from '../../store/actions/index';
 import * as userActionCreators from '../../store/actions/user';
-import { Button, Card, Fade, CircularProgress, Dialog, Grid } from '@material-ui/core';
-import NotiIcon from '@material-ui/icons/Notifications';
+import { Button, Card, Fade, CircularProgress, Dialog } from '@material-ui/core';
 import ArrowBack from '@material-ui/icons/ArrowBack'
-import Circle from '@material-ui/icons/Brightness1'
 import axios from 'axios';
 import NotiCard from '../../components/Notification/NotiCard';
 import './MainPage.css';
@@ -20,17 +18,11 @@ import Container from '@material-ui/core/Container';
 import { withStyles } from '@material-ui/core/styles';
 import {withRouter} from 'react-router';
 
-import { makeStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
 import HelpSharpIcon from '@material-ui/icons/HelpSharp';
-import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
-import FavoriteIcon from '@material-ui/icons/Favorite';
 
 import BottomNavigation from '@material-ui/core/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
@@ -39,12 +31,7 @@ import AddIcon from '@material-ui/icons/Add';
 import Fab from '@material-ui/core/Fab';
 import Slide from '@material-ui/core/Slide';
 
-import AlarmOnTwoToneIcon from '@material-ui/icons/AlarmOnTwoTone';
 import ThumbUpIcon from '@material-ui/icons/ThumbUp';
-
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
 
 const theme = createMuiTheme({
   palette: {

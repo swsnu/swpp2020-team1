@@ -18,34 +18,22 @@ export default function parseDate(text) {
 
   let year, month, date;
   for(let match of matched1) {
-    console.log("match1: "+match);
     year = match.groups.year;
     month = match.groups.month;
     date = match.groups.date;
-    console.log("YEAR: "+year);
-    console.log("MONTH: "+month);
-    console.log("DATE: "+date);
     expDates.push(moment(year + '/' + month + '/' + date))
   }
   for(let match of matched2) {
-    console.log("match2: "+match);
     year = match.groups.year;
     month = match.groups.month;
     date = match.groups.date;
-    console.log("YEAR: "+year);
-    console.log("MONTH: "+month);
-    console.log("DATE: "+date);
     expDates.push(moment(year + '/' + month + '/' + date))
   }
   if(!(year && month && date)) {
     for(let match of matched3) {
-      console.log("match3: "+match);
       year = new Date().getFullYear();
       month = match.groups.month;
       date = match.groups.date;
-      console.log("YEAR: "+year);
-      console.log("MONTH: "+month);
-      console.log("DATE: "+date);
       expDates.push(moment(year + '/' + month + '/' + date))
     }
   }

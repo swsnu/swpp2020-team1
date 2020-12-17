@@ -78,9 +78,7 @@ class EditItem extends Component {
   }
 
   onCategoryChange = (event, value) => {
-    console.log("onCategoryChange!!!")
     if (value && value.name) { // value is object {id, name}
-      console.log("value: " + JSON.stringify(value))
       this.props.onChangeEditItem({
         category_id: value.id,
         category_name: value.name

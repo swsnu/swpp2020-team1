@@ -1,7 +1,5 @@
 import '../AddItem/EditItem.css';
 import moment from 'moment';
-
-import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
 import Button from '@material-ui/core/Button';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/core/styles';

@@ -9,10 +9,8 @@ const LoginRoute = ({component: Component, currentUser, username, loginCheck, ..
     {
       if(currentUser !== 'SUCCESS') {
         loginCheck()
-        console.log("IS NOT LOGGED IN");
       } 
       else{
-        console.log(`LOGGED IN AS [USERNAME]${username}`);
         return <Component {...props} />
       }
     } 

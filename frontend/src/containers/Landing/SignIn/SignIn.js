@@ -103,7 +103,7 @@ class SignIn extends Component {
 
     this.props.onLoginUser(user)
       .then(() => {
-        console.log("User Logged In");
+        // console.log("User Logged In");
       })
   };
 

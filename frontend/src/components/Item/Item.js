@@ -1,15 +1,6 @@
 import React from 'react';
 import Card from '@material-ui/core/Card';
-import IconButton from '@material-ui/core/IconButton';
-import AddIcon from '@material-ui/icons/Add';
-import AddCircleIcon from '@material-ui/icons/AddCircle';
-import RemoveIcon from '@material-ui/icons/Remove';
-import RemoveCircleIcon from '@material-ui/icons/RemoveCircle';
 import { makeStyles } from '@material-ui/core/styles';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
 import "./Item.css";
 
 const useStyles = makeStyles({
@@ -88,7 +79,6 @@ const Item = props => {
   })[0];
   
   const onClickSelectCard = (id) => {
-    console.log(id);
     props.onClickSelectItem(id);
     //props.name;
   }
@@ -96,7 +86,6 @@ const Item = props => {
   let tmpDialog = null;
 
   const onClickCard = (itemcounts) => {
-    console.log(itemcounts);
     props.onClickCard(itemcounts);
   }
   const classes = useStyles();

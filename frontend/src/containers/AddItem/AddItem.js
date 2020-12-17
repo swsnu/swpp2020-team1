@@ -7,15 +7,13 @@ import parseDate from '../../components/AddItem/DateParser';
 import Scanner from '../../components/AddItem/Scanner';
 import Result from '../../components/AddItem/Result';
 import dataURLtoFile from '../../components/AddItem/URLtoFile';
-import moment from 'moment';
 import * as actionCreators from '../../store/actions/index';
-import { Dialog, List, Typography, Button } from '@material-ui/core';
+import { Dialog, Button } from '@material-ui/core';
  
 import './AddItem.css';
 import { withStyles } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
 import HelpSharpIcon from '@material-ui/icons/HelpSharp';
-import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import ExpireImage from '../../icons/expire.png';
@@ -82,7 +80,6 @@ class AddItem extends Component {
   }
 
   handleDetect = (imageText) => {
-    console.log("imageText_addCard: ", imageText);
     let ymd = parseDate(imageText);
 
     if(ymd === 'error') {
@@ -127,7 +124,6 @@ class AddItem extends Component {
     xhr.addEventListener("readystatechange", function () {
       if (this.readyState === this.DONE) {
         if (this.status === 200) {
-          console.log(this.responseText);
           var jsonResponse = JSON.parse(this.responseText);
           if(jsonResponse["result"][0].prediction[0]){
             for (let prediction of jsonResponse["result"][0].prediction) {
@@ -180,7 +176,6 @@ class AddItem extends Component {
     if(!this.state.isBarcodeScanning) return;
     
     let barcode_num = result.codeResult.code;
-    console.log("barcode_num", barcode_num);
 
     let user_id = 1;
     await axios.get('/back/user/')
@@ -205,7 +200,6 @@ class AddItem extends Component {
           //console.log(`custom_item count: ${custom_item.length}`)
           if(custom_item.length>0){
             custom_item = custom_item[custom_item.length - 1];
-            console.log('custom_item is:', custom_item);
             this.setState({
               currentItem: {
                 ...this.state.currentItem,

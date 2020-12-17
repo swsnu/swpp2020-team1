@@ -1,7 +1,5 @@
 import React from 'react';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import { Typography, Container, ListItem, Button } from '@material-ui/core';
+import { Typography, ListItem } from '@material-ui/core';
 import CalendarImg from '../../icons/calendar.png'
 import ShoppingCartImg from '../../icons/shopping-cart.png'
 import RecipeImg from '../../icons/zap.png'
@@ -98,7 +96,7 @@ const NotiCard = props => {
         </ListItem>
       </div>
   } else {
-    console.log(`Noti type ${notiType} is not supported.`)
+    console.log(`Notitype ${notiType} is not supported.`)
   }
   return (
     notiContent

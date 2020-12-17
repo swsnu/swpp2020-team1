@@ -100,7 +100,7 @@ class SignUp extends Component {
       };
       this.props.onSignupUser(user)
         .then(() => {
-          console.log("User Signed Up");
+          // console.log("User Signed Up")
         })
     }
   };
@@ -123,7 +123,6 @@ class SignUp extends Component {
         emailError,
       });
     }
-    console.log(pwInput)
     if (!pwInput || pwInput.length < 6) {
       passwordError = true;
       this.setState({

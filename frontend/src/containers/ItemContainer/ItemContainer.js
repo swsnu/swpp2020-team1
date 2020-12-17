@@ -3,21 +3,15 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import Item from '../../components/Item/Item';
 import * as actionCreators from '../../store/actions/index';
-import GridList from '@material-ui/core/GridList';
-import GridListTile from '@material-ui/core/GridListTile';
-import { Dialog, Typography, Container, Button, Icon } from '@material-ui/core';
+import { Dialog, Typography, Container, Button } from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
 import AddIcon from '@material-ui/icons/Add';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
-import RemoveIcon from '@material-ui/icons/Remove';
 import RemoveCircleIcon from '@material-ui/icons/RemoveCircle';
-import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
 import './ItemContainer.css';
 
-import { makeStyles } from '@material-ui/core/styles';
 import { withStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 
 
